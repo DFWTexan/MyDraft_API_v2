@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using MyDraftAPI_v2.DbData;
+using DbData;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
