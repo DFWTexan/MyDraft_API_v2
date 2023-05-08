@@ -4,6 +4,7 @@ using DbData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MyDraftAPI_v2.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    partial class AppDataContextModelSnapshot : ModelSnapshot
+    [Migration("20230508183548_emf_02")]
+    partial class emf_02
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,33 +24,6 @@ namespace MyDraftAPI_v2.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Database.Model.DepthChart", b =>
-                {
-                    b.Property<int>("PlayerID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PositionID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TeamID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Rank")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TeamAbbr")
-                        .HasMaxLength(3)
-                        .HasColumnType("nvarchar(3)");
-
-                    b.HasKey("PlayerID", "PositionID", "TeamID");
-
-                    b.HasIndex("PositionID");
-
-                    b.HasIndex("TeamID");
-
-                    b.ToTable("DepthChart", (string)null);
-                });
 
             modelBuilder.Entity("Database.Model.Player", b =>
                 {
@@ -94,9 +70,6 @@ namespace MyDraftAPI_v2.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("ProTeamID")
-                        .HasColumnType("int");
-
                     b.Property<string>("Status")
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
@@ -109,8 +82,6 @@ namespace MyDraftAPI_v2.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("ProTeamID");
 
                     b.ToTable("Players", (string)null);
                 });
@@ -154,22 +125,7 @@ namespace MyDraftAPI_v2.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("PlayerID");
-
                     b.ToTable("PlayerNews", (string)null);
-                });
-
-            modelBuilder.Entity("Database.Model.PlayerPosition", b =>
-                {
-                    b.Property<int?>("PlayerID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PositionID")
-                        .HasColumnType("int");
-
-                    b.HasKey("PlayerID", "PositionID");
-
-                    b.ToTable("PlayerPosition", (string)null);
                 });
 
             modelBuilder.Entity("Database.Model.Points", b =>
@@ -276,73 +232,6 @@ namespace MyDraftAPI_v2.Migrations
                     b.ToTable("ProTeams", (string)null);
                 });
 
-            modelBuilder.Entity("Database.Model.Schedule", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<string>("AwayTeam")
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
-
-                    b.Property<DateTime?>("GameDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("HomeTeam")
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
-
-                    b.Property<int?>("Season")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Week")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Schedule", (string)null);
-                });
-
-            modelBuilder.Entity("Database.Model.UserDraftSelections", b =>
-                {
-                    b.Property<int?>("LeagueID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PlayerID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TeamID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CreateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool?>("IsKeeper")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("OverallPick")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Pick")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PositionPick")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PositionRound")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Round")
-                        .HasColumnType("int");
-
-                    b.HasKey("LeagueID", "PlayerID", "TeamID");
-
-                    b.ToTable("UserDraftSelections", (string)null);
-                });
-
             modelBuilder.Entity("Database.Model.UserLeague", b =>
                 {
                     b.Property<int>("ID")
@@ -380,83 +269,6 @@ namespace MyDraftAPI_v2.Migrations
                     b.ToTable("UserLeague", (string)null);
                 });
 
-            modelBuilder.Entity("Database.Model.UserLeagueTeams", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<string>("Abbreviation")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DraftPosition")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LeagueID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Owner")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("LeagueID");
-
-                    b.ToTable("UserLeagueTeams", (string)null);
-                });
-
-            modelBuilder.Entity("Database.Model.DepthChart", b =>
-                {
-                    b.HasOne("Database.Model.Player", "Player")
-                        .WithMany()
-                        .HasForeignKey("PlayerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Database.Model.Position", "Position")
-                        .WithMany()
-                        .HasForeignKey("PositionID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Database.Model.ProTeam", "ProTeam")
-                        .WithMany()
-                        .HasForeignKey("TeamID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Player");
-
-                    b.Navigation("Position");
-
-                    b.Navigation("ProTeam");
-                });
-
-            modelBuilder.Entity("Database.Model.Player", b =>
-                {
-                    b.HasOne("Database.Model.ProTeam", "ProTeam")
-                        .WithMany()
-                        .HasForeignKey("ProTeamID");
-
-                    b.Navigation("ProTeam");
-                });
-
-            modelBuilder.Entity("Database.Model.PlayerNews", b =>
-                {
-                    b.HasOne("Database.Model.Player", "Player")
-                        .WithMany()
-                        .HasForeignKey("PlayerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Player");
-                });
-
             modelBuilder.Entity("Database.Model.Points", b =>
                 {
                     b.HasOne("Database.Model.UserLeague", "League")
@@ -474,17 +286,6 @@ namespace MyDraftAPI_v2.Migrations
                     b.Navigation("League");
 
                     b.Navigation("Player");
-                });
-
-            modelBuilder.Entity("Database.Model.UserLeagueTeams", b =>
-                {
-                    b.HasOne("Database.Model.UserLeague", "League")
-                        .WithMany()
-                        .HasForeignKey("LeagueID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("League");
                 });
 #pragma warning restore 612, 618
         }

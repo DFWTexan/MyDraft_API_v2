@@ -4,6 +4,7 @@ using DbData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MyDraftAPI_v2.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    partial class AppDataContextModelSnapshot : ModelSnapshot
+    [Migration("20230508193218_emf_04")]
+    partial class emf_04
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,13 +27,16 @@ namespace MyDraftAPI_v2.Migrations
 
             modelBuilder.Entity("Database.Model.DepthChart", b =>
                 {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
                     b.Property<int>("PlayerID")
                         .HasColumnType("int");
 
                     b.Property<int>("PositionID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TeamID")
                         .HasColumnType("int");
 
                     b.Property<int>("Rank")
@@ -40,7 +46,12 @@ namespace MyDraftAPI_v2.Migrations
                         .HasMaxLength(3)
                         .HasColumnType("nvarchar(3)");
 
-                    b.HasKey("PlayerID", "PositionID", "TeamID");
+                    b.Property<int>("TeamID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("PlayerID");
 
                     b.HasIndex("PositionID");
 
@@ -154,22 +165,7 @@ namespace MyDraftAPI_v2.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("PlayerID");
-
                     b.ToTable("PlayerNews", (string)null);
-                });
-
-            modelBuilder.Entity("Database.Model.PlayerPosition", b =>
-                {
-                    b.Property<int?>("PlayerID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PositionID")
-                        .HasColumnType("int");
-
-                    b.HasKey("PlayerID", "PositionID");
-
-                    b.ToTable("PlayerPosition", (string)null);
                 });
 
             modelBuilder.Entity("Database.Model.Points", b =>
@@ -308,14 +304,11 @@ namespace MyDraftAPI_v2.Migrations
 
             modelBuilder.Entity("Database.Model.UserDraftSelections", b =>
                 {
-                    b.Property<int?>("LeagueID")
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("PlayerID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TeamID")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("datetime2");
@@ -323,10 +316,18 @@ namespace MyDraftAPI_v2.Migrations
                     b.Property<bool?>("IsKeeper")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("LeagueID")
+                        .IsRequired()
+                        .HasColumnType("int");
+
                     b.Property<int?>("OverallPick")
                         .HasColumnType("int");
 
                     b.Property<int?>("Pick")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PlayerID")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int?>("PositionPick")
@@ -338,7 +339,11 @@ namespace MyDraftAPI_v2.Migrations
                     b.Property<int?>("Round")
                         .HasColumnType("int");
 
-                    b.HasKey("LeagueID", "PlayerID", "TeamID");
+                    b.Property<int?>("TeamID")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
 
                     b.ToTable("UserDraftSelections", (string)null);
                 });
@@ -444,17 +449,6 @@ namespace MyDraftAPI_v2.Migrations
                         .HasForeignKey("ProTeamID");
 
                     b.Navigation("ProTeam");
-                });
-
-            modelBuilder.Entity("Database.Model.PlayerNews", b =>
-                {
-                    b.HasOne("Database.Model.Player", "Player")
-                        .WithMany()
-                        .HasForeignKey("PlayerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Player");
                 });
 
             modelBuilder.Entity("Database.Model.Points", b =>
