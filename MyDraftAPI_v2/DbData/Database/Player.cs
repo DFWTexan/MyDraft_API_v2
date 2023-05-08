@@ -15,6 +15,7 @@ namespace Database.Model
         public string? LastName { get; set; }
         [MaxLength(5)]
         public string? TeamAbbr { get; set; }
+        public int? ProTeamID { get; set; }
         public DateTime BirthDate { get; set; }
         public int? Experience { get; set; }
         [MaxLength(3)]
@@ -32,5 +33,9 @@ namespace Database.Model
         [MaxLength(10)]
         public string? Status { get; set; }
 
+        #region Foreign Keys
+        [ForeignKey("ProTeamID")]
+        public virtual ProTeam? ProTeam { get; set; }
+        #endregion
     }
 }

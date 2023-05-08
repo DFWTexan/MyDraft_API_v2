@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Database.Model
 {
@@ -17,6 +18,11 @@ namespace Database.Model
         [MaxLength(350)]
         public string? Analysis { get; set; }
         [MaxLength(50)]
-        public string? InjuryType{ get; set; }  
+        public string? InjuryType{ get; set; }
+
+        #region Foreign Keys
+        [ForeignKey("PlayerID")]
+        public virtual Player? Player { get; set; }
+        #endregion
     }
 }

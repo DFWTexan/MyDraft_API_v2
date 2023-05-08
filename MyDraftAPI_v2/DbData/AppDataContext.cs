@@ -20,6 +20,12 @@ namespace DbData
         public DbSet<Database.Model.ProTeam> ProTeams { get; set; }
         public DbSet<Database.Model.Position> Positions { get; set; }
         public DbSet<Database.Model.UserLeague> UserLeague { get; set; }
+        public DbSet<Database.Model.DepthChart> DepthChart { get; set; }
+        public DbSet<Database.Model.UserLeagueTeams> UserLeagueTeams { get; set; }
+        public DbSet<Database.Model.UserDraftSelections> UserDraftSelections { get; set; }
+        public DbSet<Database.Model.Schedule> Schedule { get; set; }
+        public DbSet<Database.Model.PlayerPosition> PlayerPosition { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,6 +35,21 @@ namespace DbData
             modelBuilder.Entity<Database.Model.ProTeam>().ToTable("ProTeams");
             modelBuilder.Entity<Database.Model.Position>().ToTable("Positions");
             modelBuilder.Entity<Database.Model.UserLeague>().ToTable("UserLeague");
+            modelBuilder.Entity<Database.Model.DepthChart>().ToTable("DepthChart");
+            modelBuilder.Entity<Database.Model.UserLeagueTeams>().ToTable("UserLeagueTeams");
+            modelBuilder.Entity<Database.Model.UserDraftSelections>().ToTable("UserDraftSelections");
+            modelBuilder.Entity<Database.Model.Schedule>().ToTable("Schedule");
+            modelBuilder.Entity<Database.Model.PlayerPosition>().ToTable("PlayerPosition");
+
+
+            modelBuilder.Entity<Database.Model.DepthChart>()
+                .HasKey(k => new { k.PlayerID, k.PositionID, k.TeamID });
+
+            modelBuilder.Entity<Database.Model.UserDraftSelections>()
+                .HasKey(k => new { k.LeagueID, k.PlayerID, k.TeamID });
+
+            modelBuilder.Entity<Database.Model.PlayerPosition>()
+                .HasKey(k => new { k.PlayerID, k.PositionID });
         }
 
     }
