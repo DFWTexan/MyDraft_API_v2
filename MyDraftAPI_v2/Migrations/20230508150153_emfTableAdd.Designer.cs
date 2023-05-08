@@ -4,6 +4,7 @@ using DbData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MyDraftAPI_v2.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    partial class AppDataContextModelSnapshot : ModelSnapshot
+    [Migration("20230508150153_emfTableAdd")]
+    partial class emfTableAdd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -161,32 +164,9 @@ namespace MyDraftAPI_v2.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("LeagueID");
-
                     b.HasIndex("PlayerID");
 
                     b.ToTable("Points", (string)null);
-                });
-
-            modelBuilder.Entity("Database.Model.Position", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<string>("Abbr")
-                        .HasMaxLength(3)
-                        .HasColumnType("nvarchar(3)");
-
-                    b.Property<string>("FullName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Positions", (string)null);
                 });
 
             modelBuilder.Entity("Database.Model.ProTeam", b =>
@@ -229,58 +209,13 @@ namespace MyDraftAPI_v2.Migrations
                     b.ToTable("ProTeams", (string)null);
                 });
 
-            modelBuilder.Entity("Database.Model.UserLeague", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<string>("Abbr")
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
-
-                    b.Property<string>("DraftOrder")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<int>("DraftType")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Mode")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("NumberOfRounds")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NumberOfTeams")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("UserLeague", (string)null);
-                });
-
             modelBuilder.Entity("Database.Model.Points", b =>
                 {
-                    b.HasOne("Database.Model.UserLeague", "League")
-                        .WithMany()
-                        .HasForeignKey("LeagueID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Database.Model.Player", "Player")
                         .WithMany()
                         .HasForeignKey("PlayerID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("League");
 
                     b.Navigation("Player");
                 });

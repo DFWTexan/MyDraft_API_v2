@@ -4,14 +4,12 @@
     {
         public bool Success { get; set; }
         public string StatusCode { get; set; }
-        public object Data { get; set; }
+        public object ObjData { get; set; }
         public string ErrMessage { get; set; }
-        public ReturnResult(bool success, string statusCode, object data, string errMessage)
+        public ReturnResult()
         {
             Success = false;
-            StatusCode = statusCode;
-            Data = data;
-            ErrMessage = errMessage;
+            ErrMessage = string.Empty;
         }
 
     }

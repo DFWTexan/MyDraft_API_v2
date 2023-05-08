@@ -1,0 +1,22 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Database.Model
+{
+    public class PlayerNews
+    {
+        public int ID { get; set; }
+        public int PlayerID { get; set; }
+        public DateTime? PubDate { get; set; }
+        [MaxLength(250)]
+        public string? Title { get; set; }
+        [MaxLength(550)]
+        public string? NewsDescription{ get; set; }
+        public string? Reccomendation{ get; set; }
+        [MaxLength(10)]
+        public string? ImageURL { get; set; }
+        [MaxLength(350)]
+        public string? Analysis { get; set; }
+        [MaxLength(50)]
+        public string? InjuryType{ get; set; }  
+    }
+}
