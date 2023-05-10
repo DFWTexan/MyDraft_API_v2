@@ -25,6 +25,7 @@ namespace DbData
         public DbSet<Database.Model.UserDraftSelections> UserDraftSelections { get; set; }
         public DbSet<Database.Model.Schedule> Schedule { get; set; }
         public DbSet<Database.Model.PlayerPosition> PlayerPosition { get; set; }
+        public DbSet<Database.Model.Injury> Injuries { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -40,8 +41,9 @@ namespace DbData
             modelBuilder.Entity<Database.Model.UserDraftSelections>().ToTable("UserDraftSelections");
             modelBuilder.Entity<Database.Model.Schedule>().ToTable("Schedule");
             modelBuilder.Entity<Database.Model.PlayerPosition>().ToTable("PlayerPosition");
+            modelBuilder.Entity<Database.Model.Injury>().ToTable("Injuries");
 
-
+            #region Bridge Table Keys
             modelBuilder.Entity<Database.Model.DepthChart>()
                 .HasKey(k => new { k.PlayerID, k.PositionID, k.TeamID });
 
@@ -50,6 +52,13 @@ namespace DbData
 
             modelBuilder.Entity<Database.Model.PlayerPosition>()
                 .HasKey(k => new { k.PlayerID, k.PositionID });
+            #endregion
+
+            #region Property Descr
+            modelBuilder.Entity<Database.Model.Points>()
+                .Property(p => p.Value)
+                .HasColumnType("decimal(5,2)");
+            #endregion
         }
 
     }
