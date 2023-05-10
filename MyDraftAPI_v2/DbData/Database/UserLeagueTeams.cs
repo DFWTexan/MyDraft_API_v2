@@ -6,7 +6,6 @@ namespace Database.Model
     public partial class UserLeagueTeams
     {
         public int ID { get; set; }
-        [Required]
         public int LeagueID { get; set; }
         public string? Name { get; set; }
         public string? Abbreviation { get; set; }
