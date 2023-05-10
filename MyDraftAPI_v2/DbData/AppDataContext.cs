@@ -26,6 +26,10 @@ namespace DbData
         public DbSet<Database.Model.Schedule> Schedule { get; set; }
         public DbSet<Database.Model.PlayerPosition> PlayerPosition { get; set; }
         public DbSet<Database.Model.Injury> Injuries { get; set; }
+        public DbSet<Database.Model.DVDB> DVDB { get; set; }
+        public DbSet<Database.Model.AAV> AAV { get; set; }
+            
+        public DbSet<Database.Model.ADP> ADP { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -42,6 +46,9 @@ namespace DbData
             modelBuilder.Entity<Database.Model.Schedule>().ToTable("Schedule");
             modelBuilder.Entity<Database.Model.PlayerPosition>().ToTable("PlayerPosition");
             modelBuilder.Entity<Database.Model.Injury>().ToTable("Injuries");
+            modelBuilder.Entity<Database.Model.DVDB>().ToTable("DVDB").HasNoKey();
+            modelBuilder.Entity<Database.Model.AAV>().ToTable("AAV").HasNoKey();
+            modelBuilder.Entity<Database.Model.ADP>().ToTable("ADP").HasNoKey();
 
             #region Bridge Table Keys
             modelBuilder.Entity<Database.Model.DepthChart>()
@@ -57,6 +64,26 @@ namespace DbData
             #region Property Descr
             modelBuilder.Entity<Database.Model.Points>()
                 .Property(p => p.Value)
+                .HasColumnType("decimal(5,2)");
+
+            modelBuilder.Entity<Database.Model.DVDB>()
+                .Property(p => p.Value)
+                .HasColumnType("decimal(5,2)");
+
+            modelBuilder.Entity<Database.Model.AAV>()
+                .Property(p => p.StandardValue)
+                .HasColumnType("decimal(5,2)");
+
+            modelBuilder.Entity<Database.Model.AAV>()
+                .Property(p => p.PPRValue)
+                .HasColumnType("decimal(5,2)");
+
+            modelBuilder.Entity<Database.Model.ADP>()
+                .Property(p => p.StandardValue)
+                .HasColumnType("decimal(5,2)");
+
+            modelBuilder.Entity<Database.Model.ADP>()
+                .Property(p => p.PPRValue)
                 .HasColumnType("decimal(5,2)");
             #endregion
         }

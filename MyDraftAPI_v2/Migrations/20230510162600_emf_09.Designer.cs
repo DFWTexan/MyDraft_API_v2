@@ -4,6 +4,7 @@ using DbData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MyDraftAPI_v2.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    partial class AppDataContextModelSnapshot : ModelSnapshot
+    [Migration("20230510162600_emf_09")]
+    partial class emf_09
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,60 +24,6 @@ namespace MyDraftAPI_v2.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Database.Model.AAV", b =>
-                {
-                    b.Property<decimal?>("PPRValue")
-                        .HasColumnType("decimal(5,2)");
-
-                    b.Property<int?>("PlayerID")
-                        .HasColumnType("int");
-
-                    b.Property<decimal?>("StandardValue")
-                        .HasColumnType("decimal(5,2)");
-
-                    b.HasIndex("PlayerID");
-
-                    b.ToTable("AAV", (string)null);
-                });
-
-            modelBuilder.Entity("Database.Model.ADP", b =>
-                {
-                    b.Property<decimal?>("PPRValue")
-                        .HasColumnType("decimal(5,2)");
-
-                    b.Property<int?>("PlayerID")
-                        .HasColumnType("int");
-
-                    b.Property<decimal?>("StandardValue")
-                        .HasColumnType("decimal(5,2)");
-
-                    b.HasIndex("PlayerID");
-
-                    b.ToTable("ADP", (string)null);
-                });
-
-            modelBuilder.Entity("Database.Model.DVDB", b =>
-                {
-                    b.Property<int?>("LeagueID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PlayerID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Segment")
-                        .HasColumnType("int");
-
-                    b.Property<decimal?>("Value")
-                        .HasColumnType("decimal(5,2)");
-
-                    b.Property<int?>("Year")
-                        .HasColumnType("int");
-
-                    b.HasIndex("PlayerID");
-
-                    b.ToTable("DVDB", (string)null);
-                });
 
             modelBuilder.Entity("Database.Model.DepthChart", b =>
                 {
@@ -497,33 +446,6 @@ namespace MyDraftAPI_v2.Migrations
                     b.HasIndex("LeagueID");
 
                     b.ToTable("UserLeagueTeams", (string)null);
-                });
-
-            modelBuilder.Entity("Database.Model.AAV", b =>
-                {
-                    b.HasOne("Database.Model.Player", "Player")
-                        .WithMany()
-                        .HasForeignKey("PlayerID");
-
-                    b.Navigation("Player");
-                });
-
-            modelBuilder.Entity("Database.Model.ADP", b =>
-                {
-                    b.HasOne("Database.Model.Player", "Player")
-                        .WithMany()
-                        .HasForeignKey("PlayerID");
-
-                    b.Navigation("Player");
-                });
-
-            modelBuilder.Entity("Database.Model.DVDB", b =>
-                {
-                    b.HasOne("Database.Model.Player", "Player")
-                        .WithMany()
-                        .HasForeignKey("PlayerID");
-
-                    b.Navigation("Player");
                 });
 
             modelBuilder.Entity("Database.Model.DepthChart", b =>
