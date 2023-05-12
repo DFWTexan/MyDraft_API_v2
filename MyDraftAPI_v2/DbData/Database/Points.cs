@@ -5,7 +5,6 @@ namespace Database.Model
 {
     public partial class Points
     {
-        public int ID { get; set; }
         public int PlayerID { get; set; }
         public int LeagueID { get; set; }
         public int Year { get; set; }
