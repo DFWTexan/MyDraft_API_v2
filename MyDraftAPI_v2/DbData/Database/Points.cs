@@ -7,8 +7,8 @@ namespace Database.Model
     {
         public int PlayerID { get; set; }
         public int LeagueID { get; set; }
-        public int Year { get; set; }
-        public int Week { get; set; }
+        public int? Year { get; set; }
+        public int? Week { get; set; }
         [MaxLength(10)]
         public string? Tag { get; set; }
         public DateTime? TimeStamp { get; set; }
