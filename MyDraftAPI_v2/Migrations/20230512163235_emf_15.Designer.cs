@@ -4,6 +4,7 @@ using DbData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MyDraftAPI_v2.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    partial class AppDataContextModelSnapshot : ModelSnapshot
+    [Migration("20230512163235_emf_15")]
+    partial class emf_15
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -371,9 +374,9 @@ namespace MyDraftAPI_v2.Migrations
                     b.Property<int?>("AwayTeamID")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("GameDate")
+                    b.Property<string>("GameDate")
                         .HasMaxLength(50)
-                        .HasColumnType("datetime2");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int?>("HomeTeamID")
                         .HasColumnType("int");
