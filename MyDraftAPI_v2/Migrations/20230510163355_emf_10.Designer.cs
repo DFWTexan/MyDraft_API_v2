@@ -4,6 +4,7 @@ using DbData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MyDraftAPI_v2.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    partial class AppDataContextModelSnapshot : ModelSnapshot
+    [Migration("20230510163355_emf_10")]
+    partial class emf_10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,14 +27,14 @@ namespace MyDraftAPI_v2.Migrations
 
             modelBuilder.Entity("Database.Model.AAV", b =>
                 {
-                    b.Property<decimal?>("PPRValue")
-                        .HasColumnType("decimal(5,2)");
+                    b.Property<int?>("PPRValue")
+                        .HasColumnType("int");
 
                     b.Property<int?>("PlayerID")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("StandardValue")
-                        .HasColumnType("decimal(5,2)");
+                    b.Property<int?>("StandardValue")
+                        .HasColumnType("int");
 
                     b.HasIndex("PlayerID");
 
@@ -40,14 +43,14 @@ namespace MyDraftAPI_v2.Migrations
 
             modelBuilder.Entity("Database.Model.ADP", b =>
                 {
-                    b.Property<decimal?>("PPRValue")
-                        .HasColumnType("decimal(5,2)");
+                    b.Property<int?>("PPRValue")
+                        .HasColumnType("int");
 
                     b.Property<int?>("PlayerID")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("StandardValue")
-                        .HasColumnType("decimal(5,2)");
+                    b.Property<int?>("StandardValue")
+                        .HasColumnType("int");
 
                     b.HasIndex("PlayerID");
 
@@ -66,7 +69,7 @@ namespace MyDraftAPI_v2.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal?>("Value")
-                        .HasColumnType("decimal(5,2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("Year")
                         .HasColumnType("int");
@@ -141,7 +144,7 @@ namespace MyDraftAPI_v2.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<DateTime?>("BirthDate")
+                    b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("College")
@@ -159,7 +162,7 @@ namespace MyDraftAPI_v2.Migrations
                         .HasMaxLength(6)
                         .HasColumnType("nvarchar(6)");
 
-                    b.Property<bool?>("IsRookie")
+                    b.Property<bool>("IsRookie")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
@@ -189,7 +192,7 @@ namespace MyDraftAPI_v2.Migrations
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)");
 
-                    b.Property<int?>("Weight")
+                    b.Property<int>("Weight")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
@@ -405,6 +408,9 @@ namespace MyDraftAPI_v2.Migrations
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("ID")
+                        .HasColumnType("int");
 
                     b.Property<bool?>("IsKeeper")
                         .HasColumnType("bit");

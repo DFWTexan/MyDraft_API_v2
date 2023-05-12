@@ -16,18 +16,18 @@ namespace Database.Model
         [MaxLength(5)]
         public string? TeamAbbr { get; set; }
         public int? ProTeamID { get; set; }
-        public DateTime BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
         public int? Experience { get; set; }
         [MaxLength(3)]
         public string? Position { get; set; }
         [MaxLength(50)]
         public string? PositionGroup { get; set; }
-        public int Weight { get; set; }
+        public int? Weight { get; set; }
         [MaxLength(6)]
         public string? Height { get; set; }
         [MaxLength(50)]
         public string? College { get; set; }
-        public bool IsRookie { get; set; }
+        public bool? IsRookie { get; set; }
         [MaxLength(250)]
         public string? PhotoUrl { get; set; }
         [MaxLength(10)]
