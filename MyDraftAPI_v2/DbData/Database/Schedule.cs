@@ -14,6 +14,7 @@ namespace Database.Model
         public int? AwayTeamID { get; set; }
         //[MaxLength(5)]
         //public string? AwayTeamAbbr { get; set; }
+        [MaxLength(50)]
         public DateTime? GameDate { get; set; }
 
         #region Foreign Keys
