@@ -5,7 +5,6 @@ namespace Database.Model
 {
     public partial class UserDraftSelections
     {
-        public int ID { get; set; }
         [Required]
         public int LeagueID { get; set; }
         [Required]
@@ -20,13 +19,13 @@ namespace Database.Model
         public int? PositionPick { get; set; }
         public int? PositionRound { get; set; }
 
-        #region Foreign Keys
+        //#region Foreign Keys
         //[ForeignKey("LeagueID")]
-        //public virtual UserLeague? League{ get; set; }
+        //public virtual UserLeague? League { get; set; }
         //[ForeignKey("TeamID")]
         //public virtual UserLeagueTeams? LeagueTeam { get; set; }
         //[ForeignKey("PlayerID")]
         //public virtual Player? Player { get; set; }
-        #endregion
+        //#endregion
     }
 }

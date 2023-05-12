@@ -42,7 +42,7 @@ namespace DbData
             modelBuilder.Entity<Database.Model.UserLeague>().ToTable("UserLeague");
             modelBuilder.Entity<Database.Model.DepthChart>().ToTable("DepthChart");
             modelBuilder.Entity<Database.Model.UserLeagueTeams>().ToTable("UserLeagueTeams");
-            modelBuilder.Entity<Database.Model.UserDraftSelections>().ToTable("UserDraftSelections");
+            modelBuilder.Entity<Database.Model.UserDraftSelections>().ToTable("UserDraftSelections").HasNoKey();
             modelBuilder.Entity<Database.Model.Schedule>().ToTable("Schedule");
             modelBuilder.Entity<Database.Model.PlayerPosition>().ToTable("PlayerPosition");
             modelBuilder.Entity<Database.Model.Injury>().ToTable("Injuries");
