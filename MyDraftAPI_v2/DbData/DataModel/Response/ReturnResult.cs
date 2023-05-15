@@ -3,8 +3,8 @@
     public class ReturnResult
     {
         public bool Success { get; set; }
-        public string StatusCode { get; set; }
-        public object ObjData { get; set; }
+        public int StatusCode { get; set; }
+        public object? ObjData { get; set; }
         public string ErrMessage { get; set; }
         public ReturnResult()
         {
