@@ -28,7 +28,7 @@ namespace PlayerService
             var result = new DataModel.Response.ReturnResult();
             try
             {
-                var players = await _db.Players.ToListAsync();
+                var players = await _db.Players.Take(100).ToListAsync();
                 result.ObjData = players;
                 result.Success = true;
             }
