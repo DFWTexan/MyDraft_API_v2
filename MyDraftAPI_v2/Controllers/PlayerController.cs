@@ -19,7 +19,7 @@ namespace MyDraftAPI_v2.Controllers
 
         /// <summary>
         /// 
-        /// </summary>
+        /// Get All Players
         /// 
         [HttpGet]
         public async Task<ActionResult> GetPlayers()
@@ -31,5 +31,19 @@ namespace MyDraftAPI_v2.Controllers
             return StatusCode(result.StatusCode, result.ObjData);
         }
 
+        /// <summary>
+        /// 
+        /// Get Player by ID
+        /// 
+        [HttpGet]
+        public ActionResult GetPlayerByID(int id)
+        {
+            var service = new PlayerService.Player(_db, _config, null, null);
+
+            var result =  service.GetPlayerByID(id);
+
+            return StatusCode(result.StatusCode, result.ObjData);
+        }
+        
     }
 }
