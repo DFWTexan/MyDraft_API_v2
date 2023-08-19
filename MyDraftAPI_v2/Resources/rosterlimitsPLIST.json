@@ -1,0 +1,99 @@
+﻿[
+  {
+    "sections": [
+      {
+        "items": [
+          {
+            "title": "Quarterback (QB)",
+            "value": 1,
+            "positions": [ "QB" ]
+          },
+          {
+            "title": "Running Back (RB)",
+            "value": 2,
+            "positions": [ "RB", "FB" ]
+          },
+          {
+            "value": 2,
+            "title": "Wide Receiver (WR)",
+            "positions": [ "WR" ],
+            "showCombinedWRTE": false
+          },
+          {
+            "value": 1,
+            "title": "Tight End (TE)",
+            "positions": [ "TE" ],
+            "showCombinedWRTE": false
+          },
+          {
+            "value": 0,
+            "title": "Wide Receiver / Tight End (WR/TE)",
+            "positions": [ "WR", "TE" ],
+            "showCombinedWRTE": true
+          },
+          {
+            "title": "Kicker (K)",
+            "value": 1,
+            "positions": [ "K" ]
+          },
+          {
+            "title": "Defensive Team (DEF)",
+            "value": 1,
+            "positions": [ "DEF" ]
+          },
+          {
+            "title": "Defensive Line (DL)",
+            "value": 0,
+            "positions": [ "DE1", "DE2", "DT1", "DT2" ]
+          },
+          {
+            "title": "Linebacker (LB)",
+            "value": 0,
+            "positions": [ "ILB1", "ILB2", "OLB1", "OLB2" ]
+          },
+          {
+            "title": "Defensive Back (DB)",
+            "value": 0,
+            "positions": [ "CB1", "CB2", "FS", "SS" ]
+          }
+        ],
+        "title": "Positions",
+        "isFlex": false
+      },
+      {
+        "items": [
+          {
+            "title": "IDP (DL, LB, DB)",
+            "value": 1,
+            "positions": [ "CB1", "CB2", "DE1", "DE2", "DT1", "DT2", "ILB1", "ILB2", "OLB1", "OLB2", "FS", "SS" ]
+          },
+          {
+            "value": 0,
+            "title": "WR / TE",
+            "positions": [ "WR", "TE" ],
+            "showCombinedWRTE": false
+          },
+          {
+            "value": 0,
+            "title": "RB / WR",
+            "positions": [ "WR", "RB" ],
+            "hideWRTECombined": false
+          },
+          {
+            "title": "RB / WR / TE",
+            "value": 0,
+            "positions": [ "RB", "WR", "TE" ]
+          },
+          {
+            "title": "QB/ RB / WR / TE",
+            "value": 0,
+            "positions": [ "QB", "RB", "WR", "TE" ]
+          }
+        ],
+        "title": "Flex",
+        "isFlex": true
+      }
+    ]
+  },
+  "00000000"
+]
