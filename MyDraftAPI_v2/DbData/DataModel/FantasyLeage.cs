@@ -158,37 +158,7 @@ namespace MyDraftAPI_v2.FantasyDataModel
                 }
                 return null;
             }
-
-            /*
-            private static sealed IDictionary<int, DraftType> intToDraftTypeMap = new Dictionary<int, DraftType>();
-            static {
-                foreach (DraftType type in DraftType.values()) {
-                    intToDraftTypeMap.put(type.ordinal(), type);
-                }
-            }
-
-            public static DraftType draftTypeFromInt(int i) {
-                DraftType type = intToDraftTypeMap.get(Integer.valueOf(i));
-                if (type == null) 
-                    return DraftType.unknown;
-                return type;
-            }
-
-            private static sealed IDictionary<int, ScoringType> intToScoringTypeMap = new IDictionary<int, ScoringType>();
-            static {
-                for (ScoringType type : ScoringType.values()) {
-                    intToScoringTypeMap.put(type.ordinal(), type);
-                }
-            }
-
-            public static ScoringType scoringTypeFromInt(int i) {
-                ScoringType type = intToScoringTypeMap.get(Integer.valueOf(i));
-                if (type == null) 
-                    return ScoringType.ScoringTypeUnknown;
-                return type;
-            }
-             * */
-
+            
             public int getSiteID()
             {
                 return siteID;
@@ -314,7 +284,7 @@ namespace MyDraftAPI_v2.FantasyDataModel
                 return userItemMap;
             }
 
-            public async Task<CustomScoringUserItem> customScoringUserItemForKey(String key)
+            public async Task<CustomScoringUserItem?> customScoringUserItemForKey(String key)
             {
                 IDictionary<String, CustomScoringUserItem> userItemMap = await customScoringValuesMap();
                 return userItemMap.ContainsKey(key) ? userItemMap[key] : null;
@@ -452,7 +422,7 @@ namespace MyDraftAPI_v2.FantasyDataModel
 
                 await LeagueManager.savePlayerPoints(results, year, week, Convert.ToString(this.identifier));
 
-                /*TODO
+                /* TODO
                 IList<IDictionary<String, dynamic>> vbdData = VBDCalculator.calculateForLeague(this);
                 LeagueManager.savePlayerVBD(vbdData, year, week, identifier);
                 LeagueManager.saveTeamOffensiveRankingsForLeague(this);

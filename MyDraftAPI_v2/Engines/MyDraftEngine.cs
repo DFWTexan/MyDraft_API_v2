@@ -2,6 +2,7 @@
 using MyDraftAPI_v2.FantasyDataModel;
 using MyDraftAPI_v2.FantasyDataModel.Draft;
 using MyDraftAPI_v2.Managers;
+using Windows.Storage;
 using static MyDraftAPI_v2.FantasyDataModel.FantasyLeage;
 
 namespace MyDraftAPI_v2.Engines
@@ -484,52 +485,7 @@ namespace MyDraftAPI_v2.Engines
             RaiseWishlistTargetSelect(wishPlayer);
         }
         #endregion // Draft Selections //
-
-        #region // Download //
-        //public async Task DownloadPlayers()
-        //{
-        //    await Task.Run(() => PlayerManager.getPlayers());
-        //    await Task.Run(() => PlayerManager.getDepthChart());
-        //    await Task.Run(() => PlayerManager.getProjectionsWeekly());
-        //    await Task.Run(() => PlayerManager.getInjuryActive());
-        //    await Task.Run(() => PlayerManager.getInjuryDelete());
-        //    await Task.Run(() => PlayerManager.getAAV());
-        //    await Task.Run(() => PlayerManager.getADP());
-        //    await Task.Run(() => PlayerManager.getProjectionsSeason());
-        //}
-        //public async Task DownloadPlayerGame()
-        //{
-        //    Task task = GameDayManager.clearUserLineups();
-        //    await GameDayManager.getSchedule();
-        //    await GameDayManager.getPlayerGameDay();
-        //}
-        //public void DownloadNews()
-        //{
-        //    Task dataNews = PlayerManager.getNewsRecent();
-        //    TimeSpan ts = TimeSpan.FromSeconds(5);
-        //    if (!dataNews.Wait(ts))
-        //        RaiseDownloadEnd();
-        //}
-        //public async Task DownloadLineups()
-        //{
-        //    switch (AppSettings.SportsLeague.ToLower())
-        //    {
-        //        case "mlb":
-        //            await GameDayManager.getGameDayLineups();
-        //            break;
-        //        case "nba":
-        //            break;
-        //        case "nfl":
-        //            break;
-        //    }
-
-        //}
-        //public async Task DownloadTeams()
-        //{
-        //    await GameDayManager.getTeams();
-        //}
-        #endregion // Download //
-
+               
         #region // Initialization //
         public async Task InitRosterLineup(FantasyTeam fanteam)
         {
@@ -813,12 +769,6 @@ namespace MyDraftAPI_v2.Engines
                 {
                     _draftStatus = new DraftStatus(_league.identifier, _draftStatus.onTheClock, 0, false);
                     await DraftManager.saveDraftStatus(_draftStatus);
-
-                    //if (DidChangeOnTheClock != null)
-                    //{
-                    //    DidChangeOnTheClock(this, otcPick);
-                    //}
-                    //RaiseDidOTC();
                 }
                 else
                 {
@@ -939,29 +889,7 @@ namespace MyDraftAPI_v2.Engines
             }
         }
         #endregion //  Tag  //
-
-        #region //  Trades  //
-        //public void executeDraftTradeAction(DraftTradeAction action)
-        //{
-
-        //}
-        public void undoLastTrade()
-        {
-
-        }
-        #endregion //  Trades  //
-
-        #region //  Undo / Redo  //
-        //public async Task<DraftPick> undoLastDraftPick()
-        //{
-        //    return null;
-        //}
-        //public async Task<DraftPick> redoDraftPick()
-        //{
-        //    return null;
-        //}
-        #endregion //  Undo / Redo  //
-
+                
         #region // Player Note //
         public static async Task playerNoteSave(Player player, int leagueID, string note)
         {

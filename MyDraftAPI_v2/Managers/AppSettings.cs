@@ -3,6 +3,7 @@ using CodeTitans.Core.Generics.Objects;
 using MyDraftAPI_v2.DbData.DataModel;
 using MyDraftAPI_v2.FantasyDataModel;
 using MyDraftLib.Utilities;
+using Windows.Storage;
 using static MyDraftAPI_v2.FantasyDataModel.FantasyLeage;
 
 namespace MyDraftAPI_v2.Managers
@@ -72,18 +73,18 @@ namespace MyDraftAPI_v2.Managers
                 _isMockDraftActive = value;
             }
         }
-        private static MockDraftManager.MockDraftStatus _mockDraftStatus;
-        public static MockDraftManager.MockDraftStatus mockDraftStatus
-        {
-            get
-            {
-                return _mockDraftStatus;
-            }
-            set
-            {
-                _mockDraftStatus = value;
-            }
-        }
+        //private static MockDraftManager.MockDraftStatus _mockDraftStatus;
+        //public static MockDraftManager.MockDraftStatus mockDraftStatus
+        //{
+        //    get
+        //    {
+        //        return _mockDraftStatus;
+        //    }
+        //    set
+        //    {
+        //        _mockDraftStatus = value;
+        //    }
+        //}
         private ScoringEditCategory _scoreEdit;
         public ScoringEditCategory scoreEdit
         {

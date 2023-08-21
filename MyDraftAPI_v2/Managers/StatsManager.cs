@@ -126,7 +126,9 @@ namespace MyDraftAPI_v2.Managers
 
             Debug.WriteLine("StatsDBAdapter", String.Format("statsForPlayer ({0}) query: {1}", year, query));
 
-            List<Dictionary<string, float>> values = await DBAdapter.executeQuery<Dictionary<string, float>>(query);
+            await Task.Delay(2000);
+            //List<Dictionary<string, float>> values = await DBAdapter.executeQuery<Dictionary<string, float>>(query);
+            List<Dictionary<string, float>> values = new List<Dictionary<string, float>>();
 
             IList<float> result = new List<float>(statsDisplay.getColumns().Count());
             if (values.Count() > 0)
@@ -191,7 +193,10 @@ namespace MyDraftAPI_v2.Managers
 
             IDictionary<String, Object> stats = new Dictionary<String, Object>();
 
-            IList<StatVal> values = await DBAdapter.executeQuery<StatVal>(query.ToString());
+            await Task.Delay(2000);
+            //IList<StatVal> values = await DBAdapter.executeQuery<StatVal>(query.ToString());
+            IList<StatVal> values = new List<StatVal>();
+
             foreach (StatVal item in values)
             {
                 IDictionary<String, float> playerStats = stats.ContainsKey(item.playerID) ? (IDictionary<String, float>)stats[item.playerID] : null;

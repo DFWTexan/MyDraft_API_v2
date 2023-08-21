@@ -71,161 +71,22 @@ namespace MyDraftAPI_v2.Managers
 
         public static async Task<IList<PlayerItem>> getPlayerFullNames()
         {
-            //String query = String.Format("SELECT player_id, first_name, last_name, position, team_abbr FROM  " + AppSettings.SportsLeague.ToLower() + "_player ");
             String query = String.Format(@"SELECT distinct a1.player_id, a1.first_name ||' '|| a1.last_name ||' '|| a1.position ||'|'|| a1.team_abbr as fullname 
                                         FROM players a1 ");
-            IList<PlayerItem> items = await DBAdapter.executeQuery<PlayerItem>(query);
+            await Task.Delay(2000);
+            //IList<PlayerItem> items = await DBAdapter.executeQuery<PlayerItem>(query);
+            IList<PlayerItem> items = new List<PlayerItem>();
+
             return items;
         }
-
-        //public static async Task<IList<PlayerSortItem>> getPlayerSortItems(FilterSort sort)
-        //{
-        //    //IDictionary<String, Object> dict = await getPlayerIDs(sort, sort.positions, sort.healthStatus, sort.division, sort.limit);
-        //    IDictionary<String, Object> dict = await getPlayerIDs(sort, sort.positions, sort.healthStatus, sort.division, sort.limit);
-        //    IList<string> playerIDs = (IList<string>)dict["playerIDs"];
-        //    IList<float> sortValues = (IList<float>)dict["sortValues"];
-        //    IList<string> positions = (IList<string>)dict["positions"];
-        //    //IList<string> pickround = (IList<string>)dict["pickround"];
-
-        //    if (playerIDs.Count != sortValues.Count || sortValues.Count != positions.Count)
-        //        return null;
-
-        //    int itemCount = playerIDs.Count;
-
-        //    IList<PlayerSortItem> items = new List<PlayerSortItem>(itemCount);
-        //    for (int i = 0; i < itemCount; i++)
-        //    {
-        //        PlayerSortItem item = new PlayerSortItem();
-        //        item.playerID = playerIDs[i];
-        //        item.sortValue = sortValues[i];
-        //        item.position = positions[i];
-        //        //item.pickround = pickround[i];
-        //        item.sortType = sort.sortType;
-        //        items.Add(item);
-        //    }
-
-        //    return items;
-        //}
-
-        //public static async Task<IDictionary<String, Object>> getPlayerIDs(FilterSort sort, String[] positions,
-        //        PlayerManager.HealthStatus health, String division, int limit)
-        //{
-        //    IList<String> playerIDs = new List<String>(limit);
-        //    IList<float> sortValues = new List<float>(limit);
-        //    IList<String> playerPositions = new List<String>(limit);
-
-        //    IDictionary<String, Object> result = new Dictionary<String, Object>(2);
-        //    result.Add("playerIDs", playerIDs);
-        //    result.Add("sortValues", sortValues);
-        //    result.Add("positions", playerPositions);
-
-
-        //    if (sort == null)
-        //        return result;
-
-        //    StringBuilder query = new StringBuilder();
-
-        //    query.Append(String.Format(@"SELECT distinct
-        //                                    b1.player_id AS playerID
-        //                                    , b2.{0} AS sortValue
-        //                                FROM players b1 
-        //                                JOIN vbd b2 ON b1.player_id = b2.player_id ", sort.getSortBy()));
-
-        //if (positions != null && positions.Length > 0)
-        //{
-        //    String positionStr = TNUtility.arrayToString(positions, ",", true);
-        //    string sStandardPos = String.Format(@"JOIN dfs_position a4 ON a1.player_id = a4.player_id
-        //                                    AND a4.sport = '{0}' 
-        //                                    AND a4.day = '{3}'
-        //                                    AND a4.{1} IN ({2}) ", AppSettings.SportsLeague.ToLower(), AppSettings.SourceDataTXT.ToLower(), positionStr, AppSettings.appDate);
-
-        //    switch (AppSettings.SportsLeague.ToLower())
-        //    {
-        //        case "mlb":
-        //            query.Append(sStandardPos);
-        //            break;
-        //        case "nba":
-        //            switch (positionStr)
-        //            {
-        //                case "'G'":
-        //                    {
-        //                        query.Append(String.Format(@"JOIN dfs_position a4 ON a1.player_id = a4.player_id
-        //                                    AND a4.sport = '{0}' 
-        //                                    AND a4.{1} IN ('PG','SG') ", AppSettings.SportsLeague.ToLower(), AppSettings.SourceDataTXT.ToLower()));
-        //                        break;
-        //                    }
-        //                case "'F'":
-        //                    {
-        //                        query.Append(String.Format(@"JOIN dfs_position a4 ON a1.player_id = a4.player_id
-        //                                    AND a4.sport = '{0}' 
-        //                                    AND a4.{1} IN ('SF','PF') ", AppSettings.SportsLeague.ToLower(), AppSettings.SourceDataTXT.ToLower()));
-        //                        break;
-        //                    }
-        //                case "'UTIL'":
-        //                    {
-        //                        query.Append(String.Format(@"JOIN dfs_position a4 ON a1.player_id = a4.player_id
-        //                                    AND a4.sport = '{0}' ", AppSettings.SportsLeague.ToLower(), AppSettings.SourceDataTXT.ToLower()));
-        //                        break;
-        //                    }
-        //                default:
-        //                    query.Append(sStandardPos);
-        //                    break;
-        //            }
-        //            break;
-        //        case "nfl":
-        //            break;
-        //        default:
-        //            break;
-        //    }
-        //}
-
-        //query.Append("WHERE a3.player_id is null AND upo.player_id is null ");
-        //if (sort.isExcludeZero())
-        //    query.Append(string.Format(" AND a1.player_id > 0 AND a1.day = '{0}' ", AppSettings.appDate));
-
-        // -- GAME FILTER OPTIONS -- //
-
-        /* HEALTH STATUS OPTIONS */
-        //if (_HealthFilter.Count > 0)
-        //{
-        //    String HealthFilter = TNUtility.arrayToString(_HealthFilter, ",", true);
-        //    query.Append(String.Format(" AND a1.injury_status NOT IN ({0}) ", HealthFilter));
-
-        //}
-
-        //query.Append(string.Format(" GROUP BY a1.player_id"));
-
-        //if (sort.getSortBold() == "value")
-        //{
-        //    query.Append(String.Format(" ORDER BY sortValue {0}", sort.getDirection()));
-        //}
-        //else
-        //{
-        //    // Setup the ORDER BY clause (must be added after filter options)
-        //    query.Append(String.Format(" ORDER BY sortValue {0}", sort.getDirection()));
-        //}
-
-        //    if (limit > 0)
-        //        query.Append(String.Format(" LIMIT {0}", limit));
-
-        //    IList<PlayerSortVal> items = await DBAdapter.executeQuery<PlayerSortVal>(query.ToString());
-
-        //    foreach (PlayerSortVal val in items)
-        //    {
-        //        playerIDs.Add(val.playerID);
-        //        sortValues.Add(val.sortValue);
-        //        playerPositions.Add(val.position);
-        //    }
-
-        //    //Debug.WriteLine("getPlayerIDs - query:\n" + query.ToString() + "\n count(" + playerIDs.Count + ")");
-
-        //    return result;
-        //}
+                
         public static async Task<Player> getPlayerWithID(String playerID)
         {
             string query = string.Format(@"SELECT DISTINCT * FROM players WHERE player_id = '{0}' ", playerID);
+            await Task.Delay(2000);
+            //IList<Player> values = await DBAdapter.executeQuery<Player>(query);
+            IList<Player> values = new List<Player>();
 
-            IList<Player> values = await DBAdapter.executeQuery<Player>(query);
             return values.FirstOrDefault();
         }
 
@@ -249,7 +110,9 @@ namespace MyDraftAPI_v2.Managers
                     break;
             }
 
-            IList<int> values = await DBAdapter.executeQuery<int>(query.ToString());
+            await Task.Delay(2000);
+            //IList<int> values = await DBAdapter.executeQuery<int>(query.ToString());
+            IList<int> values = new List<int>();
 
             ISet<String> filteredPlayerIDs = new HashSet<String>();
 
@@ -269,7 +132,10 @@ namespace MyDraftAPI_v2.Managers
             // Filter out all positions that are not primary or IDP (i.e. PR, KR)
             IList<String> specialTeamsPositions = AppSettings.getSpecialTeamsPositions();
 
-            List<Dictionary<String, String>> values = await DBAdapter.executeQuery<Dictionary<String, String>>("SELECT player_id, position FROM depthchart");
+            await Task.Delay(2000);
+            //List<Dictionary<String, String>> values = await DBAdapter.executeQuery<Dictionary<String, String>>("SELECT player_id, position FROM depthchart");
+            List<Dictionary<String, String>> values = new List<Dictionary<String, String>>();
+
             foreach (Dictionary<String, String> item in values)
             {
                 String playerID = item["player_id"];
@@ -290,7 +156,10 @@ namespace MyDraftAPI_v2.Managers
                                "FROM depthchart WHERE {0} = '{1}' ORDER BY rank",
                                playerIDColumn, playerID);
 
-            IList<Position> values = await DBAdapter.executeQuery<Position>(query);
+            await Task.Delay(2000);
+            //IList<Position> values = await DBAdapter.executeQuery<Position>(query);
+            IList<Position> values = new List<Position>();
+
             ISet<Position> positions = new HashSet<Position>(values);
 
             return positions;
@@ -299,7 +168,10 @@ namespace MyDraftAPI_v2.Managers
         public static async Task<double> adpValue(String playerID, FantasyLeague league)
         {
             String source = league.isPPR ? "ppr" : "stand";
-            IList<Val> items = await DBAdapter.executeQuery<Val>(string.Format("SELECT value_standard as doubleValue FROM adp WHERE player_id = {0}", playerID));
+            await Task.Delay(2000);
+            //IList<Val> items = await DBAdapter.executeQuery<Val>(string.Format("SELECT value_standard as doubleValue FROM adp WHERE player_id = {0}", playerID));
+            IList<Val> items = new List<Val>();
+
             if (items.Count > 0)
             {
                 return items[0].doubleValue;
@@ -310,7 +182,10 @@ namespace MyDraftAPI_v2.Managers
 
         public static async Task<double> aavValue(String playerID)
         {
-            IList<Val> items = await DBAdapter.executeQuery<Val>("SELECT averageValue AS doubleValue FROM aav WHERE player_id = ?", playerID);
+            await Task.Delay(2000);
+            //IList<Val> items = await DBAdapter.executeQuery<Val>("SELECT averageValue AS doubleValue FROM aav WHERE player_id = ?", playerID);
+            IList<Val> items = new List<Val>();
+
             if (items.Count > 0)
             {
                 return items[0].doubleValue;
@@ -325,7 +200,9 @@ namespace MyDraftAPI_v2.Managers
                                         FROM injury a1 
                                         join players a2 ON a1.player_id = a2.player_id
                                         WHERE a1.player_id = {0} LIMIT 1", playerID);
-            IList<Injury> items = await DBAdapter.executeQuery<Injury>(query);
+            await Task.Delay(2000);
+            //IList<Injury> items = await DBAdapter.executeQuery<Injury>(query);
+            IList<Injury> items = new List<Injury>();
 
             return items.FirstOrDefault();
         }
@@ -335,7 +212,9 @@ namespace MyDraftAPI_v2.Managers
                                         FROM user_note a1 
                                         join players a2 ON a1.player_id = a2.player_id
                                         WHERE a1.player_id = {0} LIMIT 1", playerID);
-            IList<PlayerNote> items = await DBAdapter.executeQuery<PlayerNote>(query);
+            await Task.Delay(2000);
+            //IList<PlayerNote> items = await DBAdapter.executeQuery<PlayerNote>(query);
+            IList<PlayerNote> items = new List<PlayerNote>();
 
             return items.FirstOrDefault();
         }
@@ -345,7 +224,9 @@ namespace MyDraftAPI_v2.Managers
             query.Append(String.Format(@"SELECT player_id as value 
                                         FROM user_note 
                                         WHERE player_id = '{0}' ", playerID));
-            IList<DBValue> items = await DBAdapter.executeQuery<DBValue>(query.ToString());
+            await Task.Delay(2000);
+            //IList<DBValue> items = await DBAdapter.executeQuery<DBValue>(query.ToString());
+            IList<DBValue> items = new List<DBValue>();
 
             return items.Count > 0;
         }
@@ -368,7 +249,9 @@ namespace MyDraftAPI_v2.Managers
                                             and a3.team_id = {1}
                                             and a3.player_id is not null
                                         where a1.position = '{2}' ", league.identifier, league.myTeam.identifier, position));
-            IList<iBoolDBValue> items = await DBAdapter.executeQuery<iBoolDBValue>(query.ToString());
+            await Task.Delay(2000);
+            //IList<iBoolDBValue> items = await DBAdapter.executeQuery<iBoolDBValue>(query.ToString());
+            IList<iBoolDBValue> items = new List<iBoolDBValue>();
 
             if (items[0].value == 1)
             {
@@ -409,7 +292,9 @@ namespace MyDraftAPI_v2.Managers
                                         inner join {4} on a1.player_id = {4}.player_id
                                         WHERE a1.player_id = {0} 
                                             and {4}.league_id = {6} LIMIT 1", playerID, TABLE_AAV, TABLE_ADP, TABLE_VBD, TABLE_POINTS, CheckPPR, MyDraftEngine.Instance.league.identifier);
-            IList<PlayerValueItem> items = await DBAdapter.executeQuery<PlayerValueItem>(query);
+            await Task.Delay(2000);
+            //IList<PlayerValueItem> items = await DBAdapter.executeQuery<PlayerValueItem>(query);
+            IList<PlayerValueItem> items = new List<PlayerValueItem>();
 
             return items.FirstOrDefault();
         }
@@ -421,7 +306,9 @@ namespace MyDraftAPI_v2.Managers
             query.Append(String.Format(@"SELECT player_id as value 
                                         FROM player_news 
                                         WHERE player_id = '{0}' ", playerID));
-            IList<DBValue> items = await DBAdapter.executeQuery<DBValue>(query.ToString());
+            await Task.Delay(2000);
+            //IList<DBValue> items = await DBAdapter.executeQuery<DBValue>(query.ToString());
+            IList<DBValue> items = new List<DBValue>();
 
             return items.Count > 0;
         }
@@ -444,7 +331,9 @@ namespace MyDraftAPI_v2.Managers
                                             AND date(a1.pub_date) = '{3}'", AppSettings.SportsLeague.ToLower(), AppSettings.SourceDataTXT.ToLower(), AppSettings.SportsLeague.ToUpper(), AppSettings.appDate));
             query.Append("ORDER BY a1.news_id DESC");
 
-            IList<NewsItem> news = await DBAdapter.executeQuery<NewsItem>(query.ToString());
+            await Task.Delay(2000);
+            //IList<NewsItem> news = await DBAdapter.executeQuery<NewsItem>(query.ToString());
+            IList<NewsItem> news = new List<NewsItem>();
 
             foreach (NewsItem item in news)
             {
@@ -464,7 +353,9 @@ namespace MyDraftAPI_v2.Managers
                                         order by a1.news_id desc", playerID));
             //query.Append("ORDER BY a1.uid ASC");
 
-            IList<NewsItem> news = await DBAdapter.executeQuery<NewsItem>(query.ToString());
+            await Task.Delay(2000);
+            //IList<NewsItem> news = await DBAdapter.executeQuery<NewsItem>(query.ToString());
+            IList<NewsItem> news = new List<NewsItem>();
 
             foreach (NewsItem item in news)
             {
@@ -498,7 +389,9 @@ namespace MyDraftAPI_v2.Managers
 
             //query.Append("ORDER BY a1.uid ASC");
 
-            IList<NewsItem> news = await DBAdapter.executeQuery<NewsItem>(query);
+            await Task.Delay(2000);
+            //IList<NewsItem> news = await DBAdapter.executeQuery<NewsItem>(query);
+            IList<NewsItem> news = new List<NewsItem>();
 
             foreach (NewsItem item in news)
             {
@@ -525,7 +418,9 @@ namespace MyDraftAPI_v2.Managers
                                         order by rank asc", teamAbbr, pos.Replace("-", "', '")));
             //query.Append("ORDER BY a1.uid ASC");
 
-            IList<DepthChartItem> items = await DBAdapter.executeQuery<DepthChartItem>(query.ToString());
+            await Task.Delay(2000);
+            //IList<DepthChartItem> items = await DBAdapter.executeQuery<DepthChartItem>(query.ToString());
+            IList<DepthChartItem> items = new List<DepthChartItem>();
 
             foreach (DepthChartItem item in items)
             {
@@ -587,7 +482,9 @@ namespace MyDraftAPI_v2.Managers
                                         group by season, player_id
                                         order by year desc", playerID));
 
-            IList<DepthChartStats> items = await DBAdapter.executeQuery<DepthChartStats>(query.ToString());
+            await Task.Delay(2000);
+            //IList<DepthChartStats> items = await DBAdapter.executeQuery<DepthChartStats>(query.ToString());
+            IList<DepthChartStats> items = new List<DepthChartStats>();
 
             foreach (DepthChartStats item in items)
             {
@@ -627,7 +524,9 @@ namespace MyDraftAPI_v2.Managers
                                             group by a2.player_id, a2.week
                                             order by a1.week asc", playerID, teamAbbr, AppSettings.getProjectionStatsYear());
 
-            List<PlayerSchedule> items = await DBAdapter.executeQuery<PlayerSchedule>(query);
+            await Task.Delay(2000);
+            //List<PlayerSchedule> items = await DBAdapter.executeQuery<PlayerSchedule>(query);
+            List<PlayerSchedule> items = new List<PlayerSchedule>();
 
             for (int i = 1; i < 18; i++)
             {
@@ -643,7 +542,8 @@ namespace MyDraftAPI_v2.Managers
         public static async Task savePlayerNote(Player player, int leagueID, string note)
         {
             string query = string.Format(@"insert or replace into {0} (player_id, league_id, note) values ({1}, {2}, '{3}')", TABLE_USER_NOTE, player.identifier, leagueID, note.Replace("'", "''"));
-            await DBAdapter.executeUpdate(query);
+            await Task.Delay(2000);
+            //await DBAdapter.executeUpdate(query);
         }
         #endregion // Notes //
 
@@ -656,7 +556,8 @@ namespace MyDraftAPI_v2.Managers
             {
                 query.Append(String.Format(@"INSERT OR REPLACE INTO server_api_status (api_key, update_id) 
                                         VALUES ('{0}', {1})", api_key, maxuid));
-                await DBAdapter.executeUpdate(query.ToString());
+                await Task.Delay(2000);
+                //await DBAdapter.executeUpdate(query.ToString());
             }
         }
         public static async Task<int> getMaxapiID(string api_key)
@@ -666,7 +567,9 @@ namespace MyDraftAPI_v2.Managers
             query.Append(String.Format(@"SELECT ifnull(max(update_id),0) as value
                                         FROM server_api_status
                                         WHERE api_key = '{0}'", api_key));
-            IList<DBValue> value = await DBAdapter.executeQuery<DBValue>(query.ToString());
+            await Task.Delay(2000);
+            //IList<DBValue> value = await DBAdapter.executeQuery<DBValue>(query.ToString());
+            IList<DBValue> value = new List<DBValue>();
 
             var item = value.FirstOrDefault();
             if (item != null)

@@ -117,15 +117,19 @@ namespace MyDraftAPI_v2.FantasyDataModel
 
         public async Task<ProTeam> getTeam(string teamID)
         {
-            if (_team == null)
-                _team = await DBAdapter.getProTeamWithID(teamID);
+            await Task.Delay(2000);
+
+            //if (_team == null)
+            //    _team = await DBAdapter.getProTeamWithID(teamID);
 
             return _team;
         }
         public async Task<ProTeam> getPlayerTeam()
         {
-            if (_team == null)
-                _team = await DBAdapter.getProTeamWithID(teamAbbr);
+            await Task.Delay(2000);
+
+            //if (_team == null)
+            //    _team = await DBAdapter.getProTeamWithID(teamAbbr);
 
             return _team;
         }

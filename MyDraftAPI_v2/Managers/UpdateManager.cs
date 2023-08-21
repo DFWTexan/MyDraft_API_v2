@@ -14,7 +14,9 @@ namespace MyDraftAPI_v2.Managers
         {
             String updateID = "0";
 
-            List<Val> values = await DBAdapter.dbAPP.QueryAsync<Val>("SELECT update_id as value FROM updates WHERE type = ?", type);
+            await Task.Delay(2000);
+            //List<Val> values = await DBAdapter.dbAPP.QueryAsync<Val>("SELECT update_id as value FROM updates WHERE type = ?", type);
+            List<Val> values = new List<Val>();
 
             if (values.Count > 0)
             {
@@ -26,7 +28,9 @@ namespace MyDraftAPI_v2.Managers
 
         public static async Task<String> getUpdateIDLimitForDataType(String type)
         {
-            List<Val> values = await DBAdapter.executeQuery<Val>("SELECT update_id as value FROM server_api_status WHERE api_key = ?", type);
+            await Task.Delay(2000);
+            //List<Val> values = await DBAdapter.executeQuery<Val>("SELECT update_id as value FROM server_api_status WHERE api_key = ?", type);
+            List<Val> values = new List<Val>();
 
             String updateID = "0";
 
@@ -47,12 +51,15 @@ namespace MyDraftAPI_v2.Managers
 
             double timestamp = TNUtility.DateTimeToUnixTimestamp(DateTime.Now);
 
-            await DBAdapter.executeUpdate("INSERT OR REPLACE INTO updates (update_id, type, timestamp) VALUES (?, ?, ?)", updateID, type, timestamp);
+            await Task.Delay(2000);
+            //await DBAdapter.executeUpdate("INSERT OR REPLACE INTO updates (update_id, type, timestamp) VALUES (?, ?, ?)", updateID, type, timestamp);
         }
 
         public static async Task<double> getLatestTimeStampForType(String type)
         {
-            List<Val> values = await DBAdapter.executeQuery<Val>("SELECT MAX(timestamp) as value FROM updates WHERE type = ?", type);
+            await Task.Delay(2000);
+            //List<Val> values = await DBAdapter.executeQuery<Val>("SELECT MAX(timestamp) as value FROM updates WHERE type = ?", type);
+            List<Val> values = new List<Val>();
 
             double timestamp = 0;
             if (values.Count() > 0)
@@ -66,7 +73,9 @@ namespace MyDraftAPI_v2.Managers
         public static async Task<double> getLatestTimeStampForType(String type, int segment)
         {
             String query = String.Format("SELECT MAX(timestamp) as value FROM updates WHERE type LIKE '%s%%_%d'", type, segment);
-            List<Val> values = await DBAdapter.executeQuery<Val>(query);
+            await Task.Delay(2000);
+            //List<Val> values = await DBAdapter.executeQuery<Val>(query);
+            List<Val> values = new List<Val>();
 
             double timestamp = 0;
             if (values.Count() > 0)
@@ -80,7 +89,9 @@ namespace MyDraftAPI_v2.Managers
         public static async Task<double> getLatestTimeStampForType(String type, int year, int segment)
         {
             String query = String.Format("SELECT MAX(timestamp) as value FROM updates WHERE type LIKE '%s%%%d_%d'", type, year, segment);
-            List<Val> values = await DBAdapter.executeQuery<Val>(query);
+            await Task.Delay(2000);
+            //List<Val> values = await DBAdapter.executeQuery<Val>(query);
+            List<Val> values = new List<Val>();
 
             double timestamp = 0;
             if (values.Count() > 0)
@@ -98,7 +109,9 @@ namespace MyDraftAPI_v2.Managers
 
         public static async Task<double> getTimeStampForPointsWithLeagueID(int leagueID, String type, int year, int segment, String tag)
         {
-            List<Val> values = await DBAdapter.executeQuery<Val>("SELECT timestamp AS value FROM points_updates WHERE league_id = ? AND year = ? AND segment = ? AND tag = ?", leagueID, year, segment, tag);
+            await Task.Delay(2000);
+            //List<Val> values = await DBAdapter.executeQuery<Val>("SELECT timestamp AS value FROM points_updates WHERE league_id = ? AND year = ? AND segment = ? AND tag = ?", leagueID, year, segment, tag);
+            List<Val> values = new List<Val>();
 
             double timestamp = 0;
             if (values.Count() > 0)
@@ -116,12 +129,14 @@ namespace MyDraftAPI_v2.Managers
 
         public static async Task resetTimeStampForPointsWithLeagueID(int leagueID, String tag)
         {
-            await DBAdapter.executeUpdate("DELETE FROM points_updates WHERE league_id = ? AND tag = ?", leagueID, tag);
+            await Task.Delay(2000);
+            //await DBAdapter.executeUpdate("DELETE FROM points_updates WHERE league_id = ? AND tag = ?", leagueID, tag);
         }
 
         public static async Task resetTimeStampForPointsForAllLeagues()
         {
-            await DBAdapter.executeUpdate("DELETE FROM points_updates");
+            await Task.Delay(2000);
+            //await DBAdapter.executeUpdate("DELETE FROM points_updates");
         }
     }
 }

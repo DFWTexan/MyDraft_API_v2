@@ -1,4 +1,5 @@
 ﻿using DraftService;
+using Microsoft.Data.SqlClient;
 using MyDraftAPI_v2.DbData.DataModel;
 using MyDraftAPI_v2.Engines;
 using MyDraftAPI_v2.FantasyDataModel;
@@ -204,32 +205,7 @@ namespace MyDraftAPI_v2.Managers
                     LEFT JOIN depthchart a1 ON players.player_id = a1.player_id", sort.getTable(), valQuery, wishlistPickInRoundSubQuery));
 
             query.Append(getJoinQueryForDraftStatus(status, league));
-
-            //if (!sort.getTable().Equals("players"))
-            //{
-            //    String source = "";
-            //    if (sort.getSource() != null && sort.getSource().Length > 0)
-            //        source = String.Format(" AND {0}.source = '{1}' ", sort.getTable(), sort.getSource());
-
-            //    if (sort.isUseLeagueAsQualifier() && sort.getYear() > 0 && sort.getSegment() > 0)
-            //    {
-            //        query.Append(String.Format(" LEFT JOIN {0} ON (players.player_id = {1}.player_id AND {2}.league_id = {3} AND {4}.year = {5} AND {6}.segment = {7} {8}) ",
-            //                        sort.getTable(), sort.getTable(), sort.getTable(), league.identifier,
-            //                        sort.getTable(), sort.getYear(), sort.getTable(), sort.getSegment(), source));
-            //    }
-            //    else if (sort.isUseLeagueAsQualifier())
-            //    {
-            //        query.Append(String.Format(
-            //                " LEFT JOIN {0} ON (players.player_id = {1}.player_id AND {2}.league_id = {3} {4}) ",
-            //                sort.getTable(), sort.getTable(), sort.getTable(), league.identifier, source));
-            //    }
-            //    else
-            //    {
-            //        query.Append(String.Format(" LEFT JOIN {0} ON (players.player_id = {1}.player_id {2}) ", sort.getTable(),
-            //                sort.getTable(), source));
-            //    }
-            //}
-
+            
             if (division != null)
                 query.Append(" LEFT JOIN pro_team ON pro_team.abbr = players.team_abbr ");
 
@@ -311,7 +287,9 @@ namespace MyDraftAPI_v2.Managers
             if (limit > 0)
                 query.Append(String.Format(" LIMIT {0}", limit));
 
-            IList<PlayerSortVal> items = await DBAdapter.executeQuery<PlayerSortVal>(query.ToString());
+            await Task.Delay(2000);
+            //IList<PlayerSortVal> items = await DBAdapter.executeQuery<PlayerSortVal>(query.ToString());
+            IList<PlayerSortVal> items = new List<PlayerSortVal>();
 
             foreach (PlayerSortVal val in items)
             {
@@ -367,7 +345,9 @@ namespace MyDraftAPI_v2.Managers
             query.Append(string.Format(@"SELECT MAX(overall) AS value 
                                         FROM {0}
                                         WHERE league_id = {1} ", TABLE_USER_DRAFT_RESULTS, leagueID));
-            IList<DBValue> items = await DBAdapter.executeQuery<DBValue>(query.ToString());
+            await Task.Delay(2000);
+            //IList<DBValue> items = await DBAdapter.executeQuery<DBValue>(query.ToString());
+            IList<DBValue> items = new List<DBValue>();
 
             if (items.Count > 0)
                 return items[0].value;
@@ -382,7 +362,9 @@ namespace MyDraftAPI_v2.Managers
                                         FROM {0} 
                                         WHERE league_id = {1}", TABLE_USER_DRAFT_STATUS, leagueID));
 
-            IList<DraftStatus> items = await DBAdapter.executeQuery<DraftStatus>(query.ToString());
+            await Task.Delay(2000);
+            //IList<DraftStatus> items = await DBAdapter.executeQuery<DraftStatus>(query.ToString());
+            IList<DraftStatus> items = new List<DraftStatus>();
 
             if (items.Count > 0)
             {
@@ -398,7 +380,10 @@ namespace MyDraftAPI_v2.Managers
             Debug.WriteLine("LOAD_DRAFT_PICKS_FOR_LEAGUE [{0}]", league.identifier);
             StringBuilder query = new StringBuilder();
             query.Append(string.Format(@"SELECT * FROM {0} WHERE league_id = {1}", TABLE_USER_DRAFT_RESULTS, league.identifier));
-            IList<DraftPick> items = await DBAdapter.executeQuery<DraftPick>(query.ToString());
+
+            await Task.Delay(2000);
+            //IList<DraftPick> items = await DBAdapter.executeQuery<DraftPick>(query.ToString());
+            IList<DraftPick> items = new List<DraftPick>();
 
             foreach (DraftPick draftPick in items)
             {
@@ -418,7 +403,9 @@ namespace MyDraftAPI_v2.Managers
                 query = string.Format(@"SELECT player_id FROM {3} WHERE player_id = {0} AND league_id = {1}", playerID, league.identifier, TABLE_USER_DRAFT_ASSIGN);
             }
 
-            IList<DBValue> items = await DBAdapter.executeQuery<DBValue>(query);
+            await Task.Delay(2000);
+            //IList<DBValue> items = await DBAdapter.executeQuery<DBValue>(query);
+            IList<DBValue> items = new List<DBValue>();
 
             return items.Count > 0;
         }
@@ -429,7 +416,9 @@ namespace MyDraftAPI_v2.Managers
                                             where a1.player_id = {1}
                                                 and a1.league_id = {2}
                                                 and a1.is_keeper = 1", TABLE_USER_DRAFT_RESULTS, playerID, league.identifier);
-            IList<DBValue> items = await DBAdapter.executeQuery<DBValue>(query);
+            await Task.Delay(2000);
+            //IList<DBValue> items = await DBAdapter.executeQuery<DBValue>(query);
+            IList<DBValue> items = new List<DBValue>();
 
             return items.Count > 0;
         }
@@ -445,14 +434,18 @@ namespace MyDraftAPI_v2.Managers
                                             where a1.player_id = {1}
                                                 and league_id = {2}
                                                 and team_id = {3}", TABLE_USER_DRAFT_RESULTS, playerID, league.identifier, team.identifier);
-            IList<DBValue> items = await DBAdapter.executeQuery<DBValue>(query);
+            await Task.Delay(2000);
+            //IList<DBValue> items = await DBAdapter.executeQuery<DBValue>(query);
+            IList<DBValue> items = new List<DBValue>();
 
             return items.Count > 0;
         }
         public static async Task<bool> isTagged(String playerID, FantasyLeague league)
         {
-            IList<DBValue> items = await DBAdapter.executeQuery<DBValue>("SELECT * FROM player_tags WHERE player_id = ? AND league_id = ?",
-                        playerID, league.identifier);
+            await Task.Delay(2000);
+            //IList<DBValue> items = await DBAdapter.executeQuery<DBValue>("SELECT * FROM player_tags WHERE player_id = ? AND league_id = ?",
+            //            playerID, league.identifier);
+            IList<DBValue> items = new List<DBValue>();
 
             return items.Count > 0;
         }
@@ -464,7 +457,10 @@ namespace MyDraftAPI_v2.Managers
                 return league.teamWithID(draftPick.teamID);
             }
 
-            IList<DBValue> items = await DBAdapter.executeQuery<DBValue>("SELECT team_id AS value FROM " + TABLE_USER_DRAFT_ASSIGN + " WHERE player_id = ? AND league_id = ?", playerID, league.identifier);
+            await Task.Delay(2000);
+            //IList<DBValue> items = await DBAdapter.executeQuery<DBValue>("SELECT team_id AS value FROM " + TABLE_USER_DRAFT_ASSIGN + " WHERE player_id = ? AND league_id = ?", playerID, league.identifier);
+            IList<DBValue> items = new List<DBValue>();
+
             if (items.Count > 0)
             {
                 int teamID = items[0].value;
@@ -475,7 +471,10 @@ namespace MyDraftAPI_v2.Managers
         }
         public static async Task<DraftPick> draftPickForPlayer(String playerID, FantasyLeague league)
         {
-            IList<DraftPick> items = await DBAdapter.executeQuery<DraftPick>("SELECT * FROM " + TABLE_USER_DRAFT_RESULTS + " WHERE player_id = ? AND league_id = ?", playerID, league.identifier);
+            await Task.Delay(2000);
+            //IList<DraftPick> items = await DBAdapter.executeQuery<DraftPick>("SELECT * FROM " + TABLE_USER_DRAFT_RESULTS + " WHERE player_id = ? AND league_id = ?", playerID, league.identifier);
+            IList<DraftPick> items = new List<DraftPick>();
+
             if (items.Count > 0)
             {
                 DraftPick draftPick = items[0];
@@ -491,53 +490,57 @@ namespace MyDraftAPI_v2.Managers
         public static async Task tagPlayer(String playerID, int listID, FantasyLeague league, int pickround)
         {
             //await DBAdapter.executeUpdate("INSERT OR REPLACE INTO " + TABLE_USER_TAGS + " (player_id, league_id, list_id, rank) VALUES (?, ?, ?, (SELECT MAX(rank) FROM " + TABLE_USER_TAGS + " WHERE league_id = ?))",
-            await DBAdapter.executeUpdate("INSERT OR REPLACE INTO " + TABLE_USER_TAGS + " (player_id, league_id, list_id, rank, pick_in_round) VALUES (?, ?, ?, ?, ?)",
-                        playerID, league.identifier, listID, null, pickround);
+            await Task.Delay(2000);
+            //await DBAdapter.executeUpdate("INSERT OR REPLACE INTO " + TABLE_USER_TAGS + " (player_id, league_id, list_id, rank, pick_in_round) VALUES (?, ?, ?, ?, ?)",
+            //            playerID, league.identifier, listID, null, pickround);
         }
         public static async Task unTagPlayer(String playerID, FantasyLeague league)
         {
-            await DBAdapter.executeUpdate("DELETE FROM player_tags WHERE player_id = ? AND league_id = ?", playerID, league.identifier);
+            await Task.Delay(2000);
+            //await DBAdapter.executeUpdate("DELETE FROM player_tags WHERE player_id = ? AND league_id = ?", playerID, league.identifier);
         }
         public static async Task<Boolean> saveDraftPick(DraftPick draftPick)
         {
             double timestamp = TNUtility.DateTimeToUnixTimestamp(DateTime.Now);
-            return await DBAdapter.executeUpdate("INSERT OR REPLACE INTO " + TABLE_USER_DRAFT_RESULTS +
-                    " (player_id, league_id, team_id, overall, round, pick_in_round, auction_value, is_keeper, timestamp) " +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    draftPick.playerID, draftPick.leagueID, draftPick.teamID, draftPick.overall, draftPick.round, draftPick.pickInRound, draftPick.auctionValue, draftPick.isKeeper ? 1 : 0, timestamp);
+            await Task.Delay(2000);
+            return true;
+            //return await DBAdapter.executeUpdate("INSERT OR REPLACE INTO " + TABLE_USER_DRAFT_RESULTS +
+            //        " (player_id, league_id, team_id, overall, round, pick_in_round, auction_value, is_keeper, timestamp) " +
+            //        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            //        draftPick.playerID, draftPick.leagueID, draftPick.teamID, draftPick.overall, draftPick.round, draftPick.pickInRound, draftPick.auctionValue, draftPick.isKeeper ? 1 : 0, timestamp);
         }
-        private static void saveDraftPick(DraftPick draftPick, SQLiteConnection connection)
+        private static void saveDraftPick(DraftPick draftPick, SqlConnection str)
         {
             double timestamp = TNUtility.DateTimeToUnixTimestamp(DateTime.Now);
-            connection.Execute("INSERT OR REPLACE INTO " + TABLE_USER_DRAFT_RESULTS +
-                    " (player_id, league_id, team_id, overall, round, pick_in_round, auction_value, is_keeper, timestamp) " +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    draftPick.playerID, draftPick.leagueID, draftPick.teamID, draftPick.overall, draftPick.round, draftPick.pickInRound, draftPick.auctionValue, draftPick.isKeeper ? 1 : 0, timestamp);
+            //connection.Execute("INSERT OR REPLACE INTO " + TABLE_USER_DRAFT_RESULTS +
+            //        " (player_id, league_id, team_id, overall, round, pick_in_round, auction_value, is_keeper, timestamp) " +
+            //        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            //        draftPick.playerID, draftPick.leagueID, draftPick.teamID, draftPick.overall, draftPick.round, draftPick.pickInRound, draftPick.auctionValue, draftPick.isKeeper ? 1 : 0, timestamp);
         }
         public static async Task saveDraftPicks(IList<DraftPick> draftPicks)
         {
             if (draftPicks == null)
                 return;
 
-            await DBAdapter.dbAPP.RunInTransactionAsync((SQLiteConnection connection) =>
-            {
-                foreach (DraftPick draftPick in draftPicks)
-                {
-                    saveDraftPick(draftPick, connection);
-                }
+            await Task.Delay(2000);
+            //await DBAdapter.dbAPP.RunInTransactionAsync((SQLiteConnection connection) =>
+            //{
+            //    foreach (DraftPick draftPick in draftPicks)
+            //    {
+            //        saveDraftPick(draftPick, connection);
+            //    }
 
-                Debug.WriteLine("SAVE_DRAFT_PICKS_DONE");
-            });
+            //    Debug.WriteLine("SAVE_DRAFT_PICKS_DONE");
+            //});
         }
         public static async Task saveDraftStatus(DraftStatus draftStatus)
         {
-            await DBAdapter.executeUpdate("INSERT OR REPLACE INTO " + TABLE_USER_DRAFT_STATUS + " (league_id, current_pick, seconds_remaining, is_complete) VALUES (?, ?, ?, ?)",
-                draftStatus.leagueID, draftStatus.onTheClock, draftStatus.secondsRemaining, draftStatus.isComplete);
+            await Task.Delay(2000);
+            //await DBAdapter.executeUpdate("INSERT OR REPLACE INTO " + TABLE_USER_DRAFT_STATUS + " (league_id, current_pick, seconds_remaining, is_complete) VALUES (?, ?, ?, ?)",
+            //    draftStatus.leagueID, draftStatus.onTheClock, draftStatus.secondsRemaining, draftStatus.isComplete);
         }
         public static async Task<IList<PickSelectionItem>> getAvailableWishlistPicks(int fanTeamID, int leagueID)
         {
-            //List<PickSelectionItem> result = new List<PickSelectionItem>();
-            //Debug.WriteLine("LOAD_DRAFT_PICKS_FOR_LEAGUE [{0}]", fanleague.identifier);
             string query = string.Format(@"SELECT 
                                                 round
                                                 , overall               
@@ -545,37 +548,39 @@ namespace MyDraftAPI_v2.Managers
                                             WHERE league_id = {0} 
                                                 and team_id = {1}
                                                 and player_id is null", MyDraftEngine.Instance.league.identifier, MyDraftEngine.Instance.league.myTeam.identifier);
-            IList<PickSelectionItem> result = await DBAdapter.executeQuery<PickSelectionItem>(query);
+            await Task.Delay(2000);
+            //IList<PickSelectionItem> result = await DBAdapter.executeQuery<PickSelectionItem>(query);
+            IList<PickSelectionItem> result = new List<PickSelectionItem>();
 
-            //foreach (PickSelectionItem pickSelection in items)
-            //{
-
-            //}
             return result;
         }
-        public static async Task saveWishlist(int leagueID, string playerID, int round, int overall)
-        {
-            await DBAdapter.executeUpdate("INSERT OR REPLACE INTO user_wishlist (player_id, league_id, round, overall) VALUES (?, ?, ?, ?)",
-                playerID, leagueID, round, overall);
-        }
+        //public static async Task saveWishlist(int leagueID, string playerID, int round, int overall)
+        //{
+        //    await DBAdapter.executeUpdate("INSERT OR REPLACE INTO user_wishlist (player_id, league_id, round, overall) VALUES (?, ?, ?, ?)",
+        //        playerID, leagueID, round, overall);
+        //}
         public static async Task<bool> getWishlisted(String playerID, FantasyLeague league)
         {
-            IList<DBValue> items = await DBAdapter.executeQuery<DBValue>("SELECT * FROM user_wishlist WHERE player_id = ? AND league_id = ?",
-                        playerID, league.identifier);
+            await Task.Delay(2000);
+            //IList<DBValue> items = await DBAdapter.executeQuery<DBValue>("SELECT * FROM user_wishlist WHERE player_id = ? AND league_id = ?",
+            //            playerID, league.identifier);
+            IList<DBValue> items = new List<DBValue>();
 
             return items.Count > 0;
         }
         public static async Task<PickSelectionItem> getWishlistInfo(string playerID, int leagueID)
         {
             PickSelectionItem result = new PickSelectionItem();
-            //Debug.WriteLine("LOAD_DRAFT_PICKS_FOR_LEAGUE [{0}]", fanleague.identifier);
             string query = string.Format(@"SELECT 
                                                 round
                                                 , overall               
                                             FROM user_wishlist 
                                             WHERE league_id = {0} 
                                                 and player_id = {1}", MyDraftEngine.Instance.league.identifier, playerID);
-            IList<PickSelectionItem> item = await DBAdapter.executeQuery<PickSelectionItem>(query);
+            await Task.Delay(2000);
+            //IList<PickSelectionItem> item = await DBAdapter.executeQuery<PickSelectionItem>(query);
+            IList<PickSelectionItem> item = new List<PickSelectionItem>();
+
             result = item.FirstOrDefault();
 
             return result;
@@ -588,7 +593,9 @@ namespace MyDraftAPI_v2.Managers
                                             from user_wishlist
                                             where round = {0}
                                                 and league_id = {1}", round, MyDraftEngine.Instance.league.identifier);
-            IList<DBValue> item = await DBAdapter.executeQuery<DBValue>(query);
+            await Task.Delay(2000);
+            //IList<DBValue> item = await DBAdapter.executeQuery<DBValue>(query);
+            IList<DBValue> item = new List<DBValue>();
 
             return item.Count() > 0;
         }
@@ -602,7 +609,9 @@ namespace MyDraftAPI_v2.Managers
                                             where a1.round = {0}
                                                 and a1.league_id = {1}
                                                 and a2.player_id is null", round, MyDraftEngine.Instance.league.identifier);
-            List<WishPlayer> result = await DBAdapter.executeQuery<WishPlayer>(query);
+            await Task.Delay(2000);
+            //List<WishPlayer> result = await DBAdapter.executeQuery<WishPlayer>(query);
+            List<WishPlayer> result = new List<WishPlayer>();
 
             return result;
         }
@@ -636,7 +645,9 @@ namespace MyDraftAPI_v2.Managers
                                             AND a2.position in ('{1}')", league.identifier, position.Replace("-", "','"), TABLE_USER_DRAFT_ASSIGN, pos);
             }
 
-            IList<DraftPositionTotal> items = await DBAdapter.executeQuery<DraftPositionTotal>(query);
+            await Task.Delay(2000);
+            //IList<DraftPositionTotal> items = await DBAdapter.executeQuery<DraftPositionTotal>(query);
+            IList<DraftPositionTotal> items = new List<DraftPositionTotal>();
 
             DraftPositionTotal item = items.FirstOrDefault();
 
@@ -673,7 +684,9 @@ namespace MyDraftAPI_v2.Managers
                                             AND a1.team_id = {3}", league.identifier, position.Replace("-", "','"), TABLE_USER_DRAFT_ASSIGN, fanTeam.identifier, pos);
             }
 
-            IList<DraftPositionTotal> items = await DBAdapter.executeQuery<DraftPositionTotal>(query);
+            await Task.Delay(2000);
+            //IList<DraftPositionTotal> items = await DBAdapter.executeQuery<DraftPositionTotal>(query);
+            IList<DraftPositionTotal> items = new List<DraftPositionTotal>();
 
             return items.FirstOrDefault();
         }
@@ -686,7 +699,9 @@ namespace MyDraftAPI_v2.Managers
                                         where maximum > 0
                                             and league_id = {0}
                                         order by sort_value asc");
-            List<DBValue> items = await DBAdapter.executeQuery<DBValue>(query);
+            await Task.Delay(2000);
+            //List<DBValue> items = await DBAdapter.executeQuery<DBValue>(query);
+            List<DBValue> items = new List<DBValue>();
 
             return items.Count() > 0;
         }
@@ -695,13 +710,15 @@ namespace MyDraftAPI_v2.Managers
         #region Delete Data
         public static async Task deleteDraftPick(DraftPick draftPick)
         {
-            await DBAdapter.executeUpdate("DELETE FROM " + TABLE_USER_DRAFT_RESULTS + " WHERE league_id = ? AND overall = ?",
-                    draftPick.leagueID, draftPick.overall);
+            await Task.Delay(2000);
+            //await DBAdapter.executeUpdate("DELETE FROM " + TABLE_USER_DRAFT_RESULTS + " WHERE league_id = ? AND overall = ?",
+            //        draftPick.leagueID, draftPick.overall);
         }
         public static async Task deleteDraftPicksForLeague(FantasyLeague league)
         {
-            await DBAdapter.executeUpdate("DELETE FROM " + TABLE_USER_DRAFT_RESULTS + " WHERE league_id = ?",
-                    league.identifier);
+            await Task.Delay(2000);
+            //await DBAdapter.executeUpdate("DELETE FROM " + TABLE_USER_DRAFT_RESULTS + " WHERE league_id = ?",
+            //        league.identifier);
         }
         public static async Task clearPlayerDraftDataForLeague(FantasyLeague league, bool removeKeepers)
         {
@@ -709,18 +726,22 @@ namespace MyDraftAPI_v2.Managers
             {
                 if (removeKeepers)
                 {
-                    await DBAdapter.executeUpdate("UPDATE " + TABLE_USER_DRAFT_RESULTS + " SET player_id = NULL WHERE league_id = ?", league.identifier);
+                    await Task.Delay(2000);
+                    //await DBAdapter.executeUpdate("UPDATE " + TABLE_USER_DRAFT_RESULTS + " SET player_id = NULL WHERE league_id = ?", league.identifier);
                 }
                 else
                 {
-                    await DBAdapter.executeUpdate("UPDATE " + TABLE_USER_DRAFT_RESULTS + " SET player_id = NULL WHERE league_id = ? AND is_keeper = 0", league.identifier);
+                    await Task.Delay(2000);
+                    //await DBAdapter.executeUpdate("UPDATE " + TABLE_USER_DRAFT_RESULTS + " SET player_id = NULL WHERE league_id = ? AND is_keeper = 0", league.identifier);
                 }
 
-                await DBAdapter.executeUpdate("DELETE FROM " + TABLE_USER_DRAFT_STATUS + " WHERE league_id = ?", league.identifier);
+                await Task.Delay(2000);
+                //await DBAdapter.executeUpdate("DELETE FROM " + TABLE_USER_DRAFT_STATUS + " WHERE league_id = ?", league.identifier);
             }
             else
             {
-                await DBAdapter.executeUpdate("DELETE FROM " + TABLE_USER_DRAFT_RESULTS + " WHERE league_id = ?", league.identifier);
+                await Task.Delay(2000);
+                //await DBAdapter.executeUpdate("DELETE FROM " + TABLE_USER_DRAFT_RESULTS + " WHERE league_id = ?", league.identifier);
             }
 
             await clearDraftMementoUndoStack(league.identifier);
@@ -733,7 +754,7 @@ namespace MyDraftAPI_v2.Managers
                 return;
             }
 
-            List<DraftPick> draftPicks = await draftPicksForLeague(league) as List<DraftPick>;
+            List<DraftPick>? draftPicks = await draftPicksForLeague(league) as List<DraftPick>;
             int totalPicks = league.numTeams * league.rounds;
             if (draftPicks.Count > totalPicks)
             {
@@ -759,8 +780,8 @@ namespace MyDraftAPI_v2.Managers
         }
         public static async Task resetDraftData(FantasyLeague league)
         {
-            await DBAdapter.executeUpdate("DELETE FROM " + TABLE_USER_DRAFT_RESULTS + " WHERE league_id = ?", league.identifier);
-            await DBAdapter.executeUpdate("DELETE FROM " + TABLE_USER_DRAFT_STATUS + " WHERE league_id = ?", league.identifier);
+            //await DBAdapter.executeUpdate("DELETE FROM " + TABLE_USER_DRAFT_RESULTS + " WHERE league_id = ?", league.identifier);
+            //await DBAdapter.executeUpdate("DELETE FROM " + TABLE_USER_DRAFT_STATUS + " WHERE league_id = ?", league.identifier);
 
             await clearDraftMementoRedoStack(league.identifier);
             await clearDraftMementoUndoStack(league.identifier);
@@ -768,11 +789,11 @@ namespace MyDraftAPI_v2.Managers
             IList<DraftPick> draftPicks = DraftPickGenerator.generateDraftPicks(league);
             await saveDraftPicks(draftPicks);
         }
-        public static async Task deleteWishlist(Player player, int leagueID)
-        {
-            await DBAdapter.executeUpdate("DELETE FROM user_wishlist WHERE league_id = ? AND player_id = ?",
-                    leagueID, player.identifier);
-        }
+        //public static async Task deleteWishlist(Player player, int leagueID)
+        //{
+        //    await DBAdapter.executeUpdate("DELETE FROM user_wishlist WHERE league_id = ? AND player_id = ?",
+        //            leagueID, player.identifier);
+        //}
         #endregion
 
         #region // Auction //
@@ -789,7 +810,10 @@ namespace MyDraftAPI_v2.Managers
                                             from user_leagues a1
                                             where a1._id = {0}
                                                 and a1.draft_type = 2", MyDraftEngine.Instance.league.identifier);
-            IList<DBValue> items = await DBAdapter.executeQuery<DBValue>(query);
+            await Task.Delay(2000);
+            //IList<DBValue> items = await DBAdapter.executeQuery<DBValue>(query);
+            IList<DBValue> items = new List<DBValue>();
+
             if (items.Count > 0)
             {
                 AppSettings.isDraftTypeAuction = true;
@@ -811,7 +835,10 @@ namespace MyDraftAPI_v2.Managers
                                                 and a2.team_id = {1}
                                             where a1._id = {0}
                                             group by a2.league_id, a2.team_id", fanTeam.leagueID, fanTeam.identifier);
-            IList<doubleVal> items = await DBAdapter.executeQuery<doubleVal>(query);
+            await Task.Delay(2000);
+            //IList<doubleVal> items = await DBAdapter.executeQuery<doubleVal>(query);
+            IList<doubleVal> items = new List<doubleVal>();
+
             if (items.Count() > 0)
             {
                 result = items[0].value;
@@ -831,7 +858,10 @@ namespace MyDraftAPI_v2.Managers
                                             from user_draft_assignments a1
                                             where a1.league_id = {0}
                                                 and a1.team_id = {1}", MyDraftEngine.Instance.league.identifier, fanTeam.identifier);
-            IList<doubleVal> items = await DBAdapter.executeQuery<doubleVal>(query);
+            await Task.Delay(2000);
+            //IList<doubleVal> items = await DBAdapter.executeQuery<doubleVal>(query);
+            IList<doubleVal> items = new List<doubleVal>();
+
             if (items.Count() > 0)
             {
                 result = items[0].value;
@@ -853,7 +883,10 @@ namespace MyDraftAPI_v2.Managers
                                                 and a2.team_id = {1}
                                             where a1._id = {0}
                                             group by a2.league_id, a2.team_id", MyDraftEngine.Instance.league.identifier, fanTeamID);
-            IList<doubleVal> items = await DBAdapter.executeQuery<doubleVal>(query);
+            await Task.Delay(2000);
+            //IList<doubleVal> items = await DBAdapter.executeQuery<doubleVal>(query);
+            IList<doubleVal> items = new List<doubleVal>();
+
             if (items.Count() > 0)
             {
                 return result = items[0].value;
@@ -869,15 +902,18 @@ namespace MyDraftAPI_v2.Managers
                                                 (league_id, team_id, player_id, is_keeper, auction_value) 
                                             values 
                                                 ({0},{1},'{2}','false',{3})", fanTeam.leagueID, fanTeam.identifier, player.identifier, amount);
-            await DBAdapter.executeUpdate(query);
+            await Task.Delay(2000);
+            //await DBAdapter.executeUpdate(query);
         }
         public static async Task<IList<DraftPick>> auctionPicksForLeague(FantasyLeague fanleague)
         {
             List<DraftPick> result = new List<DraftPick>();
-            //Debug.WriteLine("LOAD_DRAFT_PICKS_FOR_LEAGUE [{0}]", fanleague.identifier);
+            
             StringBuilder query = new StringBuilder();
             query.Append(string.Format(@"SELECT * FROM {0} WHERE league_id = {1} order by timestamp asc", TABLE_USER_DRAFT_ASSIGN, fanleague.identifier));
-            IList<DraftPick> items = await DBAdapter.executeQuery<DraftPick>(query.ToString());
+            await Task.Delay(2000);
+            //IList<DraftPick> items = await DBAdapter.executeQuery<DraftPick>(query.ToString());
+            IList<DraftPick> items = new List<DraftPick>();
 
             foreach (DraftPick draftPick in items)
             {
@@ -909,11 +945,13 @@ namespace MyDraftAPI_v2.Managers
         
         public static async Task clearDraftMementoUndoStack(int leagueID)
         {
-            await DBAdapter.executeUpdate("DELETE FROM " + TABLE_USER_UNDO + " WHERE league_id = ?", leagueID);
+            await Task.Delay(2000);
+            //await DBAdapter.executeUpdate("DELETE FROM " + TABLE_USER_UNDO + " WHERE league_id = ?", leagueID);
         }
         public static async Task clearDraftMementoRedoStack(int leagueID)
         {
-            await DBAdapter.executeUpdate("DELETE FROM " + TABLE_USER_REDO + " WHERE league_id = ?", leagueID);
+            await Task.Delay(2000);
+            //await DBAdapter.executeUpdate("DELETE FROM " + TABLE_USER_REDO + " WHERE league_id = ?", leagueID);
         }
         #endregion //  Momentos  //
 
@@ -1001,7 +1039,9 @@ namespace MyDraftAPI_v2.Managers
                                                 or (a1.position_key = 'ILB1-ILB2-OLB1-OLB2' and a1.starters > 0)
                                                 or (a1.position_key = 'CB1-CB2-FS-SS' and a1.starters > 0)
                                                 or (a1.position_key = 'CB1-CB2-DE1-DE2-DT1-DT2-FS-ILB1-ILB2-OLB1-OLB2-SS' and a1.starters > 0))", MyDraftEngine.Instance.league.identifier);
-            List<val> values = await DBAdapter.executeQuery<val>(query);
+            await Task.Delay(2000);
+            //List<val> values = await DBAdapter.executeQuery<val>(query);
+            List<val> values = new List<val>();
 
             return values.Count() > 0;
 
