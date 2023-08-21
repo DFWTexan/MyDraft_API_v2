@@ -1,0 +1,637 @@
+﻿[
+  "MyDraftapi15/",
+  "290",
+  "2015",
+  "AppConfig.plist",
+  "advisor",
+  "00000000",
+  2015,
+  "CustomScoring.plist",
+  true,
+  true,
+  "RotoCategories.plist",
+  "appDB.sqlite",
+  "user.sqlite",
+  true,
+  false,
+  true,
+  true,
+  false,
+  {
+    "leagues": [
+      {
+        "title": "ALL NFL",
+        "value": "nfl"
+      },
+      {
+        "title": "AFC",
+        "value": "afc"
+      },
+      {
+        "title": "NFC",
+        "value": "nfc"
+      }
+    ]
+  },
+  {
+    "aavSalaryCap": 200,
+    "auctionSalaryCap": 260,
+    "draftType": 0,
+    "leagueSize": 12,
+    "maxLeagueSize": 24,
+    "numOfRounds": 16,
+    "draftByTeam": true
+  },
+  7,
+  200,
+  3,
+  [ "QB", "RB", "FB", "WR", "TE", "K", "DEF" ],
+  "RosterLimits.plist",
+  true,
+  [
+    {
+      "title": "Rankings",
+      "values": [
+        {
+          "column": "rank",
+          "direction": "asc",
+          "table": "rankings",
+          "title": "dVBD"
+        },
+        {
+          "column": "rank",
+          "direction": "asc",
+          "table": "rankings",
+          "title": "Expert Rankings"
+        },
+        {
+          "column": "rank",
+          "database": "user",
+          "direction": "asc",
+          "table": "rankings",
+          "title": "Manual Rankings"
+        },
+        {
+          "column": "averagePick",
+          "direction": "asc",
+          "table": "adp",
+          "title": "Average Draft Position"
+        },
+        {
+          "column": "rank",
+          "database": "user",
+          "direction": "asc",
+          "table": "rankings",
+          "title": "Manual Rankings"
+        }
+      ]
+    },
+    {
+      "title": "Projection Stats",
+      "values": [
+        {
+          "column": "ptd",
+          "direction": "desc",
+          "table": "projections_passing",
+          "title": "Passing TDs"
+        },
+        {
+          "column": "pyd",
+          "direction": "desc",
+          "table": "projections_passing",
+          "title": "Passing Yards"
+        },
+        {
+          "column": "intt",
+          "direction": "asc",
+          "table": "projections_passing",
+          "title": "Passing INTs"
+        },
+        {
+          "column": "rtd",
+          "direction": "desc",
+          "table": "projections_rushing",
+          "title": "Rushing TDs"
+        },
+        {
+          "column": "ry",
+          "direction": "desc",
+          "table": "projections_rushing",
+          "title": "Rushing Yards"
+        },
+        {
+          "column": "retd",
+          "direction": "desc",
+          "table": "projections_receiving",
+          "title": "Receiving TDs"
+        },
+        {
+          "column": "rey",
+          "direction": "desc",
+          "table": "projections_receiving",
+          "title": "Receiving Yards"
+        },
+        {
+          "column": "defrettd",
+          "direction": "desc",
+          "table": "projections_defense",
+          "title": "Defensive TDs"
+        },
+        {
+          "column": "fg",
+          "direction": "desc",
+          "table": "projections_kicking",
+          "title": "Field Goals"
+        }
+      ]
+    }
+  ],
+  "nfl",
+  [ "DT1", "DT2", "DE1", "DE2", "OLB1", "OLB2", "ILB1", "ILB2", "CB1", "CB2", "FS", "SS" ],
+  [ "QB", "RB", "FB", "WR", "TE", "K", "DEF", "KR", "PR" ],
+  [ "PR", "KR" ],
+  [ "DEF" ],
+  {
+    "points": {
+      "CB1": [ 0.88, 0.68, 0.48, 0.28, 0.15 ],
+      "CB2": [ 0.88, 0.68, 0.48, 0.28, 0.15 ],
+      "DE1": [ 0.88, 0.68, 0.48, 0.28, 0.15 ],
+      "DE2": [ 0.88, 0.68, 0.48, 0.28, 0.15 ],
+      "DEF": [ 0.92, 0.84, 0.75, 0.65, 0.01 ],
+      "DT1": [ 0.88, 0.68, 0.48, 0.28, 0.15 ],
+      "DT2": [ 0.88, 0.68, 0.48, 0.28, 0.15 ],
+      "K": [ 0.92, 0.84, 0.76, 0.68, 0.01 ],
+      "ILB1": [ 0.88, 0.68, 0.48, 0.28, 0.15 ],
+      "ILB2": [ 0.88, 0.68, 0.48, 0.28, 0.15 ],
+      "OLB1": [ 0.88, 0.68, 0.48, 0.28, 0.15 ],
+      "OLB2": [ 0.88, 0.68, 0.48, 0.28, 0.15 ],
+      "QB": [ 0.88, 0.75, 0.63, 0.49, 0.34, 0.18, 0.01 ],
+      "RB": [ 0.88, 0.77, 0.66, 0.54, 0.41, 0.27, 0.15, 0.01 ],
+      "FB": [ 0.88, 0.77, 0.66, 0.54, 0.41, 0.27, 0.15, 0.01 ],
+      "SS": [ 0.88, 0.68, 0.48, 0.28, 0.15 ],
+      "FS": [ 0.88, 0.68, 0.48, 0.28, 0.15 ],
+      "TE": [ 0.88, 0.68, 0.48, 0.28, 0.15, 0.05, 0.01 ],
+      "WR": [ 0.9, 0.795, 0.68, 0.56, 0.43, 0.3, 0.17, 0.08, 0.01 ]
+    },
+    "aav": {
+      "CB": [ 0.88, 0.68, 0.48, 0.28, 0.15 ],
+      "DE": [ 0.88, 0.68, 0.48, 0.28, 0.15 ],
+      "DEF": [ 0.88, 0.68, 0.48, 0.28, 0.15 ],
+      "DT": [ 0.88, 0.68, 0.48, 0.28, 0.15 ],
+      "LB": [ 0.88, 0.68, 0.48, 0.28, 0.15 ],
+      "PK": [ 0.88, 0 ],
+      "QB": [ 0.88, 0.68, 0.48, 0.28, 0.15, 0.05, 0.01 ],
+      "RB": [ 0.88, 0.68, 0.48, 0.28, 0.15, 0.05, 0.01 ],
+      "S": [ 0.88, 0.68, 0.48, 0.28, 0.15 ],
+      "TE": [ 0.88, 0.68, 0.48, 0.28, 0.15, 0.05, 0.01 ],
+      "WR": [ 0.88, 0.68, 0.48, 0.28, 0.15, 0.05, 0.01 ]
+    },
+    "adp": {
+      "CB": [ 12, 36, 50, 64, 78 ],
+      "DE": [ 12, 36, 50, 64, 78 ],
+      "DEF": [ 12, 36, 50, 64, 78 ],
+      "DT": [ 12, 36, 50, 64, 78 ],
+      "LB": [ 12, 36, 50, 64, 78 ],
+      "PK": [ 68, 10001 ],
+      "QB": [ 12, 24, 36, 48, 60 ],
+      "RB": [ 12, 36, 50, 64, 78 ],
+      "S": [ 12, 36, 50, 64, 78 ],
+      "TE": [ 12, 36, 50, 64, 78 ],
+      "WR": [ 12, 36, 50, 64, 78 ]
+    }
+  },
+  {
+    "ARI": {
+      "primary": {
+        "blue": 39,
+        "green": 0,
+        "red": 135
+      }
+    },
+    "ATL": {
+      "primary_black": {
+        "blue": 0,
+        "green": 0,
+        "red": 0
+      },
+      "primary": {
+        "blue": 45,
+        "green": 13,
+        "red": 163
+      }
+    },
+    "BAL": {
+      "primary": {
+        "blue": 0,
+        "green": 0,
+        "red": 0
+      },
+      "primary - 2": {
+        "blue": 95,
+        "green": 25,
+        "red": 26
+      }
+    },
+    "BUF": {
+      "navy": {
+        "blue": 28,
+        "green": 7,
+        "red": 0
+      },
+      "primary": {
+        "blue": 130,
+        "green": 46,
+        "red": 12
+      },
+      "red": {
+        "blue": 10,
+        "green": 10,
+        "red": 213
+      }
+    },
+    "CAR": {
+      "primary": {
+        "blue": 184,
+        "green": 124,
+        "red": 0
+      }
+    },
+    "CHI": {
+      "primary": {
+        "blue": 42,
+        "green": 22,
+        "red": 11
+      }
+    },
+    "CIN": {
+      "orange": {
+        "blue": 30,
+        "green": 47,
+        "red": 211
+      },
+      "primary": {
+        "blue": 0,
+        "green": 0,
+        "red": 0
+      }
+    },
+    "CLE": {
+      "primary": {
+        "blue": 12,
+        "green": 21,
+        "red": 34
+      }
+    },
+    "DAL": {
+      "primary_silver": {
+        "blue": 191,
+        "green": 192,
+        "red": 191
+      },
+      "primary": {
+        "blue": 50,
+        "green": 21,
+        "red": 0
+      }
+    },
+    "DEN": {
+      "primary": {
+        "blue": 76,
+        "green": 35,
+        "red": 0
+      },
+      "primary_orange": {
+        "blue": 0,
+        "green": 82,
+        "red": 255
+      }
+    },
+    "DET": {
+      "primary": {
+        "blue": 137,
+        "green": 78,
+        "red": 0
+      }
+    },
+    "GB": {
+      "primary": {
+        "blue": 37,
+        "green": 45,
+        "red": 28
+      }
+    },
+    "HOU": {
+      "primary": {
+        "blue": 45,
+        "green": 13,
+        "red": 163
+      }
+    },
+    "IND": {
+      "primary": {
+        "blue": 105,
+        "green": 51,
+        "red": 1
+      }
+    },
+    "JAX": {
+      "primary": {
+        "blue": 118,
+        "green": 101,
+        "red": 0
+      }
+    },
+    "KC": {
+      "primary": {
+        "blue": 45,
+        "green": 13,
+        "red": 163
+      }
+    },
+    "MIA": {
+      "primary": {
+        "blue": 75,
+        "green": 79,
+        "red": 0
+      },
+      "primary2": {
+        "blue": 29,
+        "green": 69,
+        "red": 215
+      }
+    },
+    "MIN": {
+      "primary": {
+        "blue": 90,
+        "green": 23,
+        "red": 38
+      },
+      "secondary": {
+        "blue": 18,
+        "green": 182,
+        "red": 255
+      }
+    },
+    "NE": {
+      "primary2": {
+        "blue": 10,
+        "green": 10,
+        "red": 213
+      },
+      "primary": {
+        "blue": 50,
+        "green": 21,
+        "red": 0
+      }
+    },
+    "NO": {
+      "primary": {
+        "blue": 93,
+        "green": 146,
+        "red": 175
+      }
+    },
+    "NYG": {
+      "primary": {
+        "blue": 82,
+        "green": 35,
+        "red": 1
+      }
+    },
+    "NYJ": {
+      "primary": {
+        "blue": 37,
+        "green": 45,
+        "red": 28
+      }
+    },
+    "OAK": {
+      "primary": {
+        "blue": 0,
+        "green": 0,
+        "red": 0
+      },
+      "secondary": {
+        "blue": 176,
+        "green": 174,
+        "red": 166
+      }
+    },
+    "PHI": {
+      "primary": {
+        "blue": 53,
+        "green": 49,
+        "red": 0
+      }
+    },
+    "PIT": {
+      "primary": {
+        "blue": 0,
+        "green": 0,
+        "red": 0
+      },
+      "secondary": {
+        "blue": 30,
+        "green": 30,
+        "red": 30
+      }
+    },
+    "SD": {
+      "primary": {
+        "blue": 197,
+        "green": 128,
+        "red": 0
+      },
+      "secondary": {
+        "blue": 50,
+        "green": 21,
+        "red": 0
+      },
+      "tertiary": {
+        "blue": 30,
+        "green": 173,
+        "red": 238
+      }
+    },
+    "SEA": {
+      "primary": {
+        "blue": 90,
+        "green": 61,
+        "red": 33
+      },
+      "dark navy": {
+        "blue": 28,
+        "green": 7,
+        "red": 0
+      },
+      "green": {
+        "blue": 52,
+        "green": 163,
+        "red": 62
+      }
+    },
+    "SF": {
+      "primary": {
+        "blue": 62,
+        "green": 9,
+        "red": 184
+      },
+      "secondary": {
+        "blue": 93,
+        "green": 146,
+        "red": 175
+      }
+    },
+    "STL": {
+      "primary": {
+        "blue": 50,
+        "green": 21,
+        "red": 0
+      },
+      "gold": {
+        "blue": 93,
+        "green": 146,
+        "red": 175
+      }
+    },
+    "TB": {
+      "red": {
+        "blue": 45,
+        "green": 13,
+        "red": 163
+      },
+      "primary": {
+        "blue": 75,
+        "green": 89,
+        "red": 100
+      }
+    },
+    "TEN": {
+      "primary": {
+        "blue": 210,
+        "green": 149,
+        "red": 68
+      },
+      "secondary": {
+        "blue": 50,
+        "green": 21,
+        "red": 0
+      }
+    },
+    "WAS": {
+      "primary": {
+        "blue": 16,
+        "green": 16,
+        "red": 63
+      },
+      "gold": {
+        "blue": 30,
+        "green": 173,
+        "red": 238
+      }
+    }
+  },
+  [ "player_id", "year", "segment", "source" ],
+  true,
+  {
+    "QB": "0055AA",
+    "RB": "FF2222",
+    "FB": "FF3333",
+    "WR": "CCCC33",
+    "TE": "00994C",
+    "K": "99CCFF",
+    "DEF": "3399FF"
+  },
+  {
+    "enabled": false,
+    "trackerURL": "http://ad.doubleclick.net/ad/N6054.nfl.com/B7762535.48;sz=1x1;pc=[TPAS_ID];ord=[timestamp]?",
+    "displayURL": "http://ad.doubleclick.net/clk;274312986;100786565;p;pc=[TPAS_ID]",
+    "clickThroughURL": "http://ad.doubleclick.net/clk;274312986;100786565;p;pc=[TPAS_ID]",
+    "splashScreenDuration": 2.5
+  },
+  1378616400,
+  [
+    {
+      "start_date": 1377686177,
+      "week": 1
+    },
+    {
+      "start_date": 1378832400,
+      "week": 1
+    },
+    {
+      "start_date": 1379437200,
+      "week": 1
+    },
+    {
+      "start_date": 1380042000,
+      "week": 1
+    },
+    {
+      "start_date": 1380646800,
+      "week": 1
+    },
+    {
+      "start_date": 1381165200,
+      "week": 1
+    },
+    {
+      "start_date": 1381770000,
+      "week": 1
+    },
+    {
+      "start_date": 1382374800,
+      "week": 1
+    },
+    {
+      "start_date": 1382979600,
+      "week": 1
+    },
+    {
+      "start_date": 1383588000,
+      "week": 1
+    },
+    {
+      "start_date": 1384192800,
+      "week": 1
+    },
+    {
+      "start_date": 1384797600,
+      "week": 1
+    },
+    {
+      "start_date": 1385056800,
+      "week": 1
+    },
+    {
+      "start_date": 1385488800,
+      "week": 1
+    },
+    {
+      "start_date": 1386093600,
+      "week": 1
+    },
+    {
+      "start_date": 1377686177,
+      "week": 1
+    },
+    {
+      "start_date": 1377686177,
+      "week": 1
+    }
+  ],
+  false,
+  true,
+  false,
+  "support@290design.com",
+  false,
+  "itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=",
+  false,
+  false,
+  true,
+  0.5,
+  "NFL Fantasy Advisor",
+  "PST",
+  false,
+  false
+]

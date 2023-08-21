@@ -1,0 +1,1425 @@
+﻿[
+  {
+    "defense": {
+      "stats": [
+        {
+          "db_column": "ptsa",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "Pts"
+        },
+        {
+          "db_column": "ya",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "Yds"
+        },
+        {
+          "db_column": "deft_int",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "INT"
+        },
+        {
+          "db_column": "deft_fum_rec",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "FR"
+        },
+        {
+          "db_column": "deft_sack",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "Sck"
+        }
+      ],
+      "title": "Defense"
+    },
+    "idp": {
+      "stats": [
+        {
+          "db_column": "tk",
+          "number_format": "integer",
+          "table": "idp",
+          "title": "Tck"
+        },
+        {
+          "db_column": "sk",
+          "number_format": "integer",
+          "table": "idp",
+          "title": "Sck"
+        },
+        {
+          "db_column": "int",
+          "number_format": "integer",
+          "table": "idp",
+          "title": "INT"
+        },
+        {
+          "db_column": "fr",
+          "number_format": "integer",
+          "table": "idp",
+          "title": "FR"
+        }
+      ],
+      "title": "IDP"
+    },
+    "kicking": {
+      "stats": [
+        {
+          "db_column": "fg",
+          "number_format": "integer",
+          "table": "kicking",
+          "title": "FG"
+        },
+        {
+          "db_column": "fga",
+          "number_format": "integer",
+          "table": "kicking",
+          "title": "FGA"
+        },
+        {
+          "db_column": "pat",
+          "number_format": "integer",
+          "table": "kicking",
+          "title": "XP"
+        },
+        {
+          "db_column": "pata",
+          "number_format": "integer",
+          "table": "kicking",
+          "title": "XPA"
+        }
+      ],
+      "title": "Receiving"
+    },
+    "passing": {
+      "stats": [
+        {
+          "db_column": "ptd",
+          "number_format": "integer",
+          "table": "passing",
+          "title": "TD"
+        },
+        {
+          "db_column": "intt",
+          "number_format": "integer",
+          "table": "passing",
+          "title": "INT"
+        },
+        {
+          "db_column": "py",
+          "number_format": "integer",
+          "table": "passing",
+          "title": "Yds"
+        }
+      ],
+      "title": "Passing"
+    },
+    "receiving": {
+      "stats": [
+        {
+          "db_column": "recs",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "Rec"
+        },
+        {
+          "db_column": "rey",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "Yds"
+        },
+        {
+          "db_column": "retd",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "TD"
+        }
+      ],
+      "title": "Receiving"
+    },
+    "rushing": {
+      "stats": [
+        {
+          "db_column": "ra",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Att"
+        },
+        {
+          "db_column": "ry",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Yds"
+        },
+        {
+          "db_column": "rtd",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "TD"
+        }
+      ],
+      "title": "Receiving"
+    },
+    "seasons": [
+      {
+        "type": "projections",
+        "year": "2011"
+      },
+      {
+        "type": "actual",
+        "year": "2010"
+      }
+    ]
+  },
+  {
+    "defense": {
+      "stats": [
+        {
+          "db_column": "ptsa",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "Pts"
+        },
+        {
+          "db_column": "deft_int",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "INT"
+        },
+        {
+          "db_column": "deft_fum_rec",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "FR"
+        },
+        {
+          "db_column": "deft_sack",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "Sck"
+        }
+      ],
+      "title": "Defense"
+    },
+    "idp": {
+      "stats": [
+        {
+          "db_column": "tk",
+          "number_format": "integer",
+          "table": "idp",
+          "title": "Tck"
+        },
+        {
+          "db_column": "sk",
+          "number_format": "integer",
+          "table": "idp",
+          "title": "Sck"
+        },
+        {
+          "db_column": "int",
+          "number_format": "integer",
+          "table": "idp",
+          "title": "INT"
+        },
+        {
+          "db_column": "fr",
+          "number_format": "integer",
+          "table": "idp",
+          "title": "FR"
+        }
+      ],
+      "title": "IDP"
+    },
+    "kicking": {
+      "stats": [
+        {
+          "db_column": "fg",
+          "number_format": "integer",
+          "table": "kicking",
+          "title": "FG"
+        },
+        {
+          "db_column": "fga",
+          "number_format": "integer",
+          "table": "kicking",
+          "title": "FGA"
+        },
+        {
+          "db_column": "pat",
+          "number_format": "integer",
+          "table": "kicking",
+          "title": "XP"
+        },
+        {
+          "db_column": "pata",
+          "number_format": "integer",
+          "table": "kicking",
+          "title": "XPA"
+        }
+      ],
+      "title": "Receiving"
+    },
+    "passing": {
+      "stats": [
+        {
+          "db_column": "ptd",
+          "number_format": "integer",
+          "table": "passing",
+          "title": "TD"
+        },
+        {
+          "db_column": "intt",
+          "number_format": "integer",
+          "table": "passing",
+          "title": "INT"
+        },
+        {
+          "db_column": "py",
+          "number_format": "integer",
+          "table": "passing",
+          "title": "Yds"
+        }
+      ],
+      "title": "Passing"
+    },
+    "receiving": {
+      "stats": [
+        {
+          "db_column": "recs",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "Rec"
+        },
+        {
+          "db_column": "rey",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "Yds"
+        },
+        {
+          "db_column": "retd",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "TD"
+        }
+      ],
+      "title": "Receiving"
+    },
+    "rushing": {
+      "stats": [
+        {
+          "db_column": "ra",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Att"
+        },
+        {
+          "db_column": "ry",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Yds"
+        },
+        {
+          "db_column": "rtd",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "TD"
+        }
+      ],
+      "title": "Receiving"
+    },
+    "seasons": [
+      {
+        "type": "projections",
+        "year": "2011"
+      },
+      {
+        "type": "actual",
+        "year": "2010"
+      }
+    ]
+  },
+  {
+    "CB1": "idp",
+    "CB2": "idp",
+    "DE1": "idp",
+    "DE2": "idp",
+    "DEF": "defense",
+    "DT1": "idp",
+    "DT2": "idp",
+    "FB": "rushing",
+    "FS": "idp",
+    "ILB1": "idp",
+    "ILB2": "idp",
+    "K": "kicking",
+    "OLB1": "idp",
+    "OLB2": "idp",
+    "QB": "passing",
+    "RB": "rushing",
+    "SS": "idp",
+    "TE": "receiving",
+    "WR": "receiving"
+  },
+  {
+    "defense": {
+      "stats": [
+        {
+          "db_column": "year",
+          "number_format": "none",
+          "table": "defense",
+          "title": "Year"
+        },
+        {
+          "db_column": "ptsa",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "Pts"
+        },
+        {
+          "db_column": "ya",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "Yds"
+        },
+        {
+          "db_column": "deft_int",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "INT"
+        },
+        {
+          "db_column": "deft_fum_rec",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "FR"
+        },
+        {
+          "db_column": "deft_sack",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "Sck"
+        }
+      ],
+      "title": "Defense"
+    },
+    "idp": {
+      "stats": [
+        {
+          "db_column": "year",
+          "number_format": "none",
+          "table": "idp",
+          "title": "Year"
+        },
+        {
+          "db_column": "tk",
+          "number_format": "integer",
+          "table": "idp",
+          "title": "Tck"
+        },
+        {
+          "db_column": "sk",
+          "number_format": "integer",
+          "table": "idp",
+          "title": "Sck"
+        },
+        {
+          "db_column": "int",
+          "number_format": "integer",
+          "table": "idp",
+          "title": "INT"
+        },
+        {
+          "db_column": "fr",
+          "number_format": "integer",
+          "table": "idp",
+          "title": "FR"
+        }
+      ],
+      "title": "IDP"
+    },
+    "kicking": {
+      "stats": [
+        {
+          "db_column": "year",
+          "number_format": "none",
+          "table": "kicking",
+          "title": "Year"
+        },
+        {
+          "db_column": "fg",
+          "number_format": "integer",
+          "table": "kicking",
+          "title": "FG"
+        },
+        {
+          "db_column": "fga",
+          "number_format": "integer",
+          "table": "kicking",
+          "title": "FGA"
+        },
+        {
+          "db_column": "pat",
+          "number_format": "integer",
+          "table": "kicking",
+          "title": "XP"
+        },
+        {
+          "db_column": "pata",
+          "number_format": "integer",
+          "table": "kicking",
+          "title": "XPA"
+        }
+      ],
+      "title": "Receiving"
+    },
+    "passing": {
+      "stats": [
+        {
+          "db_column": "year",
+          "number_format": "none",
+          "table": "passing",
+          "title": "Year"
+        },
+        {
+          "db_column": "ptd",
+          "number_format": "integer",
+          "table": "passing",
+          "title": "TD"
+        },
+        {
+          "db_column": "intt",
+          "number_format": "integer",
+          "table": "passing",
+          "title": "INT"
+        },
+        {
+          "db_column": "py",
+          "number_format": "integer",
+          "table": "passing",
+          "title": "Yds"
+        },
+        {
+          "db_column": "ra",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Att"
+        },
+        {
+          "db_column": "ry",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Yds"
+        },
+        {
+          "db_column": "rtd",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "TD"
+        }
+      ],
+      "title": "Passing"
+    },
+    "receiving": {
+      "stats": [
+        {
+          "db_column": "year",
+          "number_format": "none",
+          "table": "receiving",
+          "title": "Year"
+        },
+        {
+          "db_column": "recs",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "Rec"
+        },
+        {
+          "db_column": "rey",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "Yds"
+        },
+        {
+          "db_column": "retd",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "TD"
+        },
+        {
+          "db_column": "ra",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Att"
+        },
+        {
+          "db_column": "ry",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Yds"
+        },
+        {
+          "db_column": "rtd",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "TD"
+        }
+      ],
+      "title": "Receiving"
+    },
+    "rushing": {
+      "stats": [
+        {
+          "db_column": "year",
+          "number_format": "none",
+          "table": "rushing",
+          "title": "Year"
+        },
+        {
+          "db_column": "ra",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Att"
+        },
+        {
+          "db_column": "ry",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Yds"
+        },
+        {
+          "db_column": "rtd",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "TD"
+        },
+        {
+          "db_column": "recs",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "Rec"
+        },
+        {
+          "db_column": "rey",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "Yds"
+        },
+        {
+          "db_column": "retd",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "TD"
+        }
+      ],
+      "title": "Receiving"
+    },
+    "seasons": [
+      {
+        "type": "projections",
+        "year": "2011"
+      },
+      {
+        "type": "actual",
+        "year": "2010"
+      },
+      {
+        "type": "actual",
+        "year": "2009"
+      }
+    ]
+  },
+  {
+    "defense": {
+      "stats": [
+        {
+          "db_column": "year",
+          "number_format": "none",
+          "table": "defense",
+          "title": "Year"
+        },
+        {
+          "db_column": "ptsa",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "Pts"
+        },
+        {
+          "db_column": "ya",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "Yds"
+        },
+        {
+          "db_column": "deft_int",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "INT"
+        },
+        {
+          "db_column": "deft_fum_rec",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "FR"
+        },
+        {
+          "db_column": "deft_sack",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "Sck"
+        }
+      ],
+      "title": "Defense"
+    },
+    "idp": {
+      "stats": [
+        {
+          "db_column": "year",
+          "number_format": "none",
+          "table": "idp",
+          "title": "Year"
+        },
+        {
+          "db_column": "tk",
+          "number_format": "integer",
+          "table": "idp",
+          "title": "Tck"
+        },
+        {
+          "db_column": "sk",
+          "number_format": "integer",
+          "table": "idp",
+          "title": "Sck"
+        },
+        {
+          "db_column": "ff",
+          "number_format": "integer",
+          "table": "idp",
+          "title": "FF"
+        },
+        {
+          "db_column": "defrettd",
+          "number_format": "integer",
+          "table": "idp",
+          "title": "DTD"
+        }
+      ],
+      "title": "IDP"
+    },
+    "kicking": {
+      "stats": [
+        {
+          "db_column": "year",
+          "number_format": "none",
+          "table": "kicking",
+          "title": "Year"
+        },
+        {
+          "db_column": "fg",
+          "number_format": "integer",
+          "table": "kicking",
+          "title": "FG"
+        },
+        {
+          "db_column": "fga",
+          "number_format": "integer",
+          "table": "kicking",
+          "title": "FGA"
+        },
+        {
+          "db_column": "pat",
+          "number_format": "integer",
+          "table": "kicking",
+          "title": "XP"
+        },
+        {
+          "db_column": "pata",
+          "number_format": "integer",
+          "table": "kicking",
+          "title": "XPA"
+        }
+      ],
+      "title": "Receiving"
+    },
+    "passing": {
+      "stats": [
+        {
+          "db_column": "year",
+          "number_format": "none",
+          "table": "passing",
+          "title": "Year"
+        },
+        {
+          "db_column": "ptd",
+          "number_format": "integer",
+          "table": "passing",
+          "title": "TD"
+        },
+        {
+          "db_column": "intt",
+          "number_format": "integer",
+          "table": "passing",
+          "title": "INT"
+        },
+        {
+          "db_column": "py",
+          "number_format": "integer",
+          "table": "passing",
+          "title": "Yds"
+        },
+        {
+          "db_column": "ra",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Att"
+        },
+        {
+          "db_column": "ry",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Yds"
+        },
+        {
+          "db_column": "rtd",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "TD"
+        }
+      ],
+      "title": "Passing"
+    },
+    "receiving": {
+      "stats": [
+        {
+          "db_column": "year",
+          "number_format": "none",
+          "table": "receiving",
+          "title": "Year"
+        },
+        {
+          "db_column": "recs",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "Rec"
+        },
+        {
+          "db_column": "rey",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "Yds"
+        },
+        {
+          "db_column": "retd",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "TD"
+        },
+        {
+          "db_column": "ra",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Att"
+        },
+        {
+          "db_column": "ry",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Yds"
+        },
+        {
+          "db_column": "rtd",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "TD"
+        }
+      ],
+      "title": "Receiving"
+    },
+    "rushing": {
+      "stats": [
+        {
+          "db_column": "year",
+          "number_format": "none",
+          "table": "rushing",
+          "title": "Year"
+        },
+        {
+          "db_column": "ra",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Att"
+        },
+        {
+          "db_column": "ry",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Yds"
+        },
+        {
+          "db_column": "rtd",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "TD"
+        },
+        {
+          "db_column": "recs",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "Rec"
+        },
+        {
+          "db_column": "rey",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "Yds"
+        },
+        {
+          "db_column": "retd",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "TD"
+        }
+      ],
+      "title": "Receiving"
+    },
+    "seasons": [
+      {
+        "type": "projections",
+        "year": "2011"
+      },
+      {
+        "type": "actual",
+        "year": "2010"
+      }
+    ]
+  },
+  {
+    "defense": {
+      "stats": [
+        {
+          "db_column": "year",
+          "number_format": "none",
+          "table": "defense",
+          "title": "Year"
+        },
+        {
+          "db_column": "ptsa",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "Pts"
+        },
+        {
+          "db_column": "ya",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "Yds"
+        },
+        {
+          "db_column": "deft_int",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "INT"
+        },
+        {
+          "db_column": "deft_fum_rec",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "FR"
+        },
+        {
+          "db_column": "deft_sack",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "Sck"
+        }
+      ],
+      "title": "Defense"
+    },
+    "idp": {
+      "stats": [
+        {
+          "db_column": "year",
+          "number_format": "none",
+          "table": "idp",
+          "title": "Year"
+        },
+        {
+          "db_column": "tk",
+          "number_format": "integer",
+          "table": "idp",
+          "title": "Tck"
+        },
+        {
+          "db_column": "sk",
+          "number_format": "integer",
+          "table": "idp",
+          "title": "Sck"
+        },
+        {
+          "db_column": "ff",
+          "number_format": "integer",
+          "table": "idp",
+          "title": "FF"
+        },
+        {
+          "db_column": "defrettd",
+          "number_format": "integer",
+          "table": "idp",
+          "title": "DTD"
+        }
+      ],
+      "title": "IDP"
+    },
+    "kicking": {
+      "stats": [
+        {
+          "db_column": "year",
+          "number_format": "none",
+          "table": "kicking",
+          "title": "Year"
+        },
+        {
+          "db_column": "fg",
+          "number_format": "integer",
+          "table": "kicking",
+          "title": "FG"
+        },
+        {
+          "db_column": "fga",
+          "number_format": "integer",
+          "table": "kicking",
+          "title": "FGA"
+        },
+        {
+          "db_column": "pat",
+          "number_format": "integer",
+          "table": "kicking",
+          "title": "XP"
+        },
+        {
+          "db_column": "pata",
+          "number_format": "integer",
+          "table": "kicking",
+          "title": "XPA"
+        }
+      ],
+      "title": "Receiving"
+    },
+    "passing": {
+      "stats": [
+        {
+          "db_column": "year",
+          "number_format": "none",
+          "table": "passing",
+          "title": "Year"
+        },
+        {
+          "db_column": "ptd",
+          "number_format": "integer",
+          "table": "passing",
+          "title": "TD"
+        },
+        {
+          "db_column": "intt",
+          "number_format": "integer",
+          "table": "passing",
+          "title": "INT"
+        },
+        {
+          "db_column": "py",
+          "number_format": "integer",
+          "table": "passing",
+          "title": "Yds"
+        },
+        {
+          "db_column": "ra",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Att"
+        },
+        {
+          "db_column": "ry",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Yds"
+        },
+        {
+          "db_column": "rtd",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "TD"
+        }
+      ],
+      "title": "Passing"
+    },
+    "receiving": {
+      "stats": [
+        {
+          "db_column": "year",
+          "number_format": "none",
+          "table": "receiving",
+          "title": "Year"
+        },
+        {
+          "db_column": "recs",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "Rec"
+        },
+        {
+          "db_column": "rey",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "Yds"
+        },
+        {
+          "db_column": "retd",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "TD"
+        },
+        {
+          "db_column": "ra",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Att"
+        },
+        {
+          "db_column": "ry",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Yds"
+        },
+        {
+          "db_column": "rtd",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "TD"
+        }
+      ],
+      "title": "Receiving"
+    },
+    "rushing": {
+      "stats": [
+        {
+          "db_column": "year",
+          "number_format": "none",
+          "table": "rushing",
+          "title": "Year"
+        },
+        {
+          "db_column": "ra",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Att"
+        },
+        {
+          "db_column": "ry",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Yds"
+        },
+        {
+          "db_column": "rtd",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "TD"
+        },
+        {
+          "db_column": "recs",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "Rec"
+        },
+        {
+          "db_column": "rey",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "Yds"
+        },
+        {
+          "db_column": "retd",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "TD"
+        }
+      ],
+      "title": "Receiving"
+    },
+    "seasons": [
+      {
+        "type": "projections",
+        "year": "2011"
+      },
+      {
+        "type": "actual",
+        "year": "2010"
+      }
+    ]
+  },
+  {
+    "defense": {
+      "stats": [
+        {
+          "db_column": "year",
+          "number_format": "none",
+          "table": "defense",
+          "title": "Year"
+        },
+        {
+          "db_column": "ptsa",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "Pts"
+        },
+        {
+          "db_column": "ya",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "Yds"
+        },
+        {
+          "db_column": "deft_int",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "INT"
+        },
+        {
+          "db_column": "deft_fum_rec",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "FR"
+        },
+        {
+          "db_column": "deft_sack",
+          "number_format": "integer",
+          "table": "defense",
+          "title": "Sck"
+        }
+      ],
+      "title": "Defense"
+    },
+    "idp": {
+      "stats": [
+        {
+          "db_column": "year",
+          "number_format": "none",
+          "table": "idp",
+          "title": "Year"
+        },
+        {
+          "db_column": "tk",
+          "number_format": "integer",
+          "table": "idp",
+          "title": "Tck"
+        },
+        {
+          "db_column": "sk",
+          "number_format": "integer",
+          "table": "idp",
+          "title": "Sck"
+        },
+        {
+          "db_column": "ff",
+          "number_format": "integer",
+          "table": "idp",
+          "title": "FF"
+        },
+        {
+          "db_column": "defrettd",
+          "number_format": "integer",
+          "table": "idp",
+          "title": "DTD"
+        }
+      ],
+      "title": "IDP"
+    },
+    "kicking": {
+      "stats": [
+        {
+          "db_column": "year",
+          "number_format": "none",
+          "table": "kicking",
+          "title": "Year"
+        },
+        {
+          "db_column": "fg",
+          "number_format": "integer",
+          "table": "kicking",
+          "title": "FG"
+        },
+        {
+          "db_column": "fga",
+          "number_format": "integer",
+          "table": "kicking",
+          "title": "FGA"
+        },
+        {
+          "db_column": "pat",
+          "number_format": "integer",
+          "table": "kicking",
+          "title": "XP"
+        },
+        {
+          "db_column": "pata",
+          "number_format": "integer",
+          "table": "kicking",
+          "title": "XPA"
+        }
+      ],
+      "title": "Receiving"
+    },
+    "passing": {
+      "stats": [
+        {
+          "db_column": "year",
+          "number_format": "none",
+          "table": "passing",
+          "title": "Year"
+        },
+        {
+          "db_column": "ptd",
+          "number_format": "integer",
+          "table": "passing",
+          "title": "TD"
+        },
+        {
+          "db_column": "intt",
+          "number_format": "integer",
+          "table": "passing",
+          "title": "INT"
+        },
+        {
+          "db_column": "py",
+          "number_format": "integer",
+          "table": "passing",
+          "title": "Yds"
+        },
+        {
+          "db_column": "ra",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Att"
+        },
+        {
+          "db_column": "ry",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Yds"
+        },
+        {
+          "db_column": "rtd",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "TD"
+        }
+      ],
+      "title": "Passing"
+    },
+    "receiving": {
+      "stats": [
+        {
+          "db_column": "year",
+          "number_format": "none",
+          "table": "receiving",
+          "title": "Year"
+        },
+        {
+          "db_column": "recs",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "Rec"
+        },
+        {
+          "db_column": "rey",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "Yds"
+        },
+        {
+          "db_column": "retd",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "TD"
+        },
+        {
+          "db_column": "ra",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Att"
+        },
+        {
+          "db_column": "ry",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Yds"
+        },
+        {
+          "db_column": "rtd",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "TD"
+        }
+      ],
+      "title": "Receiving"
+    },
+    "rushing": {
+      "stats": [
+        {
+          "db_column": "year",
+          "number_format": "none",
+          "table": "rushing",
+          "title": "Year"
+        },
+        {
+          "db_column": "ra",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Att"
+        },
+        {
+          "db_column": "ry",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "Yds"
+        },
+        {
+          "db_column": "rtd",
+          "number_format": "integer",
+          "table": "rushing",
+          "title": "TD"
+        },
+        {
+          "db_column": "recs",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "Rec"
+        },
+        {
+          "db_column": "rey",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "Yds"
+        },
+        {
+          "db_column": "retd",
+          "number_format": "integer",
+          "table": "receiving",
+          "title": "TD"
+        }
+      ],
+      "title": "Receiving"
+    },
+    "seasons": [
+      {
+        "type": "projections",
+        "year": "2011"
+      },
+      {
+        "type": "actual",
+        "year": "2010"
+      }
+    ]
+  }
+]

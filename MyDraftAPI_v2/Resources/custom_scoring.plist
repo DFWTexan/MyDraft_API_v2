@@ -1,0 +1,897 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>customScoringVersion</key>
+	<string>00000000</string>
+	<key>scoring_groups</key>
+	<array>
+		<dict>
+			<key>dbTable</key>
+			<string>projections_passing</string>
+			<key>title</key>
+			<string>Passing</string>
+			<key>sections</key>
+			<array>
+				<dict>
+					<key>items</key>
+					<array>
+						<dict>
+							<key>divide</key>
+							<true/>
+							<key>value</key>
+							<integer>50</integer>
+							<key>title</key>
+							<string>Passing Yards per Point</string>
+							<key>dbKey</key>
+							<string>py</string>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>ptd</string>
+							<key>title</key>
+							<string>TD Pass</string>
+							<key>value</key>
+							<integer>4</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>ptl</string>
+							<key>title</key>
+							<string>2pt Passing Conversion</string>
+							<key>value</key>
+							<integer>2</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>intt</string>
+							<key>title</key>
+							<string>Interceptions Thrown</string>
+							<key>value</key>
+							<integer>-2</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>skd</string>
+							<key>title</key>
+							<string>Sacked</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>fuml</string>
+							<key>title</key>
+							<string>Passing Fumbles Lost</string>
+							<key>value</key>
+							<integer>-2</integer>
+						</dict>
+						<dict>
+							<key>divide</key>
+							<true/>
+							<key>value</key>
+							<integer>0</integer>
+							<key>title</key>
+							<string>Pass Attempts per Point</string>
+							<key>dbKey</key>
+							<string>pa</string>
+						</dict>
+						<dict>
+							<key>divide</key>
+							<true/>
+							<key>value</key>
+							<integer>0</integer>
+							<key>title</key>
+							<string>Pass Completions per Point</string>
+							<key>dbKey</key>
+							<string>pc</string>
+						</dict>
+						<dict>
+							<key>divide</key>
+							<true/>
+							<key>value</key>
+							<integer>0</integer>
+							<key>title</key>
+							<string>Pass Incompletions per Point</string>
+							<key>dbKey</key>
+							<string>inc</string>
+						</dict>
+					</array>
+					<key>title</key>
+					<string>Standard</string>
+				</dict>
+				<dict>
+					<key>items</key>
+					<array>
+						<dict>
+							<key>dbKey</key>
+							<string>ptd40</string>
+							<key>title</key>
+							<string>40+ yard TD pass bonus</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>ptd50</string>
+							<key>title</key>
+							<string>50+ yard TD pass bonus</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>p300</string>
+							<key>title</key>
+							<string>300+ yard passing game</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<!--<dict>
+							<key>dbKey</key>
+							<string>p350</string>
+							<key>title</key>
+							<string>350+ yard passing game</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>-->
+						<dict>
+							<key>dbKey</key>
+							<string>p400</string>
+							<key>title</key>
+							<string>400+ yard passing game</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+					</array>
+					<key>title</key>
+					<string>Bonus</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>dbTable</key>
+			<string>projections_rushing</string>
+			<key>title</key>
+			<string>Rushing</string>
+			<key>sections</key>
+			<array>
+				<dict>
+					<key>items</key>
+					<array>
+						<dict>
+							<key>divide</key>
+							<true/>
+							<key>value</key>
+							<integer>10</integer>
+							<key>title</key>
+							<string>Rushing Yards per Point</string>
+							<key>dbKey</key>
+							<string>ry</string>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>rtd</string>
+							<key>title</key>
+							<string>Rushing TD</string>
+							<key>value</key>
+							<integer>6</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>2pr</string>
+							<key>title</key>
+							<string>2pt Rushing Conversion</string>
+							<key>value</key>
+							<integer>2</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>rfuml</string>
+							<key>title</key>
+							<string>Rushing Fumbles Lost</string>
+							<key>value</key>
+							<integer>-2</integer>
+						</dict>
+						<dict>
+							<key>divide</key>
+							<true/>
+							<key>value</key>
+							<integer>0</integer>
+							<key>title</key>
+							<string>Rushing Attempts per Point</string>
+							<key>dbKey</key>
+							<string>ra</string>
+						</dict>
+					</array>
+					<key>title</key>
+					<string>Standard</string>
+				</dict>
+				<dict>
+					<key>items</key>
+					<array>
+						<dict>
+							<key>dbKey</key>
+							<string>rtd40</string>
+							<key>title</key>
+							<string>40+ yard TD rush bonus</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>rtd50</string>
+							<key>title</key>
+							<string>50+ yard TD rush bonus</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>ry100</string>
+							<key>title</key>
+							<string>100+ yard rushing game</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<!--<dict>
+							<key>dbKey</key>
+							<string>ry150</string>
+							<key>title</key>
+							<string>150+ yard rushing game</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>-->
+						<dict>
+							<key>dbKey</key>
+							<string>ry200</string>
+							<key>title</key>
+							<string>200+ yard rushing game</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+					</array>
+					<key>title</key>
+					<string>Bonus</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>dbTable</key>
+			<string>projections_receiving</string>
+			<key>title</key>
+			<string>Receiving</string>
+			<key>sections</key>
+			<array>
+				<dict>
+					<key>items</key>
+					<array>
+						<dict>
+							<key>dbKey</key>
+							<string>recs</string>
+							<key>title</key>
+							<string>Points per Reception</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>divide</key>
+							<true/>
+							<key>value</key>
+							<integer>10</integer>
+							<key>title</key>
+							<string>Receiving Yards per Point</string>
+							<key>dbKey</key>
+							<string>rey</string>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>retd</string>
+							<key>title</key>
+							<string>Receiving TD</string>
+							<key>value</key>
+							<integer>6</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>2pre</string>
+							<key>title</key>
+							<string>2pt Receiving Conversion</string>
+							<key>value</key>
+							<integer>2</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>refuml</string>
+							<key>title</key>
+							<string>Receiving Fumbles Lost</string>
+							<key>value</key>
+							<integer>-2</integer>
+						</dict>
+					</array>
+					<key>title</key>
+					<string>Standard</string>
+				</dict>
+				<dict>
+					<key>items</key>
+					<array>
+						<dict>
+							<key>dbKey</key>
+							<string>retd40</string>
+							<key>title</key>
+							<string>40+ yard TD rec bonus</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>retd50</string>
+							<key>title</key>
+							<string>50+ yard TD rec bonus</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>rey100</string>
+							<key>title</key>
+							<string>100+ yard receiving game</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<!--<dict>
+							<key>dbKey</key>
+							<string>rey150</string>
+							<key>title</key>
+							<string>150+ yard receiving game</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>-->
+						<dict>
+							<key>dbKey</key>
+							<string>rey200</string>
+							<key>title</key>
+							<string>200+ yard receiving game</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+					</array>
+					<key>title</key>
+					<string>Bonus</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>dbTable</key>
+			<string>projections_kicking</string>
+			<key>title</key>
+			<string>Kicking</string>
+			<key>sections</key>
+			<array>
+				<dict>
+					<key>items</key>
+					<array>
+						<dict>
+							<key>dbKey</key>
+							<string>fg_made</string>
+							<key>title</key>
+							<string>Each FG Made</string>
+							<key>value</key>
+							<integer>3</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>fgm</string>
+							<key>title</key>
+							<string>Each Missed FG</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>pat</string>
+							<key>title</key>
+							<string>Each PAT Made</string>
+							<key>value</key>
+							<integer>1</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>patm</string>
+							<key>title</key>
+							<string>Each PAT Missed</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+					</array>
+					<key>title</key>
+					<string>Standard</string>
+				</dict>
+				<dict>
+					<key>items</key>
+					<array>
+						<dict>
+							<key>dbKey</key>
+							<string>fg0</string>
+							<key>title</key>
+							<string>FG Made (0-39 yards)</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>fg40</string>
+							<key>title</key>
+							<string>FG Made (40-49 yards)</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>fg50</string>
+							<key>title</key>
+							<string>FG Made (50+ yards)</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>fgm0</string>
+							<key>title</key>
+							<string>FG Missed (0-39 yards)</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>fgm40</string>
+							<key>title</key>
+							<string>FG Missed (40-49 yards)</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>fgm50</string>
+							<key>title</key>
+							<string>FG Missed (50+ yards)</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+					</array>
+					<key>title</key>
+					<string>Kick Distance</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>dbTable</key>
+			<string>projections_defense</string>
+			<key>title</key>
+			<string>Defense &amp; Special Teams</string>
+			<key>sections</key>
+			<array>
+				<dict>
+					<key>items</key>
+					<array>
+						<dict>
+							<key>dbKey</key>
+							<string>inttd</string>
+							<key>title</key>
+							<string>Interception Return TD</string>
+							<key>value</key>
+							<integer>6</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>frtd</string>
+							<key>title</key>
+							<string>Fumble Return TD</string>
+							<key>value</key>
+							<integer>6</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>deft_fum_rec</string>
+							<key>title</key>
+							<string>Each Fumble Recovery</string>
+							<key>value</key>
+							<integer>2</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>deft_fum_force</string>
+							<key>title</key>
+							<string>Each Fumble Forced</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>deft_int</string>
+							<key>title</key>
+							<string>Each Interception</string>
+							<key>value</key>
+							<integer>2</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>deft_sack</string>
+							<key>title</key>
+							<string>Each Sack</string>
+							<key>value</key>
+							<integer>1</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>deft_safe</string>
+							<key>title</key>
+							<string>Each Safety</string>
+							<key>value</key>
+							<integer>2</integer>
+						</dict>
+					</array>
+					<key>title</key>
+					<string>Standard</string>
+				</dict>
+				<dict>
+					<key>items</key>
+					<array>
+						<dict>
+							<key>dbKey</key>
+							<string>pa0</string>
+							<key>title</key>
+							<string>0 points allowed</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>pa1</string>
+							<key>title</key>
+							<string>1-6 points allowed</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>pa7</string>
+							<key>title</key>
+							<string>7-13 points allowed</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>pa14</string>
+							<key>title</key>
+							<string>14-17 points allowed</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>pa18</string>
+							<key>title</key>
+							<string>18-21 points allowed</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>pa22</string>
+							<key>title</key>
+							<string>22-27 points allowed</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>pa28</string>
+							<key>title</key>
+							<string>28-34 points allowed</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>pa35</string>
+							<key>title</key>
+							<string>35-45 points allowed</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>pa46</string>
+							<key>title</key>
+							<string>46+ points allowed</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+					</array>
+					<key>title</key>
+					<string>Points Allowed</string>
+				</dict>
+				<dict>
+					<key>items</key>
+					<array>
+						<dict>
+							<key>dbKey</key>
+							<string>ya100</string>
+							<key>title</key>
+							<string>Less than 100 total yards allowed</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>ya199</string>
+							<key>title</key>
+							<string>100-199 total yards allowed</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>ya299</string>
+							<key>title</key>
+							<string>200-299 total yards allowed</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>ya349</string>
+							<key>title</key>
+							<string>300-349 total yards allowed</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>ya399</string>
+							<key>title</key>
+							<string>350-399 total yards allowed</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>ya449</string>
+							<key>title</key>
+							<string>400-449 total yards allowed</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>ya499</string>
+							<key>title</key>
+							<string>450-499 total yards allowed</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>ya549</string>
+							<key>title</key>
+							<string>500-549 total yards allowed</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>ya550</string>
+							<key>title</key>
+							<string>550+ total yards allowed</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+					</array>
+					<key>title</key>
+					<string>Yards Allowed</string>
+				</dict>
+				<dict>
+					<key>items</key>
+					<array>
+						<dict>
+							<key>dbKey</key>
+							<string>krtd</string>
+							<key>title</key>
+							<string>Kickoff Return TD</string>
+							<key>value</key>
+							<integer>6</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>prtd</string>
+							<key>title</key>
+							<string>Punt Return TD</string>
+							<key>value</key>
+							<integer>6</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>blkkrtd</string>
+							<key>title</key>
+							<string>Blocked Punt or FG return for TD</string>
+							<key>value</key>
+							<integer>6</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>deft_blk_kick</string>
+							<key>title</key>
+							<string>Blocked Punt, PAT or FG</string>
+							<key>value</key>
+							<integer>1</integer>
+						</dict>
+						<dict>
+							<key>divide</key>
+							<true/>
+							<key>value</key>
+							<integer>0</integer>
+							<key>title</key>
+							<string>Kick Return Yards per Point</string>
+							<key>dbKey</key>
+							<string>kr</string>
+						</dict>
+						<dict>
+							<key>divide</key>
+							<true/>
+							<key>value</key>
+							<integer>0</integer>
+							<key>title</key>
+							<string>Punt Return Yards per Point</string>
+							<key>dbKey</key>
+							<string>pr</string>
+						</dict>
+					</array>
+					<key>title</key>
+					<string>Special Teams</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>dbTable</key>
+			<string>projections_specialteams</string>
+			<key>title</key>
+			<string>Miscellaneous</string>
+			<key>sections</key>
+			<array>
+				<dict>
+					<key>items</key>
+					<array>
+						<dict>
+							<key>dbKey</key>
+							<string>krtd</string>
+							<key>title</key>
+							<string>Kickoff Return TD</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>prtd</string>
+							<key>title</key>
+							<string>Punt Return TD</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>divide</key>
+							<true/>
+							<key>value</key>
+							<integer>0</integer>
+							<key>title</key>
+							<string>Kick Return Yards per Point</string>
+							<key>dbKey</key>
+							<string>kr</string>
+						</dict>
+						<dict>
+							<key>divide</key>
+							<true/>
+							<key>value</key>
+							<integer>0</integer>
+							<key>title</key>
+							<string>Punt Return Yards per Point</string>
+							<key>dbKey</key>
+							<string>pr</string>
+						</dict>
+					</array>
+					<key>title</key>
+          <string>Standard</string>
+				</dict>
+				<dict>
+					<key>items</key>
+					<array>
+						<dict>
+							<key>dbKey</key>
+							<string>ftd</string>
+							<key>title</key>
+							<string>Fumble Recovered for TD</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+					</array>
+					<key>title</key>
+					<string>Misc (Individual Player)</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>dbTable</key>
+			<string>projections_idp</string>
+			<key>title</key>
+			<string>Individual Defensive Players</string>
+			<key>sections</key>
+			<array>
+				<dict>
+					<key>items</key>
+					<array>
+						<dict>
+							<key>dbKey</key>
+							<string>tk</string>
+							<key>title</key>
+							<string>Solo Tackles</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>tka</string>
+							<key>title</key>
+							<string>Assisted Tackles</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>int</string>
+							<key>title</key>
+							<string>Each Interception</string>
+							<key>value</key>
+							<integer>2</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>fr</string>
+							<key>title</key>
+							<string>Each Fumble Recovery</string>
+							<key>value</key>
+							<integer>2</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>ff</string>
+							<key>title</key>
+							<string>Each Fumble Forced</string>
+							<key>value</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>sk</string>
+							<key>title</key>
+							<string>Each Sack</string>
+							<key>value</key>
+							<integer>1</integer>
+						</dict>
+						<dict>
+							<key>dbKey</key>
+							<string>sf</string>
+							<key>title</key>
+							<string>Each Safety</string>
+							<key>value</key>
+							<integer>2</integer>
+						</dict>
+					</array>
+					<key>title</key>
+					<string>Standard</string>
+				</dict>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>
