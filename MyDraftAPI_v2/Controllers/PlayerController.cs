@@ -35,7 +35,7 @@ namespace MyDraftAPI_v2.Controllers
         /// 
         /// Get Player by ID
         /// 
-        [HttpGet]
+        [HttpGet("{id}")]
         public ActionResult GetPlayerByID(int id)
         {
             var service = new PlayerService.Player(_db, _config, null, null);
