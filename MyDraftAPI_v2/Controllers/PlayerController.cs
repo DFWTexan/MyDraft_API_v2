@@ -10,11 +10,13 @@ namespace MyDraftAPI_v2.Controllers
     {
         private readonly AppDataContext _db;
         private readonly IConfiguration _config;
+        private readonly ILogger<PlayerController> _logger;
 
-        public PlayerController(AppDataContext db, IConfiguration config)
+        public PlayerController(AppDataContext db, IConfiguration config, ILogger<PlayerController> logger)
         {
             _db = db;
             _config = config;
+            _logger = logger;
         }
 
         /// <summary>
