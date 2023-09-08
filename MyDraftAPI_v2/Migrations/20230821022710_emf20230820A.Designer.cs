@@ -4,6 +4,7 @@ using DbData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MyDraftAPI_v2.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    partial class AppDataContextModelSnapshot : ModelSnapshot
+    [Migration("20230821022710_emf20230820A")]
+    partial class emf20230820A
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -422,22 +425,6 @@ namespace MyDraftAPI_v2.Migrations
                     b.ToTable("UserDraftSelections", (string)null);
                 });
 
-            modelBuilder.Entity("Database.Model.UserDraftStatus", b =>
-                {
-                    b.Property<int>("CurrentPick")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsComplete")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("LeagueID")
-                        .HasColumnType("int");
-
-                    b.HasIndex("LeagueID");
-
-                    b.ToTable("UserDraftStatus", (string)null);
-                });
-
             modelBuilder.Entity("Database.Model.UserLeague", b =>
                 {
                     b.Property<int>("ID")
@@ -625,17 +612,6 @@ namespace MyDraftAPI_v2.Migrations
                     b.Navigation("AwayTeam");
 
                     b.Navigation("HomeTeam");
-                });
-
-            modelBuilder.Entity("Database.Model.UserDraftStatus", b =>
-                {
-                    b.HasOne("Database.Model.UserLeague", "League")
-                        .WithMany()
-                        .HasForeignKey("LeagueID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("League");
                 });
 
             modelBuilder.Entity("Database.Model.UserLeagueTeams", b =>

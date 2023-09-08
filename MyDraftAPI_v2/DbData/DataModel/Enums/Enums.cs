@@ -9,4 +9,16 @@
         Kicker = 5,
         Defense = 6
     }
+    public enum SortType
+    {
+        SortTypeGeneral,
+        SortTypePoints,
+        SortTypeDVBD,
+        SortTypeDVBDRank,
+        SortTypeADP,
+        SortTypeAAV,
+        SortTypeCustom,
+        SortTypeStats,
+        SortTypeRatings,
+    }
 }

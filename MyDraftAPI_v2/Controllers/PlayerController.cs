@@ -10,11 +10,13 @@ namespace MyDraftAPI_v2.Controllers
     {
         private readonly AppDataContext _db;
         private readonly IConfiguration _config;
+        private readonly ILogger<PlayerController> _logger;
 
-        public PlayerController(AppDataContext db, IConfiguration config)
+        public PlayerController(AppDataContext db, IConfiguration config, ILogger<PlayerController> logger)
         {
             _db = db;
             _config = config;
+            _logger = logger;
         }
 
         /// <summary>
@@ -24,7 +26,7 @@ namespace MyDraftAPI_v2.Controllers
         [HttpGet]
         public async Task<ActionResult> GetPlayers()
         {
-            var service = new PlayerService.Player(_db, _config, null, null);
+            var service = new PlayerService.PlayerSvc(_db, _config, null, null);
 
             var result = await service.GetPlayers();
 
@@ -38,7 +40,7 @@ namespace MyDraftAPI_v2.Controllers
         [HttpGet("{id}")]
         public ActionResult GetPlayerByID(int id)
         {
-            var service = new PlayerService.Player(_db, _config, null, null);
+            var service = new PlayerService.PlayerSvc(_db, _config, null, null);
 
             var result =  service.GetPlayerByID(id);
 
