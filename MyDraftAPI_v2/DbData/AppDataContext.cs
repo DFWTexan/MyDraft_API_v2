@@ -14,21 +14,21 @@ namespace DbData
 
         public AppDataContext(DbContextOptions<AppDataContext> options) : base(options) { }
 
-        public DbSet<Database.Model.Player> Players { get; set; }
+        public DbSet<Database.Model.Player> Player { get; set; }
         public DbSet<Database.Model.PlayerNews> PlayerNews { get; set; }
         public DbSet<Database.Model.Points> Points { get; set; }
-        public DbSet<Database.Model.ProTeam> ProTeams { get; set; }
+        public DbSet<Database.Model.ProTeam> ProTeam { get; set; }
         public DbSet<Database.Model.Position> Positions { get; set; }
         public DbSet<Database.Model.UserLeague> UserLeague { get; set; }
         public DbSet<Database.Model.DepthChart> DepthChart { get; set; }
-        public DbSet<Database.Model.UserLeagueTeams> UserLeagueTeams { get; set; }
-        public DbSet<Database.Model.UserDraftSelections> UserDraftSelections { get; set; }
+        public DbSet<Database.Model.UserLeagueTeams> UserLeagueTeam { get; set; }
+        public DbSet<Database.Model.UserDraftSelections> UserDraftSelection { get; set; }
+        public DbSet<Database.Model.UserDraftStatus> UserDraftStatus { get; set; }
         public DbSet<Database.Model.Schedule> Schedule { get; set; }
         public DbSet<Database.Model.PlayerPosition> PlayerPosition { get; set; }
         public DbSet<Database.Model.Injury> Injuries { get; set; }
         public DbSet<Database.Model.DVDB> DVDB { get; set; }
         public DbSet<Database.Model.AAV> AAV { get; set; }
-            
         public DbSet<Database.Model.ADP> ADP { get; set; }
 
 
@@ -43,6 +43,7 @@ namespace DbData
             modelBuilder.Entity<Database.Model.DepthChart>().ToTable("DepthChart");
             modelBuilder.Entity<Database.Model.UserLeagueTeams>().ToTable("UserLeagueTeams");
             modelBuilder.Entity<Database.Model.UserDraftSelections>().ToTable("UserDraftSelections").HasNoKey();
+            modelBuilder.Entity<Database.Model.UserDraftStatus>().ToTable("UserDraftStatus").HasNoKey();
             modelBuilder.Entity<Database.Model.Schedule>().ToTable("Schedule");
             modelBuilder.Entity<Database.Model.PlayerPosition>().ToTable("PlayerPosition");
             modelBuilder.Entity<Database.Model.Injury>().ToTable("Injuries");

@@ -1,4 +1,5 @@
-﻿using DraftService;
+﻿using DataModel.Response;
+using DraftService;
 using MyDraftAPI_v2.FantasyDataModel;
 using MyDraftAPI_v2.FantasyDataModel.Draft;
 using MyDraftAPI_v2.Managers;
@@ -7,7 +8,7 @@ using static MyDraftAPI_v2.FantasyDataModel.FantasyLeage;
 
 namespace MyDraftAPI_v2.Engines
 {
-    class MyDraftEngine
+    public class MyDraftEngine
     {
 
         #region // Public Properties //
@@ -554,6 +555,16 @@ namespace MyDraftAPI_v2.Engines
             }
             _typeAuction = await DraftManager.isAuctionDraft();
             await Task.Run(() => calculateCustomScoringAsync());
+        }
+        public ReturnResult InitializeLeagueData_v2(Database.Model.UserLeague vInput)
+        {
+            var result = new ReturnResult
+            {
+                Success = true,
+                StatusCode = 200
+            };
+
+            return result;
         }
         public async Task reload()
         {

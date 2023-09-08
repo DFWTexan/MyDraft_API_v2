@@ -15,5 +15,6 @@ namespace Database.Model
         public string? DraftOrder { get; set; }
         public int NumberOfTeams { get; set; }
         public int NumberOfRounds { get; set; }
+        public DateTime LastActiveDate { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace MyDraftAPI_v2.Controllers
         private readonly AppDataContext _db;
         private readonly IConfiguration _config;
         private readonly ILogger<DraftController> _logger;
-        public DraftController(AppDataContext db, IConfiguration config, ILogger<PlayerController> logger)
+        public DraftController(AppDataContext db, IConfiguration config, ILogger<DraftController> logger)
         {
             _db = db;
             _config = config;
@@ -19,8 +19,31 @@ namespace MyDraftAPI_v2.Controllers
 
         /// <summary>
         ///     
-        /// Get All Drafts
-        /// 
+        /// Get All DraftStatus
+        ///
+        //[HttpGet("{id}")]
+        //public ActionResult GetDraftStatus(int id)
+        //{
+        //    var service = new DraftService.DraftSvc(_db, _config, null, null);
+
+        //    var result = service.GetDraftStatus(id);
+
+        //    return StatusCode(result.StatusCode, result.ObjData);
+        //}
+
+        /// <summary>
+        ///     
+        /// Get All Daft Picks for League
+        ///
+        [HttpGet("{id}")]
+        public ActionResult GetDraftPicksForLeague(int id)
+        {
+            var service = new DraftService.DraftSvc(_db, _config, null, null);
+
+            var result = service.GetDraftPicksForLeague(id);
+
+            return StatusCode(result.StatusCode, result.ObjData);
+        }
 
 
     }

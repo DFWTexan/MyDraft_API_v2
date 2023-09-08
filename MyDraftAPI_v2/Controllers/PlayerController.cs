@@ -26,7 +26,7 @@ namespace MyDraftAPI_v2.Controllers
         [HttpGet]
         public async Task<ActionResult> GetPlayers()
         {
-            var service = new PlayerService.Player(_db, _config, null, null);
+            var service = new PlayerService.PlayerSvc(_db, _config, null, null);
 
             var result = await service.GetPlayers();
 
@@ -40,7 +40,7 @@ namespace MyDraftAPI_v2.Controllers
         [HttpGet("{id}")]
         public ActionResult GetPlayerByID(int id)
         {
-            var service = new PlayerService.Player(_db, _config, null, null);
+            var service = new PlayerService.PlayerSvc(_db, _config, null, null);
 
             var result =  service.GetPlayerByID(id);
 

@@ -5,7 +5,7 @@ using DbData.ViewModel;
 
 namespace PlayerService
 {
-    public class Player
+    public class PlayerSvc
     {
         private readonly AppDataContext _db;
         private readonly IConfiguration _config;
@@ -14,7 +14,7 @@ namespace PlayerService
         //private readonly IMapper _mapper;
         //private readonly ILogger _logger;
 
-        public Player(AppDataContext db, IConfiguration config, IWebHostEnvironment env, UtilityService.Utility utility)
+        public PlayerSvc(AppDataContext db, IConfiguration config, IWebHostEnvironment env, UtilityService.Utility utility)
         {
             _db = db;
             _config = config;
@@ -29,7 +29,7 @@ namespace PlayerService
             var result = new DataModel.Response.ReturnResult();
             try
             {
-                var players = await _db.Players.Take(100).ToListAsync();
+                var players = await _db.Player.Take(100).ToListAsync();
                 result.ObjData = players;
                 result.Success = true;
             }
@@ -46,7 +46,7 @@ namespace PlayerService
             var result = new DataModel.Response.ReturnResult();
             try
             {
-                var player = _db.Players.Where(x => x.ID == id).SingleOrDefault();
+                var player = _db.Player.Where(x => x.ID == id).SingleOrDefault();
                 
                 var playerInfo = new PlayerInfo
                 {
