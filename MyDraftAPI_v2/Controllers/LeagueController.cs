@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DbData;
+using DataModel.Response;
 
 namespace MyDraftAPI_v2.Controllers
 {
@@ -11,13 +12,14 @@ namespace MyDraftAPI_v2.Controllers
         private readonly IConfiguration _config;
         private readonly ILogger<LeagueController> _logger;
 
-        //private DraftEngine_v2 _draftEngine;
+        private DraftEngine_v2 _draftEngine;
 
-        public LeagueController(AppDataContext db, IConfiguration config, ILogger<LeagueController> logger)
+        public LeagueController(AppDataContext db, IConfiguration config, ILogger<LeagueController> logger, DraftEngine_v2 draftEngine)
         {
             _db = db;
             _config = config;
             _logger = logger;
+            _draftEngine = draftEngine;
             //_draftEngine = draftEngine;
             //_draftEngine = draftEngine;
         }
@@ -41,13 +43,13 @@ namespace MyDraftAPI_v2.Controllers
         /// Get Initialize League Data
         ///
         //[HttpPost]
-        //public ActionResult InitLeageData([FromBody] Database.Model.UserLeague vInput)
+        //public ReturnResult InitLeageData([FromBody] Database.Model.UserLeague vInput)
         //{
         //    //var service = new LeagueService.LeagueSvc(_db, _config, null, null);
 
         //    var result = _draftEngine.InitializeLeagueData_v2(vInput);
 
-        //    return StatusCode(result.StatusCode, result.ObjData);
+        //    //return StatusCode(result. , result.ObjData);
         //}
     }
 }
