@@ -15,7 +15,7 @@ namespace MyDraftAPI_v2.FantasyDataModel.Draft
         public DraftPickMemento(DraftPick draftPick)
         {
             this.timestamp = TNUtility.DateTimeToUnixTimestamp(DateTime.Now);
-            this.overall = draftPick.overall;
+            this.overall = (int)draftPick.overall;
             this.playerID = draftPick.playerID;
             this.auctionValue = draftPick.auctionValue;
             this.isKeeper = draftPick.isKeeper;

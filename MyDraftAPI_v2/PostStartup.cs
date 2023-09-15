@@ -20,7 +20,7 @@
             //    ID = 1
             //};
 
-            await _draftEngine.InitializeLeagueData_v2();
+            await _draftEngine.Initialize();
 
             //return Task.CompletedTask;
         }

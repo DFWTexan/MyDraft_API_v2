@@ -35,6 +35,8 @@ namespace MyDraftAPI_v2.Controllers
 
             var result = service.GetActiveLeague();
 
+            _draftEngine.ActiveLeague = (Database.Model.UserLeague?)result.ObjData;
+
             return StatusCode(result.StatusCode, result.ObjData);
         }
 
@@ -42,14 +44,12 @@ namespace MyDraftAPI_v2.Controllers
         /// 
         /// Get Initialize League Data
         ///
-        //[HttpPost]
-        //public ReturnResult InitLeageData([FromBody] Database.Model.UserLeague vInput)
-        //{
-        //    //var service = new LeagueService.LeagueSvc(_db, _config, null, null);
+        [HttpPost]
+        public ActionResult InitLeageData([FromBody] Database.Model.UserLeague vInput)
+        {
+            _draftEngine.InitializeLeagueData_v2(vInput);
 
-        //    var result = _draftEngine.InitializeLeagueData_v2(vInput);
-
-        //    //return StatusCode(result. , result.ObjData);
-        //}
+            return Ok();
+        }
     }
 }

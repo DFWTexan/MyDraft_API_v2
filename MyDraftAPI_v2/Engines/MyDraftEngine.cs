@@ -551,7 +551,7 @@ namespace MyDraftAPI_v2.Engines
 
             foreach (DraftPick draftPick in _draftPicks)
             {
-                _draftPickMap.Add(draftPick.overall, draftPick);
+                _draftPickMap.Add((int)draftPick.overall, draftPick);
             }
             _typeAuction = await DraftManager.isAuctionDraft();
             await Task.Run(() => calculateCustomScoringAsync());
@@ -654,7 +654,7 @@ namespace MyDraftAPI_v2.Engines
 
             foreach (DraftPick draftPick in draftPicksForTeam)
             {
-                int teamOverallPick = draftPick.overall;
+                int teamOverallPick = (int)draftPick.overall;
                 if ((teamOverallPick >= startingAtOverall) && draftPick.playerID == null)
                 {
                     return draftPick;
@@ -692,7 +692,7 @@ namespace MyDraftAPI_v2.Engines
             DraftPick otcPick = draftPickForOverall(overall);
             if (otcPick != null)
             {
-                _draftStatus.onTheClock = otcPick.overall;
+                _draftStatus.onTheClock = (int)otcPick.overall;
                 await DraftManager.saveDraftStatus(_draftStatus);
 
                 //if (DidChangeOnTheClock != null)
@@ -730,7 +730,7 @@ namespace MyDraftAPI_v2.Engines
             {
                 await DraftManager.deleteDraftPick(draftPick);
                 _draftPicks.Remove(draftPick);
-                _draftPickMap.Remove(draftPick.overall);
+                _draftPickMap.Remove((int)draftPick.overall);
             }
 
             if (DidChangeDraftPick != null)
@@ -762,7 +762,7 @@ namespace MyDraftAPI_v2.Engines
             if (otcPick != null && otcPick.playerID == null)
                 return;
 
-            int otcOverall = otcPick != null ? otcPick.overall : 0;
+            int otcOverall = otcPick != null ? (int)otcPick.overall : 0;
             DraftPick nextOTC = nextAvailableDraftPickAfterOverall(otcOverall);
             if (nextOTC == null)
             {
@@ -772,7 +772,7 @@ namespace MyDraftAPI_v2.Engines
 
             if (otcPick == null || nextOTC.overall != otcPick.overall)
             {
-                _draftStatus.onTheClock = nextOTC.overall;
+                _draftStatus.onTheClock = (int)nextOTC.overall;
                 otcPick = onTheClockDraftPick();
 
                 // Update the OTC pick. If none can be found then declare the draft complete.
@@ -811,7 +811,7 @@ namespace MyDraftAPI_v2.Engines
         public async Task executeDraftPick(FantasyTeam team, String playerID)
         {
             DraftPick draftPick = nextAvailableDraftPickForTeam(team);
-            await executeDraftPick(draftPick.overall, playerID);
+            await executeDraftPick((int)draftPick.overall, playerID);
         }
         public async Task executeDraftPick(int overall, String playerID, bool isKeeper)
         {
@@ -860,7 +860,7 @@ namespace MyDraftAPI_v2.Engines
 
             await DraftManager.saveDraftPick(draftPick);
             _draftPicks.Add(draftPick);
-            _draftPickMap.Add(draftPick.overall, draftPick);
+            _draftPickMap.Add((int)draftPick.overall, draftPick);
 
             if (DidChangeDraftPick != null)
             {

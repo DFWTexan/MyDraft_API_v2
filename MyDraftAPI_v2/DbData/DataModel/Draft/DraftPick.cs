@@ -8,15 +8,15 @@ namespace MyDraftAPI_v2.FantasyDataModel.Draft
         [Column("league_id")]
         public int leagueID { get; set; }
         [Column("overall")]
-        public int overall { get; set; }
+        public int? overall { get; set; }
         [Column("round")]
-        public int round { get; set; }
+        public int? round { get; set; }
         [Column("pick_in_round")]
-        public int pickInRound { get; set; }
+        public int? pickInRound { get; set; }
         [Column("team_id")]
         public int teamID { get; set; }
         [Column("player_id")]
-        public String playerID { get; set; }
+        public string playerID { get; set; }
         [Column("auction_value")]
         public float auctionValue { get; set; }
         [Column("is_keeper")]
@@ -32,7 +32,7 @@ namespace MyDraftAPI_v2.FantasyDataModel.Draft
         }
 
         public DraftPick() { }
-        public DraftPick(int leagueID, int overall, int round, int pickInRound, int teamID, String playerID, float auctionValue, bool isKeeper)
+        public DraftPick(int leagueID, int overall, int round, int pickInRound, int teamID, string playerID, float auctionValue, bool isKeeper)
         {
             this.leagueID = leagueID;
             this.overall = overall;
@@ -52,7 +52,7 @@ namespace MyDraftAPI_v2.FantasyDataModel.Draft
         public void setState(DraftPickMemento memento)
         {
             this.overall = memento.overall;
-            this.playerID = memento.playerID;
+            //this.playerID = memento.playerID;
             this.auctionValue = memento.auctionValue;
             this.isKeeper = memento.isKeeper;
         }
