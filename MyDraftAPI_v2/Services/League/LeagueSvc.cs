@@ -20,7 +20,7 @@ namespace LeagueService
         private readonly AppDataContext _db;
         private readonly IConfiguration _config;
         private readonly IWebHostEnvironment _env;
-        private readonly UtilityService.Utility _utility;
+        private UtilityService.Utility _utility;
 
         private static String TABLE_USER_TEAMS = "user_teams";
         private static String TABLE_USER_LEAGUES = "user_leagues";
@@ -219,6 +219,36 @@ namespace LeagueService
             }
 
             return teams;
+        }
+        public DataModel.Response.ReturnResult TeamsForLeague(int leagueID)
+        {
+            var result = new DataModel.Response.ReturnResult();
+            try
+            {
+                var teams = _db.UserLeagueTeam
+                            .Where(q => q.LeagueID == leagueID)
+                            .OrderBy(q => q.DraftPosition)
+                            .Select(i => new FantasyTeam()
+                            {
+                                identifier = i.ID,
+                                leagueID = i.LeagueID,
+                                name = i.Name ?? "",
+                                abbr = i.Abbreviation ?? "",
+                                draftPosition = i.DraftPosition,
+                                owner = i.Owner ?? ""
+                            })
+                            //.AsNoTracking()
+                            .ToList();
+
+                result.ObjData = teams.ToList();
+            }
+            catch (Exception ex)
+            {
+                result.Success = false;
+                result.ErrMessage = ex.Message;
+            }
+            
+            return result;
         }
 
         public async Task<FantasyLeague> getLeagueWithID(int identifier)

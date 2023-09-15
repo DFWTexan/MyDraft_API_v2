@@ -20,8 +20,6 @@ namespace MyDraftAPI_v2.Controllers
             _config = config;
             _logger = logger;
             _draftEngine = draftEngine;
-            //_draftEngine = draftEngine;
-            //_draftEngine = draftEngine;
         }
 
         /// <summary>
@@ -50,6 +48,21 @@ namespace MyDraftAPI_v2.Controllers
             _draftEngine.InitializeLeagueData_v2(vInput);
 
             return Ok();
+        }
+
+
+        /// <summary>
+        /// 
+        /// Get Active League
+        ///
+        [HttpGet("{id}")]
+        public ActionResult TeamsForLeague(int id)
+        {
+            var service = new LeagueService.LeagueSvc(_db, _config, null, null);
+
+            var result = service.TeamsForLeague(id);
+
+            return StatusCode(result.StatusCode, result.ObjData);
         }
     }
 }
