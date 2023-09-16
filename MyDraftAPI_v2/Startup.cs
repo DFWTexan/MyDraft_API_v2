@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MyDraftAPI_v2.Middleware;
 using DbData;
+using Microsoft.OpenApi.Models;
 
 namespace MyDraftAPI_v2
 {
@@ -30,6 +31,11 @@ namespace MyDraftAPI_v2
             services.AddSingleton<DraftEngine_v2, DraftEngine_v2>();
 
             services.AddHostedService<PostStartup>();
+
+            //services.AddSwaggerGen(c =>
+            //{
+            //    c.SwaggerDoc("{SWAGGER_VERSION}", new OpenApiInfo { Title = "{PROJECT_TITLE}", Version = "{SWAGGER_VERSION}" });
+            //});
 
             //services.AddAuthorization();
             services.AddDbContext<AppDataContext>(options =>

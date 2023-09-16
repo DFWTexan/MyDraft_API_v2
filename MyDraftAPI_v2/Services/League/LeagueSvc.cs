@@ -237,7 +237,7 @@ namespace LeagueService
                                 draftPosition = i.DraftPosition,
                                 owner = i.Owner ?? ""
                             })
-                            //.AsNoTracking()
+                            .AsNoTracking()
                             .ToList();
 
                 result.ObjData = teams.ToList();
