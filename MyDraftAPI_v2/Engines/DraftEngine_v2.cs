@@ -27,6 +27,13 @@ namespace MyDraftAPI_v2
 
         #region Properties
         public UserLeague? ActiveLeague { get; set; } = null;
+        public IList<DraftPick> draftPicks
+        {
+            get
+            {
+                return _draftPicks;
+            }
+        }
         #endregion
 
         public DraftEngine_v2(ILogger<DraftEngine_v2> logger, Microsoft.Extensions.Hosting.IHostApplicationLifetime appLifetime, IConfiguration config)
@@ -122,37 +129,24 @@ namespace MyDraftAPI_v2
 
         public async Task<IList<FantasyTeam>> TeamsForLeague()
         {
-            //await Task.Delay(2000);
-            //IList<FantasyTeam> teams = await DBAdapter.executeQuery<FantasyTeam>("SELECT * FROM " + TABLE_USER_TEAMS + " WHERE league_id = ? ORDER BY draft_position ASC", league.identifier);
-            //IList<FantasyTeam> teams = new List<FantasyTeam>();
             using (var db = new AppDataContext(_dbOptionsBuilder.Options))
             {
-                IList<FantasyTeam> teams = (IList<FantasyTeam>) await db.UserLeagueTeam
-                                                                    .Where(q => q.LeagueID == ActiveLeague.ID)
-                                                                    .OrderBy(q => q.DraftPosition)
-                                                                    .Select(i => new FantasyTeam()
-                                                                    {
-                                                                        identifier = i.ID,
-                                                                        leagueID = i.LeagueID,
-                                                                        name = i.Name ?? "",
-                                                                        abbr = i.Abbreviation ?? "",
-                                                                        draftPosition = i.DraftPosition,
-                                                                        owner = i.Owner ?? ""   
-                                                                    })
-                                                                    .ToListAsync();
+                var teams =  await db.UserLeagueTeam
+                                    .Where(q => q.LeagueID == ActiveLeague.ID)
+                                    .OrderBy(q => q.DraftPosition)
+                                    .Select(i => new FantasyTeam()
+                                    {
+                                        identifier = i.ID,
+                                        leagueID = i.LeagueID,
+                                        name = i.Name ?? "",
+                                        abbr = i.Abbreviation ?? "",
+                                        draftPosition = i.DraftPosition,
+                                        owner = i.Owner ?? ""   
+                                    })
+                                    .ToListAsync();
                 
-                //foreach (FantasyTeam team in teams)
-                //{
-                //    team.league = league;
-                //    //team.auctionRosterCount = await team.getAuctionRosterCount();
-                //    //team.budgetAmount = await team.getAuctionAmountAvailable();
-                //}
-
                 return teams;
             }
-                
-
-            
         }
 
         public async Task Initialize()

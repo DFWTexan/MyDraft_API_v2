@@ -35,6 +35,7 @@ namespace DraftService
 
             var draftStatus = await _db.UserDraftStatus
                 .Where(x => x.LeagueID == leagueID)
+                .AsNoTracking()
                 .FirstOrDefaultAsync();
             
             if (draftStatus != null)
@@ -55,6 +56,7 @@ namespace DraftService
         {
             var draftPicks = _db.UserDraftSelection
                     .Where(x => x.LeagueID == leagueID)
+                    .AsNoTracking()
                     .ToList();
 
             return (IList<DraftPick>)draftPicks;
@@ -68,6 +70,7 @@ namespace DraftService
             {
                 var draftPicks = _db.UserDraftSelection
                     .Where(x => x.LeagueID == leagueID)
+                    .AsNoTracking()
                     .ToList();
 
                 result.StatusCode = 200;
