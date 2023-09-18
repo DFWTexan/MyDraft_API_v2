@@ -42,11 +42,14 @@ namespace MyDraftAPI_v2.Controllers
         [HttpGet("{id}")]
         public ActionResult GetDraftPicksForLeague(int id)
         {
-            var result = new DataModel.Response.ReturnResult();
+            //var result = new DataModel.Response.ReturnResult();
+            //result.Success = true;
+            //result.StatusCode = 200;
+            //result.ObjData = _draftEngine.draftPicks;
 
-            result.Success = true;
-            result.StatusCode = 200;
-            result.ObjData = _draftEngine.draftPicks;
+            var service = new DraftService.DraftSvc(_db, _config, null, null);
+
+            var result = service.GetDraftPicksForLeague(id);
 
             return StatusCode(result.StatusCode, result.ObjData);
         }
