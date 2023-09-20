@@ -3,7 +3,6 @@ using MyDraftAPI_v2.FantasyDataModel;
 using MyDraftLib.Utilities;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
-using static MyDraftAPI_v2.FantasyDataModel.FantasyLeage;
 
 namespace MyDraftAPI_v2.Managers
 {

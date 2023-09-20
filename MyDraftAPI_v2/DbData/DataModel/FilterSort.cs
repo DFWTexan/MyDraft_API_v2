@@ -1,5 +1,5 @@
-﻿using MyDraftAPI_v2.Managers;
-using static MyDraftAPI_v2.FantasyDataModel.FantasyLeage;
+﻿using MyDraftAPI_v2.FantasyDataModel;
+using MyDraftAPI_v2.Managers;
 
 namespace MyDraftAPI_v2.DbData.DataModel
 {
@@ -85,12 +85,12 @@ namespace MyDraftAPI_v2.DbData.DataModel
             this.league = league;
             this.sortType = sortType;
         }
-        public FilterSort(SortType sortType)
-        {
-            setDefaultValues();
-            this.league = league;
-            this.sortType = sortType;
-        }
+        //public FilterSort(SortType sortType, FantasyLeague league)
+        //{
+        //    setDefaultValues();
+        //    this.league = league;
+        //    this.sortType = sortType;
+        //}
 
         private void configureForSortType()
         {

@@ -1,12 +1,12 @@
 ﻿using Database.Model;
 using DbData;
 using Microsoft.EntityFrameworkCore;
-using DbData.ViewModel;
+using ViewModel;
 using MyDraftAPI_v2.FantasyDataModel;
 using System.Text;
 using MyDraftAPI_v2.FantasyDataModel.Draft;
-using static MyDraftAPI_v2.FantasyDataModel.FantasyLeage;
 using System.Diagnostics;
+using MyDraftAPI_v2.Services.Algorithms;
 
 namespace DraftService
 {
@@ -18,7 +18,7 @@ namespace DraftService
         private readonly UtilityService.Utility _utility;
         //private readonly IMapper _mapper;
         //private readonly ILogger _logger;
-        
+
         public DraftSvc(AppDataContext db, IConfiguration config, IWebHostEnvironment env, UtilityService.Utility utility)
         {
             _db = db;
@@ -37,7 +37,7 @@ namespace DraftService
                 .Where(x => x.LeagueID == leagueID)
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
-            
+
             if (draftStatus != null)
             {
                 result.leagueID = leagueID;
@@ -52,26 +52,71 @@ namespace DraftService
             }
         }
 
-        public IList<DraftPick> draftPicksForLeague(int leagueID)
+        public List<ViewModel.DraftPick> draftPicksForLeague(int leagueID)
         {
             var draftPicks = _db.UserDraftSelection
                     .Where(x => x.LeagueID == leagueID)
+                    .Select(q => new ViewModel.DraftPick()
+                    {
+                        leagueID = q.LeagueID,
+                        overall = q.OverallPick,
+                        round = q.Round,
+                        pickInRound = q.Pick,
+                        teamID = q.TeamID,
+                        playerID = q.PlayerID
+                    })
                     .AsNoTracking()
                     .ToList();
 
-            return (IList<DraftPick>)draftPicks;
+            return (List<ViewModel.DraftPick>)draftPicks;
         }
 
-        public DataModel.Response.ReturnResult GetDraftPicksForLeague(int leagueID)
+        public DataModel.Response.ReturnResult GetDraftPicksForLeague(ViewModel.ActiveLeague vInput)
         {
             var result = new DataModel.Response.ReturnResult();
 
             try
             {
-                var draftPicks = _db.UserDraftSelection
-                    .Where(x => x.LeagueID == leagueID)
-                    .AsNoTracking()
-                    .ToList();
+                FantasyLeague fanLeague = new FantasyLeague()
+                {
+                    identifier = vInput.ID,
+                    numTeams = vInput.NumberOfTeams,
+                    rounds = vInput.NumberOfRounds,
+                    draftByTeamEnabled = true,
+                };
+
+                foreach(var i in vInput.teams)
+                {
+                    var addItem = new FantasyTeam()
+                    {
+                        identifier = i.ID,
+                        name = i.Name ?? "",
+                        abbr = i.Abbreviation ?? "",
+                    };
+                    fanLeague.fanTeams.Add(addItem);
+                }
+
+                //var draftPicks = _db.UserDraftSelection
+                //    .Where(x => x.LeagueID == vInput.ID)
+                //    .AsNoTracking()
+                //    .ToList();
+                var draftPicks = draftPicksForLeague(vInput.ID);
+
+                int totalPicks = vInput.NumberOfTeams * vInput.NumberOfRounds;
+                if (draftPicks.Count > totalPicks)
+                {
+                    int startIndex = totalPicks;
+                    int length = draftPicks.Count - totalPicks;
+                    draftPicks.RemoveRange(startIndex, length);
+                }
+                else
+                {
+                    List<ViewModel.DraftPick> generatedDraftPicks = (List<ViewModel.DraftPick>)DraftPickGenerator_v2.generateDraftPicks(fanLeague);
+                    int startIndex = draftPicks.Count;
+                    int length = generatedDraftPicks.Count - draftPicks.Count;
+                    IList<ViewModel.DraftPick> addedPicks = generatedDraftPicks.GetRange(startIndex, length);
+                    draftPicks.AddRange(addedPicks);
+                }
 
                 result.StatusCode = 200;
                 result.ObjData = draftPicks;
@@ -83,6 +128,6 @@ namespace DraftService
             }
 
             return result;
-        }   
+        }
     }
 }

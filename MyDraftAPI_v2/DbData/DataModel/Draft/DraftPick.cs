@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using static MyDraftAPI_v2.FantasyDataModel.FantasyLeage;
 
 namespace MyDraftAPI_v2.FantasyDataModel.Draft
 {

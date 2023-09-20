@@ -4,7 +4,6 @@ using MyDraftAPI_v2.DbData.DataModel;
 using MyDraftAPI_v2.FantasyDataModel;
 using MyDraftLib.Utilities;
 using Windows.Storage;
-using static MyDraftAPI_v2.FantasyDataModel.FantasyLeage;
 
 namespace MyDraftAPI_v2.Managers
 {

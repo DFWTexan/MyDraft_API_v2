@@ -11,7 +11,6 @@ using System.Diagnostics;
 using System.Text;
 using Windows.Data.Json;
 using Windows.Storage;
-using static MyDraftAPI_v2.FantasyDataModel.FantasyLeage;
 
 namespace MyDraftAPI_v2.Managers
 {

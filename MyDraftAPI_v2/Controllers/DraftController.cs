@@ -39,8 +39,8 @@ namespace MyDraftAPI_v2.Controllers
         ///     
         /// Get All Daft Picks for League
         ///
-        [HttpGet("{id}")]
-        public ActionResult GetDraftPicksForLeague(int id)
+        [HttpGet]
+        public ActionResult GetDraftPicksForLeague([FromBody] ViewModel.ActiveLeague vInput)
         {
             //var result = new DataModel.Response.ReturnResult();
             //result.Success = true;
@@ -49,7 +49,7 @@ namespace MyDraftAPI_v2.Controllers
 
             var service = new DraftService.DraftSvc(_db, _config, null, null);
 
-            var result = service.GetDraftPicksForLeague(id);
+            var result = service.GetDraftPicksForLeague(vInput);
 
             return StatusCode(result.StatusCode, result.ObjData);
         }

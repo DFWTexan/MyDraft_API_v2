@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations.Schema;
-using static MyDraftAPI_v2.FantasyDataModel.FantasyLeage;
 using MyDraftAPI_v2.Managers;
 
 namespace MyDraftAPI_v2.FantasyDataModel

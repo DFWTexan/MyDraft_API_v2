@@ -1,8 +1,8 @@
 ﻿using MyDraftAPI_v2.DbData.DataModel;
+using MyDraftAPI_v2.FantasyDataModel;
 using MyDraftAPI_v2.Managers;
 using MyDraftLib.Utilities;
 using System.Diagnostics;
-using static MyDraftAPI_v2.FantasyDataModel.FantasyLeage;
 
 namespace DraftService
 {

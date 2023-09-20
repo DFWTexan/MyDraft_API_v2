@@ -1,14 +1,8 @@
 ﻿using Database.Model;
-using DataModel.Response;
 using DbData;
-using DraftService;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using MyDraftAPI_v2.FantasyDataModel;
 using MyDraftAPI_v2.FantasyDataModel.Draft;
-using MyDraftAPI_v2.Managers;
-using static MyDraftAPI_v2.FantasyDataModel.FantasyLeage;
 
 namespace MyDraftAPI_v2
 {
