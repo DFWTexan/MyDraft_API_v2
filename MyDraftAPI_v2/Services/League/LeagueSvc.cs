@@ -80,6 +80,7 @@ namespace LeagueService
                     .Select(i => new ViewModel.ActiveLeague()
                     {
                         ID = i.ID,
+                        UniverseID = i.UniverseID,
                         Name = i.Name,
                         Abbr = i.Abbr,
                         Mode = i.Mode,

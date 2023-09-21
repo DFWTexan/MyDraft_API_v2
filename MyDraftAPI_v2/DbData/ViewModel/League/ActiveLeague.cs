@@ -14,6 +14,7 @@ namespace ViewModel
 
     public class UserLeageTeamItem
     {
+        public int UniversalID { get; set; }    
         public int ID { get; set; }
         public int LeagueID { get; set; }
         public string? Name { get; set; }
