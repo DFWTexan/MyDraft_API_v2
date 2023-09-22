@@ -39,7 +39,7 @@ namespace MyDraftAPI_v2.Controllers
         ///     
         /// Get All Daft Picks for League
         ///
-        [HttpPost]
+        [HttpPut]
         public ActionResult GetDraftPicksForLeague([FromBody] ViewModel.ActiveLeague vInput)
         {
             //var result = new DataModel.Response.ReturnResult();
