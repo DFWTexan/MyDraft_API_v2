@@ -23,29 +23,40 @@ namespace PlayerService
             //_logger = logger;
         }
 
-        public async Task<DataModel.Response.ReturnResult> GetPlayers(ViewModel.FilterPlayer vInput)
+        public DataModel.Response.ReturnResult GetPlayers(ViewModel.FilterPlayer vInput)
         {
             var result = new DataModel.Response.ReturnResult();
             try
             {
-                var players = await _db.Player.Take(250).ToListAsync();
+                var players = from q in _db.Player.AsSplitQuery() select q;
 
-                // Filter: Point Value
+                // FilterSORT: Point Value
                 // TBD...
 
                 // Filter: Position Value
                 if (vInput.positionValue != null)
                 {
-
+                    players = players.Where(q => q.Position == vInput.positionValue);
                 }
 
                 // Filter: Draft Status Value
                 if (vInput.draftStatus != null)
                 {
-
+                    //players = players.Where(q => q.Position == vInput.positionValue);
                 }
 
-                result.ObjData = players;
+                List<ViewModel.PlayerListItem> list = new List<ViewModel.PlayerListItem>();
+                foreach(var  p in players)
+                {
+                    list.Add(new ViewModel.PlayerListItem()
+                    {
+                        FirstName = p.FirstName,
+                        LastName = p.LastName,
+                        Position = p.Position
+                    });
+                }
+
+                result.ObjData = list;
                 result.Success = true;
             }
             catch (Exception ex)
