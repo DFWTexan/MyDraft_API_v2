@@ -23,12 +23,28 @@ namespace PlayerService
             //_logger = logger;
         }
 
-        public async Task<DataModel.Response.ReturnResult> GetPlayers()
+        public async Task<DataModel.Response.ReturnResult> GetPlayers(ViewModel.FilterPlayer vInput)
         {
             var result = new DataModel.Response.ReturnResult();
             try
             {
-                var players = await _db.Player.Take(100).ToListAsync();
+                var players = await _db.Player.Take(250).ToListAsync();
+
+                // Filter: Point Value
+                // TBD...
+
+                // Filter: Position Value
+                if (vInput.positionValue != null)
+                {
+
+                }
+
+                // Filter: Draft Status Value
+                if (vInput.draftStatus != null)
+                {
+
+                }
+
                 result.ObjData = players;
                 result.Success = true;
             }
