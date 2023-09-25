@@ -1,7 +1,6 @@
 ﻿using Database.Model;
 using DbData;
 using Microsoft.EntityFrameworkCore;
-using DbData.ViewModel;
 
 namespace PlayerService
 {
@@ -24,12 +23,28 @@ namespace PlayerService
             //_logger = logger;
         }
 
-        public async Task<DataModel.Response.ReturnResult> GetPlayers()
+        public async Task<DataModel.Response.ReturnResult> GetPlayers(ViewModel.FilterPlayer vInput)
         {
             var result = new DataModel.Response.ReturnResult();
             try
             {
-                var players = await _db.Player.Take(100).ToListAsync();
+                var players = await _db.Player.Take(250).ToListAsync();
+
+                // Filter: Point Value
+                // TBD...
+
+                // Filter: Position Value
+                if (vInput.positionValue != null)
+                {
+
+                }
+
+                // Filter: Draft Status Value
+                if (vInput.draftStatus != null)
+                {
+
+                }
+
                 result.ObjData = players;
                 result.Success = true;
             }
@@ -48,7 +63,7 @@ namespace PlayerService
             {
                 var player = _db.Player.Where(x => x.ID == id).SingleOrDefault();
                 
-                var playerInfo = new PlayerInfo
+                var playerInfo = new ViewModel.PlayerInfo
                 {
                     ID = player.ID,
                     FirstName = player.FirstName,
@@ -76,7 +91,7 @@ namespace PlayerService
                 foreach(var i in depthChart.OrderBy(s => s.Rank))
                 {
                     if (position != null && i.PositionID == position.ID)
-                        playerInfo.DepthChart.Add(new PlayerInfo.DepthChartItem 
+                        playerInfo.DepthChart.Add(new ViewModel.PlayerInfo.DepthChartItem 
                         { 
                             PlayerName = (i.Player.FirstName == null ? "" : i.Player.FirstName) + ' ' + i.Player.LastName,
                             PositionName = player.Position,
@@ -87,7 +102,7 @@ namespace PlayerService
                 {
                     foreach (var i in playerNews)
                     {
-                        playerInfo.PlayerNews.Add(new PlayerInfo.PlayerNewsItem
+                        playerInfo.PlayerNews.Add(new ViewModel.PlayerInfo.PlayerNewsItem
                         {
                             Title = i.Title,
                             PubDate = i.PubDate,

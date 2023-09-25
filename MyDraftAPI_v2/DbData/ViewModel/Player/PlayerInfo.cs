@@ -1,7 +1,7 @@
 ﻿using Database.Model;
 using System.ComponentModel.DataAnnotations;
 
-namespace DbData.ViewModel
+namespace ViewModel
 {
     public class PlayerInfo
     {

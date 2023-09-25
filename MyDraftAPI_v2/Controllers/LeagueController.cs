@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DbData;
+using DataModel.Response;
 
 namespace MyDraftAPI_v2.Controllers
 {
@@ -11,15 +12,14 @@ namespace MyDraftAPI_v2.Controllers
         private readonly IConfiguration _config;
         private readonly ILogger<LeagueController> _logger;
 
-        //private DraftEngine_v2 _draftEngine;
+        private DraftEngine_v2 _draftEngine;
 
-        public LeagueController(AppDataContext db, IConfiguration config, ILogger<LeagueController> logger)
+        public LeagueController(AppDataContext db, IConfiguration config, ILogger<LeagueController> logger, DraftEngine_v2 draftEngine)
         {
             _db = db;
             _config = config;
             _logger = logger;
-            //_draftEngine = draftEngine;
-            //_draftEngine = draftEngine;
+            _draftEngine = draftEngine;
         }
 
         /// <summary>
@@ -33,6 +33,8 @@ namespace MyDraftAPI_v2.Controllers
 
             var result = service.GetActiveLeague();
 
+            _draftEngine.ActiveLeague = (Database.Model.UserLeague?)result.ObjData;
+
             return StatusCode(result.StatusCode, result.ObjData);
         }
 
@@ -40,14 +42,27 @@ namespace MyDraftAPI_v2.Controllers
         /// 
         /// Get Initialize League Data
         ///
-        //[HttpPost]
-        //public ActionResult InitLeageData([FromBody] Database.Model.UserLeague vInput)
-        //{
-        //    //var service = new LeagueService.LeagueSvc(_db, _config, null, null);
+        [HttpPost]
+        public ActionResult InitLeageData([FromBody] Database.Model.UserLeague vInput)
+        {
+            _draftEngine.InitializeLeagueData_v2(vInput);
 
-        //    var result = _draftEngine.InitializeLeagueData_v2(vInput);
+            return Ok();
+        }
 
-        //    return StatusCode(result.StatusCode, result.ObjData);
-        //}
+
+        /// <summary>
+        /// 
+        /// Get Active League
+        ///
+        [HttpGet("{id}")]
+        public ActionResult TeamsForLeague(int id)
+        {
+            var service = new LeagueService.LeagueSvc(_db, _config, null, null);
+
+            var result = service.TeamsForLeague(id);
+
+            return StatusCode(result.StatusCode, result.ObjData);
+        }
     }
 }

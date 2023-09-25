@@ -1,13 +1,11 @@
 ﻿using Database.Model;
 using DbData;
 using Microsoft.EntityFrameworkCore;
-using DbData.ViewModel;
 using MyDraftAPI_v2.FantasyDataModel;
 using System.Text;
 using MyDraftAPI_v2.Managers;
 using MyDraftAPI_v2.Engines;
 using System.ComponentModel.DataAnnotations.Schema;
-using static MyDraftAPI_v2.FantasyDataModel.FantasyLeage;
 using MyDraftLib.Utilities;
 using System.Diagnostics;
 using MyDraftAPI_v2.FantasyDataModel.Draft;
@@ -20,7 +18,7 @@ namespace LeagueService
         private readonly AppDataContext _db;
         private readonly IConfiguration _config;
         private readonly IWebHostEnvironment _env;
-        private readonly UtilityService.Utility _utility;
+        private UtilityService.Utility _utility;
 
         private static String TABLE_USER_TEAMS = "user_teams";
         private static String TABLE_USER_LEAGUES = "user_leagues";
@@ -34,7 +32,7 @@ namespace LeagueService
             _env = env;
             _utility = utility;
         }
-        
+
         private class Val
         {
             public String value { get; set; }
@@ -74,9 +72,39 @@ namespace LeagueService
         public DataModel.Response.ReturnResult GetActiveLeague()
         {
             var result = new DataModel.Response.ReturnResult();
+
+
             try
             {
-                var activeLeague = _db.UserLeague.Take(1).OrderByDescending(q => q.LastActiveDate).FirstOrDefault();
+                var activeLeague = _db.UserLeague.Take(1).OrderByDescending(q => q.LastActiveDate)
+                    .Select(i => new ViewModel.ActiveLeague()
+                    {
+                        ID = i.ID,
+                        UniverseID = i.UniverseID,
+                        Name = i.Name,
+                        Abbr = i.Abbr,
+                        Mode = i.Mode,
+                        DraftType = i.DraftType,
+                        DraftOrder = i.DraftOrder,
+                        NumberOfTeams = i.NumberOfTeams,
+                        NumberOfRounds = i.NumberOfRounds
+                    })
+                    .FirstOrDefault();
+                   
+                var leagueTeams = _db.UserLeagueTeam.Where(q => q.LeagueID == activeLeague.ID).ToList();
+                foreach(var i in leagueTeams)
+                {
+                    var addItem = new ViewModel.UserLeageTeamItem()
+                    {
+                        ID = i.ID,
+                        Name = i.Name,
+                        Abbreviation = i.Abbreviation,
+                        DraftPosition = i.DraftPosition,
+                        Owner = i.Owner
+                    };
+
+                    activeLeague.teams.Add(addItem);
+                }
 
                 result.ObjData = activeLeague;
                 result.Success = true;
@@ -118,7 +146,8 @@ namespace LeagueService
             // leagueContainer.name, leagueContainer.abbr, leagueContainer.numTeams, leagueContainer.rounds, leagueContainer.draftType, leagueContainer.draftByTeamEnabled, leagueContainer.isIncludeIDP, leagueContainer.siteID, leagueContainer.source);
             //Boolean success = true;
 
-            var newLeague = new UserLeague {
+            var newLeague = new UserLeague
+            {
                 Name = leagueContainer.name,
                 Abbr = leagueContainer.abbr,
                 NumberOfTeams = leagueContainer.numTeams,
@@ -219,6 +248,36 @@ namespace LeagueService
             }
 
             return teams;
+        }
+        public DataModel.Response.ReturnResult TeamsForLeague(int leagueID)
+        {
+            var result = new DataModel.Response.ReturnResult();
+            try
+            {
+                var teams = _db.UserLeagueTeam
+                            .Where(q => q.LeagueID == leagueID)
+                            .OrderBy(q => q.DraftPosition)
+                            .Select(i => new FantasyTeam()
+                            {
+                                identifier = i.ID,
+                                leagueID = i.LeagueID,
+                                name = i.Name ?? "",
+                                abbr = i.Abbreviation ?? "",
+                                draftPosition = i.DraftPosition,
+                                owner = i.Owner ?? ""
+                            })
+                            .AsNoTracking()
+                            .ToList();
+
+                result.ObjData = teams.ToList();
+            }
+            catch (Exception ex)
+            {
+                result.Success = false;
+                result.ErrMessage = ex.Message;
+            }
+
+            return result;
         }
 
         public async Task<FantasyLeague> getLeagueWithID(int identifier)
@@ -367,7 +426,7 @@ namespace LeagueService
 
         public async Task<int> maxTeamID()
         {
-            IList<Val> values = (IList<Val>) await Task.Run(() => _db.UserLeagueTeam.OrderByDescending(s => s.ID).Select(q => q.ID).ToListAsync());
+            IList<Val> values = (IList<Val>)await Task.Run(() => _db.UserLeagueTeam.OrderByDescending(s => s.ID).Select(q => q.ID).ToListAsync());
 
             int result = 0;
             if (values.Count() > 0)

@@ -21,14 +21,14 @@ namespace MyDraftAPI_v2.Controllers
 
         /// <summary>
         /// 
-        /// Get All Players
+        /// Get Filtered Players
         /// 
-        [HttpGet]
-        public async Task<ActionResult> GetPlayers()
+        [HttpPut]
+        public async Task<ActionResult> GetPlayers([FromBody] ViewModel.FilterPlayer vInput)
         {
             var service = new PlayerService.PlayerSvc(_db, _config, null, null);
 
-            var result = await service.GetPlayers();
+            var result = await service.GetPlayers(vInput);
 
             return StatusCode(result.StatusCode, result.ObjData);
         }

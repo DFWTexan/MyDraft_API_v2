@@ -6,13 +6,42 @@ namespace DbData
 {
     public class AppDataContext : DbContext
     {
-        //private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly int _fanUniverse_ID;
 
-        public AppDataContext()
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        //public AppDataContext()
+        //{
+        //}
+
+        public AppDataContext(DbContextOptions<AppDataContext> options) : base(options) 
         {
-        }
+            //if (httpContextAccessor != null && httpContextAccessor.HttpContext != null)
+            //{
+            //    _httpContextAccessor = httpContextAccessor;
 
-        public AppDataContext(DbContextOptions<AppDataContext> options) : base(options) { }
+            //    if (_httpContextAccessor.HttpContext.User.Claims.Any())
+            //    {
+            //        //var claim = _httpContextAccessor.HttpContext.User.Claims.Where(c => c.Type == "Tenant_ID").SingleOrDefault();
+            //        //if (claim != null)
+            //        //{
+            //        //    _ = int.TryParse(claim.Value.ToString(), out _tenant_ID);
+            //        //}
+            //    }
+            //    else
+            //    {
+            //        //var headers = _httpContextAccessor.HttpContext.Request.Headers;
+
+            //        //headers.TryGetValue("Key", out Microsoft.Extensions.Primitives.StringValues key);
+            //        //headers.TryGetValue("Secret", out Microsoft.Extensions.Primitives.StringValues secret);
+
+            //        _fanUniverse_ID = 101;
+            //    }
+            //} else
+            //{
+            //    _fanUniverse_ID = 101;
+            //}
+        }
 
         public DbSet<Database.Model.Player> Player { get; set; }
         public DbSet<Database.Model.PlayerNews> PlayerNews { get; set; }

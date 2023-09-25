@@ -2,15 +2,15 @@
 using MyDraftAPI_v2.FantasyDataModel;
 using MyDraftAPI_v2.FantasyDataModel.Draft;
 
-namespace DraftService
+namespace MyDraftAPI_v2.Services.Algorithms
 {
-    public class DraftPickGenerator
+    public class DraftPickGenerator_v2
     {
         private readonly AppDataContext _db;
 
-        public DraftPickGenerator(AppDataContext db) { _db = db; }
+        public DraftPickGenerator_v2(AppDataContext db) { _db = db; }
 
-        public static IList<DraftPick> generateDraftPicks(FantasyLeague league)
+        public static IList<ViewModel.DraftPick> generateDraftPicks(FantasyLeague league)
         {
             FantasyLeague.DraftOrderType draftType = league.draftOrderType;
 
@@ -18,7 +18,7 @@ namespace DraftService
                 return null;
 
             List<FantasyTeam> teams = new List<FantasyTeam>(league.fanTeams);
-           
+
             teams.Sort(delegate (FantasyTeam team1, FantasyTeam team2)
             {
                 return (int)(team1.draftPosition - team2.draftPosition);
@@ -27,7 +27,7 @@ namespace DraftService
             int numberOfTeams = teams.Count;
             int rounds = league.rounds;
             int totalPicks = rounds * numberOfTeams;
-            IList<DraftPick> draftPicks = new List<DraftPick>(totalPicks);
+            IList<ViewModel.DraftPick> draftPicks = new List<ViewModel.DraftPick>(totalPicks);
 
             for (int overall = 1; overall <= totalPicks; overall++)
             {
@@ -144,8 +144,8 @@ namespace DraftService
 
                 FantasyTeam team = teams[teamIndex];
                 int pickInRound = pickInRoundForOverallPick(overall, numberOfTeams);
-                DraftPick draftPick = new DraftPick(league.identifier, overall, round, pickInRound, team.identifier, null, 0, false);
-                draftPick.league = league;
+                ViewModel.DraftPick draftPick = new ViewModel.DraftPick(league.identifier, overall, round, pickInRound, team.identifier, 0, 0, false);
+                //draftPick.league = league;
                 draftPicks.Add(draftPick);
             }
 

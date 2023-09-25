@@ -3,7 +3,6 @@ using System.Diagnostics;
 using Windows.ApplicationModel.Background;
 using MyDraftAPI_v2.FantasyDataModel;
 using global::MyDraftAPI_v2.FantasyDataModel.Draft;
-using static MyDraftAPI_v2.FantasyDataModel.FantasyLeage;
 
 namespace MyDraftAPI_v2.Engines
 {
