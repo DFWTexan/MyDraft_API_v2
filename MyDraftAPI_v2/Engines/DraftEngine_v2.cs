@@ -3,6 +3,7 @@ using DbData;
 using Microsoft.EntityFrameworkCore;
 using MyDraftAPI_v2.FantasyDataModel;
 using MyDraftAPI_v2.FantasyDataModel.Draft;
+using MyDraftAPI_v2.Managers;
 
 namespace MyDraftAPI_v2
 {
@@ -15,12 +16,18 @@ namespace MyDraftAPI_v2
         private readonly DbContextOptionsBuilder<AppDataContext> _dbOptionsBuilder;
         private System.Threading.Timer _timer;
 
+        private FanDataModel.FantasyLeague _league; 
         private List<DraftPick> _draftPicks;
         private DraftStatus _draftStatus;
         private IDictionary<int, DraftPick> _draftPickMap;
 
         #region Properties
         public UserLeague? ActiveLeague { get; set; } = null;
+        public FanDataModel.FantasyLeague league
+        {
+            get { return _league; }
+            set {  _league = value; }
+        }
         public IList<DraftPick> draftPicks
         {
             get
@@ -45,8 +52,17 @@ namespace MyDraftAPI_v2
             ActiveLeague = new UserLeague();
         }
 
-        public void InitializeLeagueData_v2(Database.Model.UserLeague vInput)
+        public void InitializeLeagueData_v2(ViewModel.ActiveLeague vInput)
         {
+            _league = new FanDataModel.FantasyLeague()
+            {
+                UniverseID = vInput.UniverseID,
+                identifier = vInput.ID,
+                draftType = vInput.DraftType,
+                //draftOrderType = vInput.DraftOrderType
+            };
+            _league.teams = (List<ViewModel.UserLeageTeamItem>)vInput.teams;
+
             using (var db = new AppDataContext(_dbOptionsBuilder.Options)) {
                
                 try
@@ -94,7 +110,6 @@ namespace MyDraftAPI_v2
                 }
                 catch (Exception ex)
                 {
-
                     throw;
                 }
             };
@@ -142,11 +157,156 @@ namespace MyDraftAPI_v2
                 return teams;
             }
         }
-
         public async Task Initialize()
         {
             await Task.Run(() => StartTimer());
         }
+
+        #region //  Draft Pick Manipulation  //
+        public DraftPick onTheClockDraftPick()
+        {
+            return draftPickForOverall(_draftStatus.onTheClock);
+        }
+        public DraftPick nextAvailableDraftPickAfterOverall(int overall)
+        {
+            int totalPicks = _draftPicks.Count;
+            if (totalPicks <= overall)
+            {
+                return null;
+            }
+
+            // Iterate over all draft picks after the overall pick. Stop when an empty spot (playerID == nil) is found.
+            int startIndex = overall >= 0 ? overall : 0; // Start at 0 or greater
+            for (int i = startIndex; i < totalPicks; i++)
+            {
+                DraftPick draftPick = _draftPicks[i];
+                if (draftPick.playerID == null)
+                {
+                    return draftPick;
+                }
+            }
+            return null;
+        }
+        public DraftPick draftPickForOverall(int overall)
+        {
+            return _draftPickMap.ContainsKey(overall) ? _draftPickMap[overall] : null;
+        }
+        public async Task setOnTheClock(int overall)
+        {
+            if (_draftStatus.onTheClock == overall)
+            {
+                return;
+            }
+
+            DraftPick otcPick = draftPickForOverall(overall);
+            if (otcPick != null)
+            {
+                _draftStatus.onTheClock = (int)otcPick.overall;
+                await DraftManager.saveDraftStatus(_draftStatus);
+
+                //if (DidChangeOnTheClock != null)
+                //{
+                //    DidChangeOnTheClock(this, onTheClockDraftPick());
+                //}
+                //RaiseDidOTC();
+            }
+        }
+        public async Task changeDraftPickToTeam(int overall, FantasyTeam team)
+        {
+            DraftPick draftPick = draftPickForOverall(overall);
+            draftPick.teamID = team.identifier;
+            await DraftManager.saveDraftPick(draftPick);
+
+            //if (DidChangeDraftPick != null)
+            //{
+            //    DidChangeDraftPick(this, draftPick);
+            //}
+        }
+        //public async Task resetDraftPick(String playerID)
+        //{
+        //    DraftPick draftPick = draftPickForPlayerID(playerID);
+        //    if (draftPick == null)
+        //    {
+        //        return;
+        //    }
+
+        //    if (_league.draftByTeamEnabled && _league.draftOrderType != FantasyLeague.DraftOrderType.auction)
+        //    {
+        //        resetDraftPick(draftPick);
+        //        await DraftManager.saveDraftPick(draftPick);
+        //    }
+        //    else
+        //    {
+        //        await DraftManager.deleteDraftPick(draftPick);
+        //        _draftPicks.Remove(draftPick);
+        //        _draftPickMap.Remove((int)draftPick.overall);
+        //    }
+
+        //    if (DidChangeDraftPick != null)
+        //    {
+        //        DidChangeDraftPick(this, draftPick);
+        //    }
+        //}
+        //public void resetDraftPick(DraftPick draftPick)
+        //{
+        //    draftPick.playerID = null;
+        //    draftPick.isKeeper = false;
+        //    draftPick.auctionValue = 0;
+        //}
+        ///*
+        //public void resetDraftData()
+        //{
+        //    DraftManager.resetDraftData(_league);
+        //    initializeLeagueData();
+        //    updateOnTheClock();
+
+        //    if (DidResetLeague != null) {
+        //        DidResetLeague();
+        //    }
+        //}
+        // * */
+        public async Task updateOnTheClock()
+        {
+            DraftPick otcPick = onTheClockDraftPick();
+            if (otcPick != null && otcPick.playerID == null)
+                return;
+
+            int otcOverall = otcPick != null ? (int)otcPick.overall : 0;
+            DraftPick nextOTC = nextAvailableDraftPickAfterOverall(otcOverall);
+            if (nextOTC == null)
+            {
+                await setDraftComplete();
+                return;
+            }
+
+            if (otcPick == null || nextOTC.overall != otcPick.overall)
+            {
+                _draftStatus.onTheClock = (int)nextOTC.overall;
+                otcPick = onTheClockDraftPick();
+
+                // Update the OTC pick. If none can be found then declare the draft complete.
+                if (otcPick != null)
+                {
+                    _draftStatus = new DraftStatus(_league.identifier, _draftStatus.onTheClock, 0, false);
+                    await DraftManager.saveDraftStatus(_draftStatus);
+                }
+                else
+                {
+                    await setDraftComplete();
+                }
+            }
+        }
+        private async Task setDraftComplete()
+        {
+            _draftStatus = new DraftStatus(_league.identifier, _league.rounds * _league.numTeams + 1, 0, true); // Set on the clock to 1 pick beyond the end of the draft
+            await DraftManager.saveDraftStatus(_draftStatus);
+
+            //if (DidCompleteDraft != null)
+            //{
+            //    DidCompleteDraft(this);
+            //}
+        }
+        #endregion //  Draft Pick Manipulation  //
         private void StartTimer()
         {
             //_timer.Change(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
