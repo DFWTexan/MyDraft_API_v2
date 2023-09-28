@@ -35,6 +35,10 @@ namespace MyDraftAPI_v2
                 return _draftPicks;
             }
         }
+        public DraftStatus draftStatus
+        {
+            get { return _draftStatus; }
+        }
         #endregion
 
         public DraftEngine_v2(ILogger<DraftEngine_v2> logger, Microsoft.Extensions.Hosting.IHostApplicationLifetime appLifetime, IConfiguration config)
@@ -68,10 +72,9 @@ namespace MyDraftAPI_v2
                 try
                 {
                     #region DraftStatus  
-                    //_draftStatus = await _draftSvc.DraftStatus(leagueID);
                     var result = new DraftStatus();
 
-                    var _draftStatus = db.UserDraftStatus
+                    var draftStatus = db.UserDraftStatus
                         .Where(x => x.LeagueID == vInput.ID)
                         .Select(i => new DraftStatus()
                         {
@@ -80,6 +83,16 @@ namespace MyDraftAPI_v2
                             isComplete = i.IsComplete,
                         })
                         .FirstOrDefault();
+
+                    if (draftStatus != null)
+                    {
+                        _draftStatus = new DraftStatus()
+                        {
+                            leagueID = draftStatus.leagueID,
+                            onTheClock = draftStatus.onTheClock,
+                            isComplete = draftStatus.isComplete
+                        };
+                    }
                     #endregion
 
                     #region DraftPicks  
@@ -189,7 +202,9 @@ namespace MyDraftAPI_v2
         }
         public DraftPick draftPickForOverall(int overall)
         {
+#pragma warning disable CS8603 // Possible null reference return.
             return _draftPickMap.ContainsKey(overall) ? _draftPickMap[overall] : null;
+#pragma warning restore CS8603 // Possible null reference return.
         }
         public async Task setOnTheClock(int overall)
         {

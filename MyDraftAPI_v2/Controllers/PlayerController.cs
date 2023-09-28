@@ -24,7 +24,7 @@ namespace MyDraftAPI_v2.Controllers
         /// Get Filtered Players
         /// 
         [HttpPut]
-        public ActionResult GetPlayers([FromBody] ViewModel.FilterPlayer vInput)
+        public ActionResult GetPlayers([FromBody] ViewModel.FilterSortPlayer vInput)
         {
             var service = new PlayerService.PlayerSvc(_db, _config, null, null);
 

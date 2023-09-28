@@ -140,31 +140,7 @@ namespace FanDataModel
             return null;
         }
 
-        public int getSiteID()
-        {
-            return siteID;
-        }
-
-        public void setSiteID(int siteID)
-        {
-            this.siteID = siteID;
-        }
-
-        public String getUrl()
-        {
-            return url;
-        }
-
-        public void setUrl(String url)
-        {
-            this.url = url;
-        }
-
-        public async Task setDirty()
-        {
-            await UpdateManager.resetTimeStampForPointsWithLeagueID(this.identifier);
-        }
-
+       
         public bool isTeamDEFRankingsSet()
         {
             return teamDEFRankingsSet;
@@ -186,18 +162,7 @@ namespace FanDataModel
                 return false;
             }
         }
-
-        public bool isMockActive()
-        {
-            if (leagueMode == 1)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+               
         //public async Task reloadScoringValues()
         //{
         //    customScoringValues = null;
