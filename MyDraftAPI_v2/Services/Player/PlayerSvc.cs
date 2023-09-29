@@ -46,7 +46,7 @@ namespace PlayerService
                 // Filter: Draft Status Value
                 if (vInput.draftStatus != null)
                 {
-                    //players = players.Where(q => q.Position == vInput.positionValue);
+                    players = players.Where(q => q.Position == vInput.positionValue);
                 }
 
                 result.ObjData = players;
