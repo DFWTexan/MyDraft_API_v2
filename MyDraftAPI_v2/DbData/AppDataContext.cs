@@ -42,7 +42,7 @@ namespace DbData
             //    _fanUniverse_ID = 101;
             //}
         }
-
+        #region TABLES
         public DbSet<Database.Model.Player> Player { get; set; }
         public DbSet<Database.Model.PlayerNews> PlayerNews { get; set; }
         public DbSet<Database.Model.Points> Points { get; set; }
@@ -59,6 +59,11 @@ namespace DbData
         public DbSet<Database.Model.DVDB> DVDB { get; set; }
         public DbSet<Database.Model.AAV> AAV { get; set; }
         public DbSet<Database.Model.ADP> ADP { get; set; }
+        #endregion
+
+        #region Views
+        public DbSet<Database.Model.vw_PlayerListItem> vw_PlayerListItem { get; set; }
+        #endregion
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -89,6 +94,10 @@ namespace DbData
 
             modelBuilder.Entity<Database.Model.PlayerPosition>()
                 .HasKey(k => new { k.PlayerID, k.PositionID });
+            #endregion
+
+            #region Views
+            modelBuilder.Entity<Database.Model.vw_PlayerListItem>().ToView("vw_PlayerListItem").HasNoKey();
             #endregion
 
             #region Property Descr

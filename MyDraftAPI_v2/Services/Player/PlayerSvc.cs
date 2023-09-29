@@ -23,15 +23,19 @@ namespace PlayerService
             //_logger = logger;
         }
 
-        public DataModel.Response.ReturnResult GetPlayers(ViewModel.FilterPlayer vInput)
+        public DataModel.Response.ReturnResult GetPlayers(ViewModel.FilterSortPlayer vInput)
         {
             var result = new DataModel.Response.ReturnResult();
             try
             {
-                var players = from q in _db.Player.AsSplitQuery() select q;
+                //var players = from q in _db.vw_PlayerListItem.AsSplitQuery() select q;
+                var players = _db.vw_PlayerListItem.AsSplitQuery();
 
                 // FilterSORT: Point Value
-                // TBD...
+                if (vInput.pointValue != null)
+                {
+                    players = players.OrderByDescending(q => q.PointsVal);
+                }
 
                 // Filter: Position Value
                 if (vInput.positionValue != null)
@@ -42,26 +46,16 @@ namespace PlayerService
                 // Filter: Draft Status Value
                 if (vInput.draftStatus != null)
                 {
-                    //players = players.Where(q => q.Position == vInput.positionValue);
+                    players = players.Where(q => q.Position == vInput.positionValue);
                 }
 
-                List<ViewModel.PlayerListItem> list = new List<ViewModel.PlayerListItem>();
-                foreach(var  p in players)
-                {
-                    list.Add(new ViewModel.PlayerListItem()
-                    {
-                        FirstName = p.FirstName,
-                        LastName = p.LastName,
-                        Position = p.Position
-                    });
-                }
-
-                result.ObjData = list;
+                result.ObjData = players;
                 result.Success = true;
             }
             catch (Exception ex)
             {
                 result.Success = false;
+                result.StatusCode = 500;
                 result.ErrMessage = ex.Message;
             }
             return result;

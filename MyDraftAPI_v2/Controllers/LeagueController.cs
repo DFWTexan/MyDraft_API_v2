@@ -43,7 +43,7 @@ namespace MyDraftAPI_v2.Controllers
         /// Get Initialize League Data
         ///
         [HttpPost]
-        public ActionResult InitLeageData([FromBody] Database.Model.UserLeague vInput)
+        public ActionResult InitLeageData([FromBody] ViewModel.ActiveLeague vInput)
         {
             _draftEngine.InitializeLeagueData_v2(vInput);
 
