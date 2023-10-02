@@ -25,15 +25,15 @@ namespace MyDraftAPI_v2.Controllers
         ///     
         /// Get All DraftStatus
         ///
-        //[HttpGet("{id}")]
-        //public ActionResult GetDraftStatus(int id)
-        //{
-        //    var service = new DraftService.DraftSvc(_db, _config, null, null);
+        [HttpGet]
+        public ActionResult GetDraftStatus()
+        {
+            var result = new DataModel.Response.ReturnResult();
 
-        //    var result = service.GetDraftStatus(id);
+            result.ObjData = _draftEngine.draftStatus;
 
-        //    return StatusCode(result.StatusCode, result.ObjData);
-        //}
+            return StatusCode(result.StatusCode = 200, result.ObjData);
+        }
 
         /// <summary>
         ///     

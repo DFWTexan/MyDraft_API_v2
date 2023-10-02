@@ -12,13 +12,13 @@ namespace MyDraftAPI_v2
         private int _timerCount = 0;
 
         private IConfiguration _config;
-        private readonly string _connectionString;
+        private readonly string? _connectionString;
         private readonly DbContextOptionsBuilder<AppDataContext> _dbOptionsBuilder;
-        private System.Threading.Timer _timer;
+        private System.Threading.Timer? _timer;
 
-        private FanDataModel.FantasyLeague _league; 
+        private FanDataModel.FantasyLeague? _league; 
         private List<DraftPick> _draftPicks;
-        private DraftStatus _draftStatus;
+        private DraftStatus? _draftStatus;
         private IDictionary<int, DraftPick> _draftPickMap;
 
         #region Properties
@@ -28,14 +28,14 @@ namespace MyDraftAPI_v2
             get { return _league; }
             set {  _league = value; }
         }
-        public IList<DraftPick> draftPicks
+        public IList<DraftPick>? draftPicks
         {
             get
             {
                 return _draftPicks;
             }
         }
-        public DraftStatus draftStatus
+        public DraftStatus? draftStatus
         {
             get { return _draftStatus; }
         }
@@ -82,6 +82,7 @@ namespace MyDraftAPI_v2
                             onTheClock = i.CurrentPick,
                             isComplete = i.IsComplete,
                         })
+                        .AsNoTracking()
                         .FirstOrDefault();
 
                     if (draftStatus != null)
@@ -104,10 +105,11 @@ namespace MyDraftAPI_v2
                                 leagueID = i.LeagueID,
                                 overall = i.OverallPick,
                                 round = i.Round,
-                                pickInRound = i.Pick,
+                                pickInRound = i.PickInRound,
                                 teamID = i.TeamID,
                                 playerID = i.PlayerID.ToString(),
                             })
+                            .AsNoTracking()
                             .ToList();
                     #endregion
 
@@ -165,6 +167,7 @@ namespace MyDraftAPI_v2
                                         draftPosition = i.DraftPosition,
                                         owner = i.Owner ?? ""   
                                     })
+                                    .AsNoTracking()
                                     .ToListAsync();
                 
                 return teams;
@@ -174,6 +177,21 @@ namespace MyDraftAPI_v2
         {
             await Task.Run(() => StartTimer());
         }
+
+        #region // Data Helper //
+        public IList<DraftPick> draftPicksForTeam(FantasyTeam team)
+        {
+            IList<DraftPick> draftPicks = new List<DraftPick>(_league.numTeams);
+            foreach (DraftPick draftPick in _draftPicks)
+            {
+                if (draftPick.teamID == team.identifier)
+                {
+                    draftPicks.Add(draftPick);
+                }
+            }
+            return draftPicks;
+        }
+        #endregion
 
         #region //  Draft Pick Manipulation  //
         public DraftPick onTheClockDraftPick()

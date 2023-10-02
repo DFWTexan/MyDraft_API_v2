@@ -5,6 +5,7 @@ namespace Database.Model
 {
     public partial class UserDraftSelections
     {
+        public int UniverseID { get; set; }
         [Required]
         public int LeagueID { get; set; }
         [Required]
@@ -14,7 +15,8 @@ namespace Database.Model
         public DateTime? CreateDate { get; set; }
         public bool? IsKeeper { get; set; }
         public int? Round { get; set; }
-        public int? Pick { get; set; }
+        //public int? Pick { get; set; }
+        public int? PickInRound { get; set; }
         public int? OverallPick { get; set; }
         public int? PositionPick { get; set; }
         public int? PositionRound { get; set; }

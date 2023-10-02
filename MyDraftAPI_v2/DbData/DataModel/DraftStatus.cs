@@ -1,16 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿//using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyDraftAPI_v2.FantasyDataModel
 {
     public class DraftStatus
     {
-        [Column("league_id")]
+        //[Column("league_id")]
         public int leagueID { get; set; }
-        [Column("current_pick")]
+        //[Column("current_pick")]
         public int onTheClock { get; set; }
-        [Column("seconds_remaining")]
+        public string? fanTeamName { get; set; }
+        //[Column("seconds_remaining")]
         public int secondsRemaining { get; set; }
-        [Column("is_complete")]
+        //[Column("is_complete")]
         public Boolean isComplete { get; set; }
 
         public DraftStatus() { }

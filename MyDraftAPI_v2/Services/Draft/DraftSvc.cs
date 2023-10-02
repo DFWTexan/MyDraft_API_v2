@@ -51,7 +51,6 @@ namespace DraftService
                 return new DraftStatus(leagueID, 0, 0, false);
             }
         }
-
         public List<ViewModel.DraftPick> draftPicksForLeague(int leagueID)
         {
             var draftPicks = _db.UserDraftSelection
@@ -59,9 +58,9 @@ namespace DraftService
                     .Select(q => new ViewModel.DraftPick()
                     {
                         leagueID = q.LeagueID,
-                        overall = q.OverallPick,
+                        overallPick = q.OverallPick,
                         round = q.Round,
-                        pickInRound = q.Pick,
+                        pickInRound = q.PickInRound,
                         teamID = q.TeamID,
                         playerID = q.PlayerID
                     })
@@ -70,7 +69,31 @@ namespace DraftService
 
             return (List<ViewModel.DraftPick>)draftPicks;
         }
+        public void saveDraftPicks(IList<ViewModel.DraftPick> draftPicks)
+        {
+            if (draftPicks == null)
+                return;
 
+            List<UserDraftSelections> userDraftSelections = new List<UserDraftSelections>();
+            foreach (var i in draftPicks)
+            {
+                var usrSelection = new UserDraftSelections()
+                {
+                    //UniverseID = i.UnerverseID,
+                    LeagueID = i.leagueID,
+                    TeamID = i.teamID,
+                    PlayerID = i.playerID,
+                    Round = i.round,
+                    PickInRound = i.pickInRound,
+                    OverallPick = i.overallPick,
+
+                };
+                userDraftSelections.Add(usrSelection);
+            }
+
+            _db.UserDraftSelection.AddRange(userDraftSelections);
+            _db.SaveChanges();
+        }
         public DataModel.Response.ReturnResult GetDraftPicksForLeague(ViewModel.ActiveLeague vInput)
         {
             var result = new DataModel.Response.ReturnResult();
