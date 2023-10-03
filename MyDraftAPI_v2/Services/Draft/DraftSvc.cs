@@ -66,33 +66,51 @@ namespace DraftService
                     })
                     .AsNoTracking()
                     .ToList();
-
+                     
             return (List<ViewModel.DraftPick>)draftPicks;
         }
         public void saveDraftPicks(IList<ViewModel.DraftPick> draftPicks)
         {
-            if (draftPicks == null)
+            if (draftPicks.Count() == 0)
                 return;
 
-            List<UserDraftSelections> userDraftSelections = new List<UserDraftSelections>();
-            foreach (var i in draftPicks)
+            try
             {
-                var usrSelection = new UserDraftSelections()
+                List<UserDraftSelections> userDraftSelections = new List<UserDraftSelections>();
+                foreach (var i in draftPicks)
                 {
-                    //UniverseID = i.UnerverseID,
-                    LeagueID = i.leagueID,
-                    TeamID = i.teamID,
-                    PlayerID = i.playerID,
-                    Round = i.round,
-                    PickInRound = i.pickInRound,
-                    OverallPick = i.overallPick,
+                    //var usrSelection = new UserDraftSelections()
+                    //{
+                    //    UniverseID = i.UniverseID,
+                    //    LeagueID = i.leagueID,
+                    //    TeamID = i.teamID,
+                    //    PlayerID = i.playerID,
+                    //    Round = i.round,
+                    //    PickInRound = i.pickInRound,
+                    //    OverallPick = i.overallPick,
 
-                };
-                userDraftSelections.Add(usrSelection);
+                    //};
+                    //userDraftSelections.Add(usrSelection);
+                    _db.UserDraftSelection.Add(new UserDraftSelections()
+                    {
+                        UniverseID = i.UniverseID,
+                        LeagueID = i.leagueID,
+                        TeamID = i.teamID,
+                        PlayerID = i.playerID,
+                        Round = i.round,
+                        PickInRound = i.pickInRound,
+                        OverallPick = i.overallPick,
+                    });
+                }
+
+                //_db.UserDraftSelection.AddRange(userDraftSelections);
+                _db.SaveChanges();
             }
+            catch (Exception ex)
+            {
 
-            _db.UserDraftSelection.AddRange(userDraftSelections);
-            _db.SaveChanges();
+                throw;
+            }
         }
         public DataModel.Response.ReturnResult GetDraftPicksForLeague(ViewModel.ActiveLeague vInput)
         {

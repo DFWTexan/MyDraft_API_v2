@@ -2,6 +2,7 @@
 {
     public class DraftPick
     {
+        public int UniverseID { get; set; }
         public int leagueID { get; set; }
         public int? overallPick { get; set; }
         public int? round { get; set; }
