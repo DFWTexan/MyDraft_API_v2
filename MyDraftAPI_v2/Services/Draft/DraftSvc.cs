@@ -29,28 +29,38 @@ namespace DraftService
             //_logger = logger;
         }
 
-        public async Task<DraftStatus> DraftStatus(int leagueID)
+        public ViewModel.DraftStatus DraftStatus(int vUniversID, int vleagueID)
         {
-            var result = new DraftStatus();
+            var result = new ViewModel.DraftStatus();
 
-            var draftStatus = await _db.UserDraftStatus
-                .Where(x => x.LeagueID == leagueID)
+            var draftStatus = _db.UserDraftStatus
+                .Where(x => x.LeagueID == vleagueID)
                 .AsNoTracking()
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
 
             if (draftStatus != null)
             {
-                result.leagueID = leagueID;
-                result.onTheClock = draftStatus.CurrentPick;
-                result.isComplete = draftStatus.IsComplete;
+                result.UniverseID = draftStatus.UniverseID; 
+                result.LeagueID = draftStatus.LeagueID;
+                result.CurrentPick = draftStatus.CurrentPick;
+                result.IsComplete = draftStatus.IsComplete;
+
+                var teamInfo = _db.UserLeagueTeam
+                    .Where(q => q.ID == draftStatus.CurrentPick)
+                    .AsNoTracking()
+                    .FirstOrDefault();
+
+                if (teamInfo != null)
+                    result.fanTeam = teamInfo.Name;
 
                 return result;
             }
             else
             {
-                return new DraftStatus(leagueID, 0, 0, false);
+                return new ViewModel.DraftStatus(vleagueID, 0, 0, false);
             }
         }
+        
         public List<ViewModel.DraftPick> draftPicksForLeague(int leagueID)
         {
             var draftPicks = _db.UserDraftSelection
@@ -64,6 +74,7 @@ namespace DraftService
                         teamID = q.TeamID,
                         playerID = q.PlayerID
                     })
+                    .OrderBy(q => q.overallPick)
                     .AsNoTracking()
                     .ToList();
                      
