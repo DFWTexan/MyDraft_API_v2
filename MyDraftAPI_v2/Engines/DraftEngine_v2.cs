@@ -207,7 +207,7 @@ namespace MyDraftAPI_v2
         {
             return draftPickForOverall(_draftStatus.CurrentPick);
         }
-        public DraftPick nextAvailableDraftPickAfterOverall(int overall)
+        public DraftPick? nextAvailableDraftPickAfterOverall(int overall)
         {
             int totalPicks = _draftPicks.Count;
             if (totalPicks <= overall)
@@ -251,12 +251,6 @@ namespace MyDraftAPI_v2
             {
                 _draftStatus.CurrentPick = (int)otcPick.overall;
                 await saveDraftStatus(_draftStatus);
-
-                //if (DidChangeOnTheClock != null)
-                //{
-                //    DidChangeOnTheClock(this, onTheClockDraftPick());
-                //}
-                //RaiseDidOTC();
             }
         }
         public async Task changeDraftPickToTeam(int overall, FantasyTeam team)
@@ -264,11 +258,6 @@ namespace MyDraftAPI_v2
             DraftPick draftPick = draftPickForOverall(overall);
             draftPick.teamID = team.identifier;
             await DraftManager.saveDraftPick(draftPick);
-
-            //if (DidChangeDraftPick != null)
-            //{
-            //    DidChangeDraftPick(this, draftPick);
-            //}
         }
         //public async Task resetDraftPick(String playerID)
         //{
@@ -348,19 +337,23 @@ namespace MyDraftAPI_v2
         {
             _draftStatus = new ViewModel.DraftStatus(_league.identifier, _league.rounds * _league.numTeams + 1, 0, true); // Set on the clock to 1 pick beyond the end of the draft
             await saveDraftStatus(_draftStatus);
-
-            //if (DidCompleteDraft != null)
-            //{
-            //    DidCompleteDraft(this);
-            //}
         }
         #endregion //  Draft Pick Manipulation  //
 
-        public static async Task saveDraftStatus(ViewModel.DraftStatus draftStatus)
+        public async Task saveDraftStatus(ViewModel.DraftStatus vDraftStatus)
         {
-            await Task.Delay(2000);
-            //await DBAdapter.executeUpdate("INSERT OR REPLACE INTO " + TABLE_USER_DRAFT_STATUS + " (league_id, current_pick, seconds_remaining, is_complete) VALUES (?, ?, ?, ?)",
-            //    draftStatus.leagueID, draftStatus.onTheClock, draftStatus.secondsRemaining, draftStatus.isComplete);
+            using (var db = new AppDataContext(_dbOptionsBuilder.Options))
+            {
+                try
+                {
+                    db.Add(vDraftStatus);
+                    await db.SaveChangesAsync();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
         }
 
         private void StartTimer()
