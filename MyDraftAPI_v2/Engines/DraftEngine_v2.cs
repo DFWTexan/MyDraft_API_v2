@@ -306,10 +306,13 @@ namespace MyDraftAPI_v2
         {
             DraftPick otcPick = onTheClockDraftPick();
             if (otcPick != null && otcPick.playerID == null)
+
                 return;
 
             int otcOverall = otcPick != null ? (int)otcPick.overall : 0;
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             DraftPick nextOTC = nextAvailableDraftPickAfterOverall(otcOverall);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             if (nextOTC == null)
             {
                 await setDraftComplete();

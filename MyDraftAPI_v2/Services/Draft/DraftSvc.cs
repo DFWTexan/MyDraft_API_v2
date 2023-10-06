@@ -63,6 +63,8 @@ namespace DraftService
         
         public List<ViewModel.DraftPick> draftPicksForLeague(int leagueID)
         {
+            List<ViewModel.DraftPick> returnResult = new List<ViewModel.DraftPick>();
+
             var draftPicks = _db.UserDraftSelection
                     .Where(x => x.LeagueID == leagueID)
                     .Select(q => new ViewModel.DraftPick()
@@ -77,8 +79,19 @@ namespace DraftService
                     .OrderBy(q => q.overallPick)
                     .AsNoTracking()
                     .ToList();
+
+            foreach ( var draftPick in draftPicks )
+            {
+                if (draftPick.playerID != 0)
+                {
+                    var playerInfo = _db.Player.Where(q => q.ID == draftPick.playerID).FirstOrDefault();
+                    if (playerInfo != null)
+                        draftPick.player = playerInfo;
+                }
+                returnResult.Add(draftPick);
+            }
                      
-            return (List<ViewModel.DraftPick>)draftPicks;
+            return returnResult;
         }
         public void saveDraftPicks(IList<ViewModel.DraftPick> draftPicks)
         {
