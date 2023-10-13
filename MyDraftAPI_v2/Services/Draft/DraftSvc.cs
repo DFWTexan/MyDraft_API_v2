@@ -7,6 +7,7 @@ using System.Text;
 using MyDraftAPI_v2.FantasyDataModel.Draft;
 using System.Diagnostics;
 using MyDraftAPI_v2.Services.Algorithms;
+using MyDraftAPI_v2;
 
 namespace DraftService
 {
@@ -19,7 +20,9 @@ namespace DraftService
         //private readonly IMapper _mapper;
         //private readonly ILogger _logger;
 
-        public DraftSvc(AppDataContext db, IConfiguration config, IWebHostEnvironment env, UtilityService.Utility utility)
+        private DraftEngine_v2 _draftEngine;
+
+        public DraftSvc(AppDataContext db, IConfiguration config, IWebHostEnvironment env, UtilityService.Utility utility, DraftEngine_v2 draftEngine)
         {
             _db = db;
             _config = config;
@@ -27,6 +30,7 @@ namespace DraftService
             _utility = utility;
             //_mapper = mapper;
             //_logger = logger;
+            _draftEngine = draftEngine;
         }
 
         public ViewModel.DraftStatus DraftStatus(int vUniversID, int vleagueID)
@@ -182,6 +186,81 @@ namespace DraftService
                     IList<ViewModel.DraftPick> addedPicks = generatedDraftPicks.GetRange(startIndex, length);
                     draftPicks.AddRange(addedPicks);
                 }
+
+                result.StatusCode = 200;
+                result.ObjData = draftPicks;
+            }
+            catch (Exception ex)
+            {
+                result.StatusCode = 500;
+                result.ErrMessage = ex.Message;
+            }
+
+            return result;
+        }
+        public DataModel.Response.ReturnResult GetDraftPicksForLeague_v2()
+        {
+            var result = new DataModel.Response.ReturnResult();
+
+            try
+            {
+                FantasyLeague fanLeague = new FantasyLeague()
+                {
+                    identifier = _draftEngine.ActiveMyDraftLeague.ID,
+                    numTeams = _draftEngine.ActiveMyDraftLeague.NumberOfTeams,
+                    rounds = _draftEngine.ActiveMyDraftLeague.NumberOfRounds,
+                    draftByTeamEnabled = true,
+                };
+
+                foreach (var i in _draftEngine.ActiveMyDraftLeague.teams)
+                {
+                    var addItem = new FantasyTeam()
+                    {
+                        identifier = i.ID,
+                        name = i.Name ?? "",
+                        abbr = i.Abbreviation ?? "",
+                    };
+                    fanLeague.fanTeams.Add(addItem);
+                }
+
+                var draftPicks = draftPicksForLeague
+                    (_draftEngine.ActiveMyDraftLeague.ID);
+
+                int totalPicks = _draftEngine.ActiveMyDraftLeague.NumberOfTeams * _draftEngine.ActiveMyDraftLeague.NumberOfRounds;
+                if (draftPicks.Count > totalPicks)
+                {
+                    int startIndex = totalPicks;
+                    int length = draftPicks.Count - totalPicks;
+                    draftPicks.RemoveRange(startIndex, length);
+                }
+                else
+                {
+                    List<ViewModel.DraftPick> generatedDraftPicks = (List<ViewModel.DraftPick>)DraftPickGenerator_v2.generateDraftPicks(fanLeague);
+                    int startIndex = draftPicks.Count;
+                    int length = generatedDraftPicks.Count - draftPicks.Count;
+                    IList<ViewModel.DraftPick> addedPicks = generatedDraftPicks.GetRange(startIndex, length);
+                    draftPicks.AddRange(addedPicks);
+                }
+
+                result.StatusCode = 200;
+                result.ObjData = draftPicks;
+            }
+            catch (Exception ex)
+            {
+                result.StatusCode = 500;
+                result.ErrMessage = ex.Message;
+            }
+
+            return result;
+        }
+        public DataModel.Response.ReturnResult GetDraftPicksByFanTeam(ViewModel.ActiveFanTeamInfo vInput)
+        {
+            var result = new DataModel.Response.ReturnResult();
+
+            try
+            {
+                var draftPicks = _db.UserDraftSelection
+                                .Where(q => q.LeagueID == vInput.LeagueID && q.TeamID == vInput.FanTeamID);
 
                 result.StatusCode = 200;
                 result.ObjData = draftPicks;

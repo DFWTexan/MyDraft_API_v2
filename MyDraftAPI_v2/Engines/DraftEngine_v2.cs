@@ -17,12 +17,21 @@ namespace MyDraftAPI_v2
         private System.Threading.Timer? _timer;
 
         private FanDataModel.FantasyLeague? _league;
+        private ViewModel.ActiveLeague _activeMyDraftLeague;
         private List<DraftPick> _draftPicks;
         private ViewModel.DraftStatus? _draftStatus;
         private IDictionary<int, DraftPick> _draftPickMap;
 
         #region Properties
-        public UserLeague? ActiveLeague { get; set; } = null;
+        public ViewModel.ActiveLeague ActiveMyDraftLeague 
+        {
+            get { return _activeMyDraftLeague; }
+            set { _activeMyDraftLeague = value; } 
+        }
+        //public ViewModel.ActiveLeague ActiveMyDraftLeague 
+        //{
+        //    get { return _activeMyDraftLeague;  } 
+        //}
         public FanDataModel.FantasyLeague league
         {
             get { return _league; }
@@ -53,30 +62,31 @@ namespace MyDraftAPI_v2
             _draftPicks = new List<DraftPick>();
             _draftPickMap = new Dictionary<int, DraftPick>();
 
-            ActiveLeague = new UserLeague();
+            //ActiveLeague = new ViewModel.ActiveLeague();
         }
 
-        public void InitializeLeagueData_v2(ViewModel.ActiveLeague vInput)
+        public void InitializeLeagueData_v2()
         {
+            //_activeMyDraftLeague = vInput;
+
             _league = new FanDataModel.FantasyLeague()
             {
-                UniverseID = vInput.UniverseID,
-                identifier = vInput.ID,
-                draftType = vInput.DraftType,
+                UniverseID = _activeMyDraftLeague.UniverseID,
+                identifier = _activeMyDraftLeague.ID,
+                draftType = _activeMyDraftLeague.DraftType,
                 //draftOrderType = vInput.DraftOrderType
             };
-            _league.teams = (List<ViewModel.UserLeageTeamItem>)vInput.teams;
+            _league.teams = (List<ViewModel.UserLeageTeamItem>)_activeMyDraftLeague.teams;
 
             using (var db = new AppDataContext(_dbOptionsBuilder.Options))
             {
-
                 try
                 {
                     #region DraftStatus  
                     var result = new ViewModel.DraftStatus();
 
                     var draftStatus = db.UserDraftStatus
-                        .Where(x => x.LeagueID == vInput.ID)
+                        .Where(x => x.LeagueID == _activeMyDraftLeague.ID)
                         .Select(i => new ViewModel.DraftStatus()
                         {
                             LeagueID = i.LeagueID,
@@ -108,7 +118,7 @@ namespace MyDraftAPI_v2
                     #region DraftPicks  
                     //_draftPicks = _draftSvc.draftPicksForLeague(leagueID).ToList();
                     var _draftPicks = db.UserDraftSelection
-                            .Where(x => x.LeagueID == vInput.ID)
+                            .Where(x => x.LeagueID == _activeMyDraftLeague.ID)
                             .Select(i => new DraftPick()
                             {
                                 leagueID = i.LeagueID,
@@ -165,7 +175,7 @@ namespace MyDraftAPI_v2
             using (var db = new AppDataContext(_dbOptionsBuilder.Options))
             {
                 var teams = await db.UserLeagueTeam
-                                    .Where(q => q.LeagueID == ActiveLeague.ID)
+                                    .Where(q => q.LeagueID == ActiveMyDraftLeague.ID)
                                     .OrderBy(q => q.DraftPosition)
                                     .Select(i => new FantasyTeam()
                                     {

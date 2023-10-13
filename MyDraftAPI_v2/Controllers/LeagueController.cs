@@ -29,11 +29,11 @@ namespace MyDraftAPI_v2.Controllers
         [HttpGet]
         public ActionResult GetActiveLeague()
         {
-            var service = new LeagueService.LeagueSvc(_db, _config, null, null);
+            var service = new LeagueService.LeagueSvc(_db, _config, null, null, _draftEngine);
 
             var result = service.GetActiveLeague();
 
-            _draftEngine.ActiveLeague = (Database.Model.UserLeague?)result.ObjData;
+            _draftEngine.ActiveMyDraftLeague = result.ObjData as ViewModel.ActiveLeague;
 
             return StatusCode(result.StatusCode, result.ObjData);
         }
@@ -42,10 +42,10 @@ namespace MyDraftAPI_v2.Controllers
         /// 
         /// Get Initialize League Data
         ///
-        [HttpPost]
-        public ActionResult InitLeageData([FromBody] ViewModel.ActiveLeague vInput)
+        [HttpGet]
+        public ActionResult InitLeageData()
         {
-            _draftEngine.InitializeLeagueData_v2(vInput);
+            _draftEngine.InitializeLeagueData_v2();
 
             return Ok();
         }
@@ -58,7 +58,7 @@ namespace MyDraftAPI_v2.Controllers
         [HttpGet("{id}")]
         public ActionResult TeamsForLeague(int id)
         {
-            var service = new LeagueService.LeagueSvc(_db, _config, null, null);
+            var service = new LeagueService.LeagueSvc(_db, _config, null, null, _draftEngine);
 
             var result = service.TeamsForLeague(id);
 
