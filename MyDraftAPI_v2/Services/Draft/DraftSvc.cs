@@ -253,14 +253,14 @@ namespace DraftService
 
             return result;
         }
-        public DataModel.Response.ReturnResult GetDraftPicksByFanTeam(ViewModel.ActiveFanTeamInfo vInput)
+        public DataModel.Response.ReturnResult GetDraftPicksByFanTeam(int vFanTeamID)
         {
             var result = new DataModel.Response.ReturnResult();
 
             try
             {
                 var draftPicks = _db.UserDraftSelection
-                                .Where(q => q.LeagueID == vInput.LeagueID && q.TeamID == vInput.FanTeamID);
+                                .Where(q => q.LeagueID == _draftEngine.ActiveMyDraftLeague.ID && q.TeamID == vFanTeamID);
 
                 result.StatusCode = 200;
                 result.ObjData = draftPicks;

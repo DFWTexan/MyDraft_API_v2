@@ -1,6 +1,7 @@
 ﻿using Database.Model;
 using DbData;
 using Microsoft.EntityFrameworkCore;
+using MyDraftAPI_v2;
 
 namespace PlayerService
 {
@@ -10,10 +11,11 @@ namespace PlayerService
         private readonly IConfiguration _config;
         private readonly IWebHostEnvironment _env;
         private readonly UtilityService.Utility _utility;
+        private DraftEngine_v2 _draftEngine;
         //private readonly IMapper _mapper;
         //private readonly ILogger _logger;
 
-        public PlayerSvc(AppDataContext db, IConfiguration config, IWebHostEnvironment env, UtilityService.Utility utility)
+        public PlayerSvc(AppDataContext db, IConfiguration config, IWebHostEnvironment env, UtilityService.Utility utility, DraftEngine_v2 draftEngine)
         {
             _db = db;
             _config = config;
@@ -21,6 +23,7 @@ namespace PlayerService
             _utility = utility;
             //_mapper = mapper;
             //_logger = logger;
+            _draftEngine = draftEngine;
         }
 
         public DataModel.Response.ReturnResult GetPlayers(ViewModel.FilterSortPlayer vInput)

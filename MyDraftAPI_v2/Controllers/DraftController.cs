@@ -67,12 +67,12 @@ namespace MyDraftAPI_v2.Controllers
         ///     
         /// Get All Daft Picks for Fantasy Team
         ///
-        [HttpPut]
-        public ActionResult GetDraftPicksByFanTeam([FromBody] ViewModel.ActiveFanTeamInfo vInput)
+        [HttpGet("{fanTeamID}")]
+        public ActionResult GetDraftPicksByFanTeam(int fanTeamID)
         {
             var service = new DraftService.DraftSvc(_db, _config, null, null, _draftEngine);
 
-            var result = service.GetDraftPicksByFanTeam(vInput);
+            var result = service.GetDraftPicksByFanTeam(fanTeamID);
 
             return StatusCode(result.StatusCode, result.ObjData);
         }
