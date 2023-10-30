@@ -8,6 +8,7 @@ using MyDraftAPI_v2.FantasyDataModel.Draft;
 using System.Diagnostics;
 using MyDraftAPI_v2.Services.Algorithms;
 using MyDraftAPI_v2;
+using MyDraftLib.Utilities;
 
 namespace DraftService
 {
@@ -259,11 +260,8 @@ namespace DraftService
 
             try
             {
-                var draftPicks = _db.UserDraftSelection
-                                .Where(q => q.LeagueID == _draftEngine.ActiveMyDraftLeague.ID && q.TeamID == vFanTeamID);
-
                 result.StatusCode = 200;
-                result.ObjData = draftPicks;
+                result.ObjData = _draftEngine.draftPicksForTeam(vFanTeamID);
             }
             catch (Exception ex)
             {
