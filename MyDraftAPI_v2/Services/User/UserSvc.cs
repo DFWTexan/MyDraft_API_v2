@@ -24,10 +24,15 @@ namespace UserService
         public DataModel.Response.ReturnResult Login(ViewModel.UserInfo vInput)
         {
             var result = new DataModel.Response.ReturnResult();
+            var service = new LeagueService.LeagueSvc(_db, _config, null, null, _draftEngine);
 
             try
             {
-                var userInfo = new ViewModel.UserInfo() { UserName = "EMFTest_User", IsLoggedIn = true };
+                // TBD: Convert to LOGIN with provided Credentials...
+                var userInfo = new ViewModel.UserInfo() { UserID = 1, UserName = "EMFTest_User", IsLoggedIn = true };
+                var activeLeague = service.GetActiveLeague(userInfo.UserID);
+
+                _draftEngine.InitializeLeagueData_v2();
 
                 result.StatusCode = 200;
                 result.ObjData = userInfo;

@@ -95,7 +95,9 @@ namespace DraftService
                 }
                 returnResult.Add(draftPick);
             }
-                     
+            
+            _draftEngine.draftPicks = returnResult.ToList();
+            
             return returnResult;
         }
         public void saveDraftPicks(IList<ViewModel.DraftPick> draftPicks)
@@ -261,7 +263,7 @@ namespace DraftService
             try
             {
                 result.StatusCode = 200;
-                result.ObjData = _draftEngine.draftPicksForTeam(vFanTeamID);
+                result.ObjData = _draftEngine.draftPicksForTeam_v2(vFanTeamID);
             }
             catch (Exception ex)
             {

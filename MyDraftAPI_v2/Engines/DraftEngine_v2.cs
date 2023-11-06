@@ -23,6 +23,14 @@ namespace MyDraftAPI_v2
         private ViewModel.DraftStatus? _draftStatus;
         private IDictionary<int, ViewModel.DraftPick> _draftPickMap;
         private int _myDraftFanTeamID = 1;
+        private Dictionary<string, ViewModel.DraftPick> _rosterDict = new Dictionary<string, ViewModel.DraftPick>() {
+            {"QB", new ViewModel.DraftPick() },
+            {"RB", new ViewModel.DraftPick() },
+            {"WR1", new ViewModel.DraftPick() },
+            {"WR2", new ViewModel.DraftPick() },
+            {"TE", new ViewModel.DraftPick() },
+            {"K", new ViewModel.DraftPick() }
+        };
 
         #region Properties
         public int MyDraftFanTeamID
@@ -30,10 +38,10 @@ namespace MyDraftAPI_v2
             get { return _myDraftFanTeamID; }
             set { _myDraftFanTeamID = value; }
         }
-        public ViewModel.ActiveLeague ActiveMyDraftLeague 
+        public ViewModel.ActiveLeague ActiveMyDraftLeague
         {
             get { return _activeMyDraftLeague; }
-            set { _activeMyDraftLeague = value; } 
+            set { _activeMyDraftLeague = value; }
         }
         //public ViewModel.ActiveLeague ActiveMyDraftLeague 
         //{
@@ -50,6 +58,7 @@ namespace MyDraftAPI_v2
             {
                 return _draftPicks;
             }
+            set => _draftPicks = (List<ViewModel.DraftPick>)value;
         }
         public ViewModel.DraftStatus? draftStatus
         {
@@ -228,21 +237,37 @@ namespace MyDraftAPI_v2
                     {
                         using (var db = new AppDataContext(_dbOptionsBuilder.Options))
                         {
-                            //try
-                            //{
-                                draftPick.player = draftPick.playerID != 0 ? db.Player.Where(q => q.ID == draftPick.playerID).FirstOrDefault() : null;
-                            //}
-                            //catch (Exception ex)
-                            //{
-                            //    throw;
-                            //}
-                            
+                            draftPick.player = draftPick.playerID != 0 ? db.Player
+                                                                        .Where(q => q.ID == draftPick.playerID)
+                                                                        .FirstOrDefault() : null;
                         }
                     }
 
                     draftPicks.Add(draftPick);
                 }
             }
+            return draftPicks;
+        }
+        public Dictionary<string, ViewModel.DraftPick> draftPicksForTeam_v2(int vFanTeamID)
+        {
+            //Dictionary<string, ViewModel.DraftPick> draftPicks = new Dictionary<string, ViewModel.DraftPick>();
+            Dictionary<string, ViewModel.DraftPick> draftPicks = _rosterDict;
+
+            var picks = draftPicksForTeam(vFanTeamID);
+            foreach (var pick in picks)
+            {
+                if (pick.player != null)
+                {
+                    foreach (var draftPick in _rosterDict.ToList())
+                    {
+                        if (draftPick.Key == pick.player.Position)
+                        {
+                            draftPicks[draftPick.Key] = pick;
+                        }
+                    }
+                }
+            }
+
             return draftPicks;
         }
         #endregion
@@ -293,7 +318,8 @@ namespace MyDraftAPI_v2
             if (_draftStatus == null)
             {
                 return;
-            } else
+            }
+            else
             {
                 if (_draftStatus.CurrentPick == overall)
                 {

@@ -13,7 +13,7 @@ namespace ViewModel
         public int teamID { get; set; }
         public float auctionValue { get; set; }
         public bool isKeeper { get; set; }
-        public Player player { get; set; }
+        public Player? player { get; set; }
 
         public DraftPick() { }
         public DraftPick(int leagueID, int overall, int round, int pickInRound, int teamID, int playerID, float auctionValue, bool isKeeper)

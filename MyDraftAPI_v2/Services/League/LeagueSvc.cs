@@ -72,13 +72,14 @@ namespace LeagueService
             public int drafttypeVal { get; set; }
         }
 
-        public DataModel.Response.ReturnResult GetActiveLeague()
+        public DataModel.Response.ReturnResult GetActiveLeague(int? vID = 1)
         {
             var result = new DataModel.Response.ReturnResult();
 
             try
             {
                 var activeLeague = _db.UserLeague.Take(1).OrderByDescending(q => q.LastActiveDate)
+                    .Where(q => q.UniverseID == vID)
                     .Select(i => new ViewModel.ActiveLeague()
                     {
                         ID = i.ID,
