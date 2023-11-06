@@ -4,6 +4,7 @@ namespace Database.Model
 {
     public class UserDraftStatus
     {
+        public int UniverseID { get; set; }
         public int LeagueID { get; set; }
         public int CurrentPick { get; set; }
         public bool IsComplete { get; set; }

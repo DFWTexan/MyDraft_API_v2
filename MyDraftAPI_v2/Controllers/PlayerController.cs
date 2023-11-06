@@ -12,11 +12,14 @@ namespace MyDraftAPI_v2.Controllers
         private readonly IConfiguration _config;
         private readonly ILogger<PlayerController> _logger;
 
-        public PlayerController(AppDataContext db, IConfiguration config, ILogger<PlayerController> logger)
+        private DraftEngine_v2 _draftEngine;
+
+        public PlayerController(AppDataContext db, IConfiguration config, ILogger<PlayerController> logger, DraftEngine_v2 draftEngine)
         {
             _db = db;
             _config = config;
             _logger = logger;
+            _draftEngine = draftEngine;
         }
 
         /// <summary>
@@ -26,7 +29,7 @@ namespace MyDraftAPI_v2.Controllers
         [HttpPut]
         public ActionResult GetPlayers([FromBody] ViewModel.FilterSortPlayer vInput)
         {
-            var service = new PlayerService.PlayerSvc(_db, _config, null, null);
+            var service = new PlayerService.PlayerSvc(_db, _config, null, null, _draftEngine);
 
             var result = service.GetPlayers(vInput);
 
@@ -40,7 +43,7 @@ namespace MyDraftAPI_v2.Controllers
         [HttpGet("{id}")]
         public ActionResult GetPlayerByID(int id)
         {
-            var service = new PlayerService.PlayerSvc(_db, _config, null, null);
+            var service = new PlayerService.PlayerSvc(_db, _config, null, null, _draftEngine);
 
             var result =  service.GetPlayerByID(id);
 

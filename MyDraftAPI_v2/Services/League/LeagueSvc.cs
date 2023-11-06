@@ -10,6 +10,7 @@ using MyDraftLib.Utilities;
 using System.Diagnostics;
 using MyDraftAPI_v2.FantasyDataModel.Draft;
 using DraftService;
+using MyDraftAPI_v2;
 
 namespace LeagueService
 {
@@ -19,18 +20,20 @@ namespace LeagueService
         private readonly IConfiguration _config;
         private readonly IWebHostEnvironment _env;
         private UtilityService.Utility _utility;
+        private DraftEngine_v2 _draftEngine;
 
         private static String TABLE_USER_TEAMS = "user_teams";
         private static String TABLE_USER_LEAGUES = "user_leagues";
         private static String TABLE_USER_ROSTER = "user_roster";
         public static readonly String TABLE_USER_ROSTER_CONFIG = "user_roster_config";
 
-        public LeagueSvc(AppDataContext db, IConfiguration config, IWebHostEnvironment env, UtilityService.Utility utility)
+        public LeagueSvc(AppDataContext db, IConfiguration config, IWebHostEnvironment env, UtilityService.Utility utility, DraftEngine_v2 draftEngine)
         {
             _db = db;
             _config = config;
             _env = env;
             _utility = utility;
+            _draftEngine = draftEngine;
         }
 
         private class Val
@@ -69,14 +72,14 @@ namespace LeagueService
             public int drafttypeVal { get; set; }
         }
 
-        public DataModel.Response.ReturnResult GetActiveLeague()
+        public DataModel.Response.ReturnResult GetActiveLeague(int? vID = 1)
         {
             var result = new DataModel.Response.ReturnResult();
-
 
             try
             {
                 var activeLeague = _db.UserLeague.Take(1).OrderByDescending(q => q.LastActiveDate)
+                    .Where(q => q.UniverseID == vID)
                     .Select(i => new ViewModel.ActiveLeague()
                     {
                         ID = i.ID,

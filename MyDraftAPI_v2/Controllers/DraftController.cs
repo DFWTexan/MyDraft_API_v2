@@ -25,15 +25,15 @@ namespace MyDraftAPI_v2.Controllers
         ///     
         /// Get All DraftStatus
         ///
-        //[HttpGet("{id}")]
-        //public ActionResult GetDraftStatus(int id)
-        //{
-        //    var service = new DraftService.DraftSvc(_db, _config, null, null);
+        [HttpGet]
+        public ActionResult GetDraftStatus()
+        {
+            var result = new DataModel.Response.ReturnResult();
 
-        //    var result = service.GetDraftStatus(id);
+            result.ObjData = _draftEngine.draftStatus;
 
-        //    return StatusCode(result.StatusCode, result.ObjData);
-        //}
+            return StatusCode(result.StatusCode = 200, result.ObjData);
+        }
 
         /// <summary>
         ///     
@@ -42,18 +42,40 @@ namespace MyDraftAPI_v2.Controllers
         [HttpPut]
         public ActionResult GetDraftPicksForLeague([FromBody] ViewModel.ActiveLeague vInput)
         {
-            //var result = new DataModel.Response.ReturnResult();
-            //result.Success = true;
-            //result.StatusCode = 200;
-            //result.ObjData = _draftEngine.draftPicks;
-
-            var service = new DraftService.DraftSvc(_db, _config, null, null);
+            var service = new DraftService.DraftSvc(_db, _config, null, null, _draftEngine);
 
             var result = service.GetDraftPicksForLeague(vInput);
 
             return StatusCode(result.StatusCode, result.ObjData);
         }
 
+        /// <summary>
+        ///     
+        /// Get All Daft Picks for League
+        ///
+        [HttpGet]
+        public ActionResult GetDraftPicksForLeague_v2()
+        {
+            var service = new DraftService.DraftSvc(_db, _config, null, null, _draftEngine);
+
+            var result = service.GetDraftPicksForLeague_v2();
+
+            return StatusCode(result.StatusCode, result.ObjData);
+        }
+
+        /// <summary>
+        ///     
+        /// Get All Daft Picks for Fantasy Team
+        ///
+        [HttpGet("{fanTeamID}")]
+        public ActionResult GetDraftPicksByFanTeam(int fanTeamID)
+        {
+            var service = new DraftService.DraftSvc(_db, _config, null, null, _draftEngine);
+
+            var result = service.GetDraftPicksByFanTeam(fanTeamID);
+
+            return StatusCode(result.StatusCode, result.ObjData);
+        }
 
     }
 }

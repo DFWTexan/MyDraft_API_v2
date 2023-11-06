@@ -4,6 +4,7 @@ using DbData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MyDraftAPI_v2.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    partial class AppDataContextModelSnapshot : ModelSnapshot
+    [Migration("20231002164132_emf20231002A")]
+    partial class emf20231002A
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -396,9 +399,6 @@ namespace MyDraftAPI_v2.Migrations
                     b.Property<int>("TeamID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Round")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("datetime2");
 
@@ -408,7 +408,7 @@ namespace MyDraftAPI_v2.Migrations
                     b.Property<int?>("OverallPick")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PickInRound")
+                    b.Property<int?>("Pick")
                         .HasColumnType("int");
 
                     b.Property<int?>("PositionPick")
@@ -417,10 +417,10 @@ namespace MyDraftAPI_v2.Migrations
                     b.Property<int?>("PositionRound")
                         .HasColumnType("int");
 
-                    b.Property<int>("UniverseID")
+                    b.Property<int?>("Round")
                         .HasColumnType("int");
 
-                    b.HasKey("LeagueID", "PlayerID", "TeamID", "Round");
+                    b.HasKey("LeagueID", "PlayerID", "TeamID");
 
                     b.ToTable("UserDraftSelections", (string)null);
                 });

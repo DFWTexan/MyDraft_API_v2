@@ -90,7 +90,7 @@ namespace DbData
                 .HasKey(k => new { k.PlayerID, k.PositionID, k.TeamID });
 
             modelBuilder.Entity<Database.Model.UserDraftSelections>()
-                .HasKey(k => new { k.LeagueID, k.PlayerID, k.TeamID });
+                .HasKey(k => new { k.LeagueID, k.PlayerID, k.TeamID, k.Round });
 
             modelBuilder.Entity<Database.Model.PlayerPosition>()
                 .HasKey(k => new { k.PlayerID, k.PositionID });
