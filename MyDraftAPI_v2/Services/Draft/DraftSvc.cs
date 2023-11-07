@@ -287,7 +287,6 @@ namespace DraftService
                         case "RB":
                             pick.@int = ++cnt_RB;
                             pick.PositionGroup = "RUNNING BACK";
-                            pick.PlayerName = item.Value.player.FirstName + ' ' + item.Value.player.LastName;
                             pick.SortOrder = 2;
                             break;
                         case "WR":
@@ -312,6 +311,7 @@ namespace DraftService
                             break;
                     }
 
+                    pick.PlayerName = item.Value.player != null ? item.Value.player.FirstName + ' ' + item.Value.player.LastName : "";
                     fanTeamPicks.Add(pick);
                 }
 
