@@ -261,7 +261,6 @@ namespace DraftService
             var result = new DataModel.Response.ReturnResult();
             List<FanTeamPick> fanTeamPicks = new List<FanTeamPick>();
 
-            // Position Counts
             int cnt_QB = 0;
             int cnt_RB = 0;
             int cnt_WR = 0;
