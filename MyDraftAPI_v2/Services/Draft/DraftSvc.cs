@@ -259,11 +259,64 @@ namespace DraftService
         public DataModel.Response.ReturnResult GetDraftPicksByFanTeam(int vFanTeamID)
         {
             var result = new DataModel.Response.ReturnResult();
+            List<FanTeamPick> fanTeamPicks = new List<FanTeamPick>();
+
+            // Position Counts
+            int cnt_QB = 0;
+            int cnt_RB = 0;
+            int cnt_WR = 0;
+            int cnt_TE = 0;
+            int cnt_K = 0;
+            int cnt_BN = 0;
 
             try
             {
                 result.StatusCode = 200;
-                result.ObjData = _draftEngine.draftPicksForTeam_v2(vFanTeamID);
+                var resData = _draftEngine.draftPicksForTeam_v2(vFanTeamID);
+
+                foreach (var item in resData)
+                {
+                    FanTeamPick pick = new FanTeamPick();
+                    switch (item.Key.Substring(0,2))
+                    {
+                        case "QB":
+                            pick.@int = ++cnt_QB;
+                            pick.PositionGroup = "QUARTERBACK";
+                            pick.SortOrder = 1;
+                            break;
+                        case "RB":
+                            pick.@int = ++cnt_RB;
+                            pick.PositionGroup = "RUNNING BACK";
+                            pick.PlayerName = item.Value.player.FirstName + ' ' + item.Value.player.LastName;
+                            pick.SortOrder = 2;
+                            break;
+                        case "WR":
+                            pick.@int = ++cnt_WR;
+                            pick.PositionGroup = "WIDE RECIEVER";
+                            pick.SortOrder = 3;
+                            break;
+                        case "TE":
+                            pick.@int = ++cnt_TE;
+                            pick.PositionGroup = "TIGHT END";
+                            pick.SortOrder = 4;
+                            break;
+                        case "K1":
+                            pick.@int = ++cnt_K;
+                            pick.PositionGroup = "KICKER";
+                            pick.SortOrder = 5;
+                            break;
+                        default:  // "BENCH" is the defaut
+                            pick.@int = ++cnt_BN;
+                            pick.PositionGroup = "BENCH";
+                            pick.SortOrder = 6;
+                            break;
+                    }
+
+                    fanTeamPicks.Add(pick);
+                }
+
+
+                result.ObjData = fanTeamPicks.OrderBy(o => o.SortOrder).ToList();
             }
             catch (Exception ex)
             {

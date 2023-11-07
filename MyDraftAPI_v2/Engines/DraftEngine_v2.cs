@@ -18,7 +18,7 @@ namespace MyDraftAPI_v2
         private System.Threading.Timer? _timer;
 
         private FanDataModel.FantasyLeague? _league;
-        private ViewModel.ActiveLeague _activeMyDraftLeague;
+        private ViewModel.ActiveLeague? _activeMyDraftLeague;
         private List<ViewModel.DraftPick> _draftPicks;
         private ViewModel.DraftStatus? _draftStatus;
         private IDictionary<int, ViewModel.DraftPick> _draftPickMap;
@@ -29,7 +29,7 @@ namespace MyDraftAPI_v2
             {"WR1", new ViewModel.DraftPick() },
             {"WR2", new ViewModel.DraftPick() },
             {"TE", new ViewModel.DraftPick() },
-            {"K", new ViewModel.DraftPick() },
+            {"K1", new ViewModel.DraftPick() },
             {"B1", new ViewModel.DraftPick() },
             {"B2", new ViewModel.DraftPick() },
             {"B3", new ViewModel.DraftPick() },
@@ -254,7 +254,6 @@ namespace MyDraftAPI_v2
         }
         public Dictionary<string, ViewModel.DraftPick> draftPicksForTeam_v2(int vFanTeamID)
         {
-            //Dictionary<string, ViewModel.DraftPick> draftPicks = new Dictionary<string, ViewModel.DraftPick>();
             Dictionary<string, ViewModel.DraftPick> draftPicks = _rosterDict;
 
             var picks = draftPicksForTeam(vFanTeamID);
