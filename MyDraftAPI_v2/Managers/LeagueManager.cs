@@ -6,6 +6,7 @@ using MyDraftLib.Utilities;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using System.Text;
+#pragma warning disable 
 
 namespace MyDraftAPI_v2.Managers
 {

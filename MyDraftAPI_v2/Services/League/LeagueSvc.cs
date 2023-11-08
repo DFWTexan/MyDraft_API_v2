@@ -11,6 +11,7 @@ using System.Diagnostics;
 using MyDraftAPI_v2.FantasyDataModel.Draft;
 using DraftService;
 using MyDraftAPI_v2;
+#pragma warning disable 
 
 namespace LeagueService
 {

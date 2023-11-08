@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+#pragma warning disable 
 
 namespace MyDraftAPI_v2.FantasyDataModel
 {

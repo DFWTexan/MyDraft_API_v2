@@ -9,6 +9,7 @@ using System.Diagnostics;
 using MyDraftAPI_v2.Services.Algorithms;
 using MyDraftAPI_v2;
 using MyDraftLib.Utilities;
+#pragma warning disable 
 
 namespace DraftService
 {
@@ -126,8 +127,8 @@ namespace DraftService
                     {
                         UniverseID = i.UniverseID,
                         LeagueID = i.leagueID,
-                        TeamID = i.teamID,
-                        PlayerID = i.playerID,
+                        TeamID = (int)i.teamID,
+                        PlayerID = (int)i.playerID,
                         Round = i.round,
                         PickInRound = i.pickInRound,
                         OverallPick = i.overallPick,
@@ -316,6 +317,68 @@ namespace DraftService
 
 
                 result.ObjData = fanTeamPicks.OrderBy(o => o.SortOrder).ToList();
+            }
+            catch (Exception ex)
+            {
+                result.StatusCode = 500;
+                result.ErrMessage = ex.Message;
+            }
+
+            return result;
+        }
+        public DataModel.Response.ReturnResult GetDraftPicksByPosition()
+        {
+            var result = new DataModel.Response.ReturnResult();
+            
+            List<ViewModel.DraftPick> drafted_QB = new List<ViewModel.DraftPick>();
+            List<ViewModel.DraftPick> drafted_RB = new List<ViewModel.DraftPick>();
+            List<ViewModel.DraftPick> drafted_WR = new List<ViewModel.DraftPick>();
+            List<ViewModel.DraftPick> drafted_TE = new List<ViewModel.DraftPick>();
+            List<ViewModel.DraftPick> drafted_K = new List<ViewModel.DraftPick>();
+
+            try
+            {
+                result.StatusCode = 200;
+                var resData = _draftEngine.draftPicks;
+
+                foreach (var item in resData)
+                {
+                    FanTeamPick pick = new FanTeamPick();
+                    if(item.player != null)
+                    {
+                        switch (item.player.Position)
+                        {
+                            case "QB":
+                                drafted_QB.Add(item);
+                                break;
+                            case "RB":
+                                drafted_RB.Add(item);
+                                break;
+                            case "WR":
+                                drafted_WR.Add(item);
+                                break;
+                            case "TE":
+                                drafted_TE.Add(item);
+                                break;
+                            case "K":
+                                drafted_K.Add(item);
+                                break;
+                            //default:  // "BENCH" is the defaut
+                            //    ++cnt_BN;
+                            //    break;
+                        }
+                    }
+                }
+
+                Dictionary<string, List<ViewModel.DraftPick>> draftedPlayerByPositions = new Dictionary<string, List<ViewModel.DraftPick>>() {
+                    {"QB",drafted_QB },
+                    {"RB",drafted_RB },
+                    {"WR",drafted_WR },
+                    {"TE",drafted_TE },
+                    {"K1",drafted_K },
+                };
+
+                result.ObjData = draftedPlayerByPositions.ToList();
             }
             catch (Exception ex)
             {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DbData;
+#pragma warning disable 
 
 namespace MyDraftAPI_v2.Controllers
 {
@@ -77,5 +78,18 @@ namespace MyDraftAPI_v2.Controllers
             return StatusCode(result.StatusCode, result.ObjData);
         }
 
+        /// <summary>
+        ///     
+        /// Get All Position Daft Picks for League
+        ///
+        [HttpGet]
+        public ActionResult GetDraftPicksByPosition()
+        {
+            var service = new DraftService.DraftSvc(_db, _config, null, null, _draftEngine);
+
+            var result = service.GetDraftPicksByPosition();
+
+            return StatusCode(result.StatusCode, result.ObjData);
+        }
     }
 }

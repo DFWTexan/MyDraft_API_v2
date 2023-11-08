@@ -5,6 +5,7 @@ using MyDraftAPI_v2.FantasyDataModel;
 using MyDraftAPI_v2.FantasyDataModel.Draft;
 using MyDraftAPI_v2.Managers;
 using MyDraftLib.Utilities;
+#pragma warning disable 
 
 namespace MyDraftAPI_v2
 {
@@ -19,7 +20,7 @@ namespace MyDraftAPI_v2
 
         private FanDataModel.FantasyLeague? _league;
         private ViewModel.ActiveLeague? _activeMyDraftLeague;
-        private List<ViewModel.DraftPick> _draftPicks;
+        private List<ViewModel.DraftPick>? _draftPicks;
         private ViewModel.DraftStatus? _draftStatus;
         private IDictionary<int, ViewModel.DraftPick> _draftPickMap;
         private int _myDraftFanTeamID = 1;

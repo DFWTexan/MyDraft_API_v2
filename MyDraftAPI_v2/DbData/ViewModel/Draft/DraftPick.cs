@@ -6,11 +6,11 @@ namespace ViewModel
     {
         public int UniverseID { get; set; }
         public int leagueID { get; set; }
-        public int playerID { get; set; }
+        public int? playerID { get; set; }
         public int? overallPick { get; set; }
         public int? round { get; set; }
         public int? pickInRound { get; set; }
-        public int teamID { get; set; }
+        public int? teamID { get; set; }
         public float auctionValue { get; set; }
         public bool isKeeper { get; set; }
         public Player? player { get; set; }
