@@ -110,6 +110,8 @@ namespace LeagueService
                     activeLeague.teams.Add(addItem);
                 }
 
+                _draftEngine.ActiveMyDraftLeague = activeLeague;
+
                 result.ObjData = activeLeague;
                 result.Success = true;
             }

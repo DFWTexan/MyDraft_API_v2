@@ -57,13 +57,14 @@ namespace MyDraftAPI_v2
             get { return _league; }
             set { _league = value; }
         }
-        public IList<ViewModel.DraftPick>? draftPicks
+        public List<ViewModel.DraftPick>? draftPicks
         {
             get
             {
                 return _draftPicks;
             }
-            set => _draftPicks = (List<ViewModel.DraftPick>)value;
+            //set => _draftPicks = (List<ViewModel.DraftPick>)value;
+            set { _draftPicks = (List<ViewModel.DraftPick>?)value; }
         }
         public ViewModel.DraftStatus? draftStatus
         {
@@ -149,6 +150,7 @@ namespace MyDraftAPI_v2
                                 teamID = i.TeamID,
                                 playerID = i.PlayerID,
                             })
+                            .OrderBy(q => q.overallPick)
                             .AsNoTracking()
                             .ToList();
                     #endregion

@@ -227,8 +227,7 @@ namespace DraftService
                     fanLeague.fanTeams.Add(addItem);
                 }
 
-                var draftPicks = draftPicksForLeague
-                    (_draftEngine.ActiveMyDraftLeague.ID);
+                var draftPicks = draftPicksForLeague(_draftEngine.ActiveMyDraftLeague.ID);
 
                 int totalPicks = _draftEngine.ActiveMyDraftLeague.NumberOfTeams * _draftEngine.ActiveMyDraftLeague.NumberOfRounds;
                 if (draftPicks.Count > totalPicks)
@@ -339,9 +338,9 @@ namespace DraftService
             try
             {
                 result.StatusCode = 200;
-                var resData = _draftEngine.draftPicks;
+                var draftPicks = draftPicksForLeague(_draftEngine.ActiveMyDraftLeague.ID);
 
-                foreach (var item in resData)
+                foreach (var item in draftPicks)
                 {
                     FanTeamPick pick = new FanTeamPick();
                     if(item.player != null)
@@ -363,9 +362,6 @@ namespace DraftService
                             case "K":
                                 drafted_K.Add(item);
                                 break;
-                            //default:  // "BENCH" is the defaut
-                            //    ++cnt_BN;
-                            //    break;
                         }
                     }
                 }
