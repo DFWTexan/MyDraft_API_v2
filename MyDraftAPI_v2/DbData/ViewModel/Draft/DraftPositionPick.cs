@@ -4,14 +4,16 @@
     {
         public string? PositionGroup { get; set; }
         public string? PlayerName { get; set; }
-        public int SortOrder { get; set; }
+        public int Round { get; set; }
+        public int PickInRound { get; set; }
 
         public DraftPositionPick() { }
-        public DraftPositionPick(string positionGroup, string playerName, int sortOrder)
+        public DraftPositionPick(string positionGroup, string playerName, int round, int pickInRound)
         {
             PositionGroup = positionGroup;
             PlayerName = playerName;
-            SortOrder = sortOrder;
+            Round = round;
+            PickInRound = pickInRound;
         }
     }
 }

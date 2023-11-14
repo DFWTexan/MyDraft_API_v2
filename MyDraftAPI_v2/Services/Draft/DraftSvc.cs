@@ -9,7 +9,8 @@ using System.Diagnostics;
 using MyDraftAPI_v2.Services.Algorithms;
 using MyDraftAPI_v2;
 using MyDraftLib.Utilities;
-#pragma warning disable 
+using Windows.UI.Xaml;
+#pragma warning disable
 
 namespace DraftService
 {
@@ -46,7 +47,7 @@ namespace DraftService
 
             if (draftStatus != null)
             {
-                result.UniverseID = draftStatus.UniverseID; 
+                result.UniverseID = draftStatus.UniverseID;
                 result.LeagueID = draftStatus.LeagueID;
                 result.CurrentPick = draftStatus.CurrentPick;
                 result.IsComplete = draftStatus.IsComplete;
@@ -66,7 +67,7 @@ namespace DraftService
                 return new ViewModel.DraftStatus(vleagueID, 0, 0, false);
             }
         }
-        
+
         public List<ViewModel.DraftPick> draftPicksForLeague(int leagueID)
         {
             List<ViewModel.DraftPick> returnResult = new List<ViewModel.DraftPick>();
@@ -86,7 +87,7 @@ namespace DraftService
                     .AsNoTracking()
                     .ToList();
 
-            foreach ( var draftPick in draftPicks )
+            foreach (var draftPick in draftPicks)
             {
                 if (draftPick.playerID != 0)
                 {
@@ -96,9 +97,9 @@ namespace DraftService
                 }
                 returnResult.Add(draftPick);
             }
-            
+
             _draftEngine.draftPicks = returnResult.ToList();
-            
+
             return returnResult;
         }
         public void saveDraftPicks(IList<ViewModel.DraftPick> draftPicks)
@@ -158,7 +159,7 @@ namespace DraftService
                     draftByTeamEnabled = true,
                 };
 
-                foreach(var i in vInput.teams)
+                foreach (var i in vInput.teams)
                 {
                     var addItem = new FantasyTeam()
                     {
@@ -276,7 +277,7 @@ namespace DraftService
                 foreach (var item in resData)
                 {
                     FanTeamPick pick = new FanTeamPick();
-                    switch (item.Key.Substring(0,2))
+                    switch (item.Key.Substring(0, 2))
                     {
                         case "QB":
                             pick.@int = ++cnt_QB;
@@ -328,7 +329,15 @@ namespace DraftService
         public DataModel.Response.ReturnResult GetDraftPicksByPosition()
         {
             var result = new DataModel.Response.ReturnResult();
-            
+            string[] positionGroups = { "QB", "RB", "WR", "TE", "K1" };
+            List<ViewModel.DraftedByPositionItem> draftedPositions = new List<DraftedByPositionItem>();
+
+            //Dictionary<int, ViewModel.DraftPositionPick> dict_PositionGroup = new Dictionary<int, DraftPositionPick>();
+            //for (int i = 1; i <= _draftEngine.ActiveMyDraftLeague.NumberOfRounds; i++)
+            //{
+            //    dict_PositionGroup.Add(i, new ViewModel.DraftPositionPick());
+            //}
+
             List<ViewModel.DraftPick> drafted_QB = new List<ViewModel.DraftPick>();
             List<ViewModel.DraftPick> drafted_RB = new List<ViewModel.DraftPick>();
             List<ViewModel.DraftPick> drafted_WR = new List<ViewModel.DraftPick>();
@@ -343,7 +352,7 @@ namespace DraftService
                 foreach (var item in draftPicks)
                 {
                     FanTeamPick pick = new FanTeamPick();
-                    if(item.player != null)
+                    if (item.player != null)
                     {
                         switch (item.player.Position)
                         {
@@ -366,7 +375,7 @@ namespace DraftService
                     }
                 }
 
-                Dictionary<string, List<ViewModel.DraftPick>> draftedPlayerByPositions = new Dictionary<string, List<ViewModel.DraftPick>>() {
+                Dictionary<string, List<ViewModel.DraftPick>> dictDraftedPlayerByPositions = new Dictionary<string, List<ViewModel.DraftPick>>() {
                     {"QB",drafted_QB },
                     {"RB",drafted_RB },
                     {"WR",drafted_WR },
@@ -374,7 +383,41 @@ namespace DraftService
                     {"K1",drafted_K },
                 };
 
-                result.ObjData = draftedPlayerByPositions.ToList();
+                foreach (string posGroup in positionGroups)
+                {
+                    int round = 0;
+                    var draftedPosItem = new ViewModel.DraftedByPositionItem()
+                    {
+                        PositionGroup = posGroup,
+                        Count = dictDraftedPlayerByPositions[posGroup].Count,
+                        RoundPicks = new Dictionary<int, Dictionary<int, List<DraftPositionPick>>>()
+                    };
+
+                    Dictionary<int, List<ViewModel.DraftPositionPick>> dict_PositionGroup = new Dictionary<int, List<DraftPositionPick>>();
+                    for (int i = 1; i <= _draftEngine.ActiveMyDraftLeague.NumberOfRounds; i++)
+                    {
+                        dict_PositionGroup.Add(i, new List<ViewModel.DraftPositionPick>());
+                    }
+
+                    foreach (ViewModel.DraftPick item in dictDraftedPlayerByPositions[posGroup])
+                    {
+                        if (item.player.Position == posGroup)
+                        {
+                            dict_PositionGroup[(int)item.round].Add( new ViewModel.DraftPositionPick()
+                            {
+                                PositionGroup = item.player.Position,
+                                PlayerName = item.player.FirstName + " " + item.player.LastName,
+                                Round = (int)item.round,
+                                PickInRound = (int)item.pickInRound,
+                            });
+                        }
+                    }
+                    draftedPosItem.RoundPicks.Add(round++, dict_PositionGroup);
+                    draftedPositions.Add(draftedPosItem);
+                }
+
+                //result.ObjData = dictDraftedPlayerByPositions.ToList();
+                result.ObjData = draftedPositions.ToList();
             }
             catch (Exception ex)
             {
