@@ -67,7 +67,6 @@ namespace DraftService
                 return new ViewModel.DraftStatus(vleagueID, 0, 0, false);
             }
         }
-
         public List<ViewModel.DraftPick> draftPicksForLeague(int leagueID)
         {
             List<ViewModel.DraftPick> returnResult = new List<ViewModel.DraftPick>();
@@ -329,7 +328,7 @@ namespace DraftService
         public DataModel.Response.ReturnResult GetDraftPicksByPosition()
         {
             var result = new DataModel.Response.ReturnResult();
-            string[] positionGroups = { "QB", "RB", "WR", "TE", "K1" };
+            string[] positionGroups = { "QB", "RB", "WR", "TE", "K1", "D1" };
             List<ViewModel.DraftedByPositionItem> draftedPositions = new List<DraftedByPositionItem>();
 
             List<ViewModel.DraftPick> drafted_QB = new List<ViewModel.DraftPick>();
@@ -337,6 +336,7 @@ namespace DraftService
             List<ViewModel.DraftPick> drafted_WR = new List<ViewModel.DraftPick>();
             List<ViewModel.DraftPick> drafted_TE = new List<ViewModel.DraftPick>();
             List<ViewModel.DraftPick> drafted_K = new List<ViewModel.DraftPick>();
+            List<ViewModel.DraftPick> drafted_D = new List<ViewModel.DraftPick>();
 
             try
             {
@@ -375,6 +375,7 @@ namespace DraftService
                     {"WR",drafted_WR },
                     {"TE",drafted_TE },
                     {"K1",drafted_K },
+                    {"D1",drafted_D },
                 };
 
                 foreach (string posGroup in positionGroups)
@@ -420,12 +421,59 @@ namespace DraftService
 
             return result;
         }
-        public DataModel.Response.ReturnResult GetMyTeamRoster() 
+        public DataModel.Response.ReturnResult GetRosterTotalPositionCount()
         {
             var result = new DataModel.Response.ReturnResult();
+            Dictionary<string, int> dictStarters = new Dictionary<string, int>() {
+                {"QB", 1 },
+                {"RB", 2 },
+                {"WR", 2 },
+                {"TE", 1 },
+                {"K1", 1 },
+            };
+
+            List<ViewModel.DraftPick> myTeam_QB = new List<ViewModel.DraftPick>();
+            List<ViewModel.DraftPick> myTeam_RB = new List<ViewModel.DraftPick>();
+            List<ViewModel.DraftPick> myTeam_WR = new List<ViewModel.DraftPick>();
+            List<ViewModel.DraftPick> myTeam_TE = new List<ViewModel.DraftPick>();
+            List<ViewModel.DraftPick> myTeam_K = new List<ViewModel.DraftPick>();
+            List<ViewModel.DraftPick> myTeam_BN = new List<ViewModel.DraftPick>();
 
             try
             {
+                result.StatusCode = 200;
+               
+            }
+            catch (Exception ex)
+            {
+                result.StatusCode = 500;
+                result.ErrMessage = ex.Message;
+            }
+
+            return result;
+        }
+        public DataModel.Response.ReturnResult GetTeamRoster(int vFanTeamID) 
+        {
+            var result = new DataModel.Response.ReturnResult();
+            Dictionary<string,int> dictStarters = new Dictionary<string, int>() {
+                {"QB", 1 },
+                {"RB", 2 },
+                {"WR", 2 },
+                {"TE", 1 },
+                {"K1", 1 },
+            };
+
+            List<ViewModel.DraftPick> myTeam_QB = new List<ViewModel.DraftPick>();
+            List<ViewModel.DraftPick> myTeam_RB = new List<ViewModel.DraftPick>();
+            List<ViewModel.DraftPick> myTeam_WR = new List<ViewModel.DraftPick>();
+            List<ViewModel.DraftPick> myTeam_TE = new List<ViewModel.DraftPick>();
+            List<ViewModel.DraftPick> myTeam_K = new List<ViewModel.DraftPick>();
+            List<ViewModel.DraftPick> myTeam_BN = new List<ViewModel.DraftPick>();
+
+            try
+            {
+                result.StatusCode = 200;
+                var draftPicks = GetDraftPicksByFanTeam(vFanTeamID);
 
             }
             catch (Exception ex)

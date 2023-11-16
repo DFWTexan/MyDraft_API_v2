@@ -94,14 +94,28 @@ namespace MyDraftAPI_v2.Controllers
 
         /// <summary>
         ///     
-        /// Get Roster for  My Team
+        /// Get All Roster position counts
         ///
         [HttpGet]
-        public ActionResult MyTeamRoster()
+        public ActionResult GetRosterTotalPositionCount()
         {
             var service = new DraftService.DraftSvc(_db, _config, null, null, _draftEngine);
 
-            var result = service.GetDraftPicksByPosition();
+            var result = service.GetRosterTotalPositionCount();
+
+            return StatusCode(result.StatusCode, result.ObjData);
+        }
+
+        /// <summary>
+        ///     
+        /// Get Roster for Fantasy Team
+        ///
+        [HttpGet("{fanTeamID}")]
+        public ActionResult GetTeamRoster(int fanTeamID)
+        {
+            var service = new DraftService.DraftSvc(_db, _config, null, null, _draftEngine);
+
+            var result = service.GetTeamRoster(fanTeamID);
 
             return StatusCode(result.StatusCode, result.ObjData);
         }
