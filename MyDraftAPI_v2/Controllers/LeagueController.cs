@@ -33,8 +33,6 @@ namespace MyDraftAPI_v2.Controllers
 
             var result = service.GetActiveLeague();
 
-            _draftEngine.ActiveMyDraftLeague = result.ObjData as ViewModel.ActiveLeague;
-
             return StatusCode(result.StatusCode, result.ObjData);
         }
 

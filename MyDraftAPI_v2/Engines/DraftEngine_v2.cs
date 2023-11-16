@@ -5,6 +5,7 @@ using MyDraftAPI_v2.FantasyDataModel;
 using MyDraftAPI_v2.FantasyDataModel.Draft;
 using MyDraftAPI_v2.Managers;
 using MyDraftLib.Utilities;
+#pragma warning disable 
 
 namespace MyDraftAPI_v2
 {
@@ -18,8 +19,8 @@ namespace MyDraftAPI_v2
         private System.Threading.Timer? _timer;
 
         private FanDataModel.FantasyLeague? _league;
-        private ViewModel.ActiveLeague _activeMyDraftLeague;
-        private List<ViewModel.DraftPick> _draftPicks;
+        private ViewModel.ActiveLeague? _activeMyDraftLeague;
+        private List<ViewModel.DraftPick>? _draftPicks;
         private ViewModel.DraftStatus? _draftStatus;
         private IDictionary<int, ViewModel.DraftPick> _draftPickMap;
         private int _myDraftFanTeamID = 1;
@@ -29,7 +30,11 @@ namespace MyDraftAPI_v2
             {"WR1", new ViewModel.DraftPick() },
             {"WR2", new ViewModel.DraftPick() },
             {"TE", new ViewModel.DraftPick() },
-            {"K", new ViewModel.DraftPick() }
+            {"K1", new ViewModel.DraftPick() },
+            {"B1", new ViewModel.DraftPick() },
+            {"B2", new ViewModel.DraftPick() },
+            {"B3", new ViewModel.DraftPick() },
+            {"B4", new ViewModel.DraftPick() }
         };
 
         #region Properties
@@ -52,13 +57,14 @@ namespace MyDraftAPI_v2
             get { return _league; }
             set { _league = value; }
         }
-        public IList<ViewModel.DraftPick>? draftPicks
+        public List<ViewModel.DraftPick>? draftPicks
         {
             get
             {
                 return _draftPicks;
             }
-            set => _draftPicks = (List<ViewModel.DraftPick>)value;
+            //set => _draftPicks = (List<ViewModel.DraftPick>)value;
+            set { _draftPicks = (List<ViewModel.DraftPick>?)value; }
         }
         public ViewModel.DraftStatus? draftStatus
         {
@@ -144,6 +150,7 @@ namespace MyDraftAPI_v2
                                 teamID = i.TeamID,
                                 playerID = i.PlayerID,
                             })
+                            .OrderBy(q => q.overallPick)
                             .AsNoTracking()
                             .ToList();
                     #endregion
@@ -250,7 +257,6 @@ namespace MyDraftAPI_v2
         }
         public Dictionary<string, ViewModel.DraftPick> draftPicksForTeam_v2(int vFanTeamID)
         {
-            //Dictionary<string, ViewModel.DraftPick> draftPicks = new Dictionary<string, ViewModel.DraftPick>();
             Dictionary<string, ViewModel.DraftPick> draftPicks = _rosterDict;
 
             var picks = draftPicksForTeam(vFanTeamID);

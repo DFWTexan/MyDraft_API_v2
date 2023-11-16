@@ -6,6 +6,7 @@ using MyDraftLib.Utilities;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using ViewModel;
+#pragma warning disable 
 
 namespace FanDataModel
 {

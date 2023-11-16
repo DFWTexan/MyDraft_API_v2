@@ -11,6 +11,7 @@ using System.Diagnostics;
 using MyDraftAPI_v2.FantasyDataModel.Draft;
 using DraftService;
 using MyDraftAPI_v2;
+#pragma warning disable 
 
 namespace LeagueService
 {
@@ -108,6 +109,8 @@ namespace LeagueService
 
                     activeLeague.teams.Add(addItem);
                 }
+
+                _draftEngine.ActiveMyDraftLeague = activeLeague;
 
                 result.ObjData = activeLeague;
                 result.Success = true;
