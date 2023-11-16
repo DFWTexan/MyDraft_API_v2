@@ -91,5 +91,19 @@ namespace MyDraftAPI_v2.Controllers
 
             return StatusCode(result.StatusCode, result.ObjData);
         }
+
+        /// <summary>
+        ///     
+        /// Get Roster for  My Team
+        ///
+        [HttpGet]
+        public ActionResult MyTeamRoster()
+        {
+            var service = new DraftService.DraftSvc(_db, _config, null, null, _draftEngine);
+
+            var result = service.GetDraftPicksByPosition();
+
+            return StatusCode(result.StatusCode, result.ObjData);
+        }
     }
 }
