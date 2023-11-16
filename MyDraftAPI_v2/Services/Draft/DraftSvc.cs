@@ -266,6 +266,7 @@ namespace DraftService
             int cnt_WR = 0;
             int cnt_TE = 0;
             int cnt_K = 0;
+            int cnt_DEF = 0;
             int cnt_BN = 0;
 
             try
@@ -303,17 +304,21 @@ namespace DraftService
                             pick.PositionGroup = "KICKER";
                             pick.SortOrder = 5;
                             break;
+                        case "D1":
+                            pick.@int = ++cnt_DEF;
+                            pick.PositionGroup = "DEFENSE";
+                            pick.SortOrder = 6;
+                            break;
                         default:  // "BENCH" is the defaut
                             pick.@int = ++cnt_BN;
                             pick.PositionGroup = "BENCH";
-                            pick.SortOrder = 6;
+                            pick.SortOrder = 7;
                             break;
                     }
 
                     pick.PlayerName = item.Value.player != null ? item.Value.player.FirstName + ' ' + item.Value.player.LastName : "";
                     fanTeamPicks.Add(pick);
                 }
-
 
                 result.ObjData = fanTeamPicks.OrderBy(o => o.SortOrder).ToList();
             }
@@ -383,7 +388,7 @@ namespace DraftService
                     int round = 0;
                     var draftedPosItem = new ViewModel.DraftedByPositionItem()
                     {
-                        PositionGroup = posGroup,
+                        PositionGroup = posGroup == "K1" ? "K" : posGroup == "D1" ? "DEF" : posGroup,
                         Count = dictDraftedPlayerByPositions[posGroup].Count,
                         RoundPicks = new Dictionary<int, Dictionary<int, List<DraftPositionPick>>>()
                     };

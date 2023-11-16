@@ -31,6 +31,7 @@ namespace MyDraftAPI_v2
             {"WR2", new ViewModel.DraftPick() },
             {"TE", new ViewModel.DraftPick() },
             {"K1", new ViewModel.DraftPick() },
+            {"D1", new ViewModel.DraftPick() },
             {"B1", new ViewModel.DraftPick() },
             {"B2", new ViewModel.DraftPick() },
             {"B3", new ViewModel.DraftPick() },
