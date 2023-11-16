@@ -332,12 +332,6 @@ namespace DraftService
             string[] positionGroups = { "QB", "RB", "WR", "TE", "K1" };
             List<ViewModel.DraftedByPositionItem> draftedPositions = new List<DraftedByPositionItem>();
 
-            //Dictionary<int, ViewModel.DraftPositionPick> dict_PositionGroup = new Dictionary<int, DraftPositionPick>();
-            //for (int i = 1; i <= _draftEngine.ActiveMyDraftLeague.NumberOfRounds; i++)
-            //{
-            //    dict_PositionGroup.Add(i, new ViewModel.DraftPositionPick());
-            //}
-
             List<ViewModel.DraftPick> drafted_QB = new List<ViewModel.DraftPick>();
             List<ViewModel.DraftPick> drafted_RB = new List<ViewModel.DraftPick>();
             List<ViewModel.DraftPick> drafted_WR = new List<ViewModel.DraftPick>();
@@ -416,8 +410,23 @@ namespace DraftService
                     draftedPositions.Add(draftedPosItem);
                 }
 
-                //result.ObjData = dictDraftedPlayerByPositions.ToList();
                 result.ObjData = draftedPositions.ToList();
+            }
+            catch (Exception ex)
+            {
+                result.StatusCode = 500;
+                result.ErrMessage = ex.Message;
+            }
+
+            return result;
+        }
+        public DataModel.Response.ReturnResult GetMyTeamRoster() 
+        {
+            var result = new DataModel.Response.ReturnResult();
+
+            try
+            {
+
             }
             catch (Exception ex)
             {
