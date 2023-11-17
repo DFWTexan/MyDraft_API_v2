@@ -26,7 +26,8 @@ namespace MyDraftAPI_v2
         private int _myDraftFanTeamID = 1;
         private Dictionary<string, ViewModel.DraftPick> _rosterDict = new Dictionary<string, ViewModel.DraftPick>() {
             {"QB", new ViewModel.DraftPick() },
-            {"RB", new ViewModel.DraftPick() },
+            {"RB1", new ViewModel.DraftPick() },
+            {"RB2", new ViewModel.DraftPick() },
             {"WR1", new ViewModel.DraftPick() },
             {"WR2", new ViewModel.DraftPick() },
             {"TE", new ViewModel.DraftPick() },
@@ -246,7 +247,7 @@ namespace MyDraftAPI_v2
             {
                 if (draftPick.teamID == fanTeamID)
                 {
-                    if (draftPick.playerID != 0)
+                    if (draftPick.playerID > 0)
                     {
                         using (var db = new AppDataContext(_dbOptionsBuilder.Options))
                         {
@@ -264,25 +265,35 @@ namespace MyDraftAPI_v2
         public Dictionary<string, ViewModel.DraftPick> draftPicksForTeam_v2(int vFanTeamID)
         {
             Dictionary<string, ViewModel.DraftPick> draftPicks = _rosterDict;
+            HashSet<ViewModel.DraftPick> uniqueValues = new HashSet<ViewModel.DraftPick>();
 
             var picks = draftPicksForTeam(vFanTeamID);
             foreach (var pick in picks)
             {
                 if (pick.player != null)
                 {
-                    foreach (var draftPick in _rosterDict.ToList())
+                    foreach (var draftPickKey in _rosterDict.Keys.ToList())
                     {
-                        if (draftPick.Key == pick.player.Position)
+                        string positionPrefix = draftPickKey.Substring(0, 2);
+
+                        if (positionPrefix == pick.player.Position.Trim() &&
+                            (!draftPicks.ContainsKey(draftPickKey) || !uniqueValues.Contains(pick)))
                         {
-                            draftPicks[draftPick.Key] = pick;
+                            draftPicks[draftPickKey] = pick;
+                            uniqueValues.Add(pick);
+                        }
+                        else if (!draftPicks.ContainsKey(draftPickKey) || draftPicks[draftPickKey].teamID != vFanTeamID)
+                        {
+                            draftPicks[draftPickKey] = new ViewModel.DraftPick();
                         }
                     }
                 }
             }
-
             return draftPicks;
         }
         #endregion
+
+
 
         #region //  Draft Pick Manipulation  //
         public ViewModel.DraftPick onTheClockDraftPick()
