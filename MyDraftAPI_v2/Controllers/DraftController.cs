@@ -110,12 +110,26 @@ namespace MyDraftAPI_v2.Controllers
         ///     
         /// Get Roster for Fantasy Team
         ///
+        //[HttpGet("{fanTeamID}")]
+        //public ActionResult GetTeamRoster(int fanTeamID)
+        //{
+        //    var service = new DraftService.DraftSvc(_db, _config, null, null, _draftEngine);
+
+        //    var result = service.GetTeamRoster(fanTeamID);
+
+        //    return StatusCode(result.StatusCode, result.ObjData);
+        //}
+
+        /// <summary>
+        ///     
+        /// Get Fan Team Selections order
+        ///
         [HttpGet("{fanTeamID}")]
-        public ActionResult GetTeamRoster(int fanTeamID)
+        public ActionResult GetTeamSelections(int fanTeamID)
         {
             var service = new DraftService.DraftSvc(_db, _config, null, null, _draftEngine);
 
-            var result = service.GetTeamRoster(fanTeamID);
+            var result = service.GetTeamSelections(fanTeamID);
 
             return StatusCode(result.StatusCode, result.ObjData);
         }
