@@ -403,7 +403,7 @@ namespace DraftService
                     {
                         if (item.player.Position == posGroup)
                         {
-                            dict_PositionGroup[(int)item.round].Add( new ViewModel.DraftPositionPick()
+                            dict_PositionGroup[(int)item.round].Add(new ViewModel.DraftPositionPick()
                             {
                                 PositionGroup = item.player.Position,
                                 PlayerName = item.player.FirstName + " " + item.player.LastName,
@@ -429,25 +429,24 @@ namespace DraftService
         public DataModel.Response.ReturnResult GetRosterTotalPositionCount()
         {
             var result = new DataModel.Response.ReturnResult();
-            Dictionary<string, int> dictStarters = new Dictionary<string, int>() {
-                {"QB", 1 },
-                {"RB", 2 },
-                {"WR", 2 },
-                {"TE", 1 },
-                {"K1", 1 },
-            };
-
-            List<ViewModel.DraftPick> myTeam_QB = new List<ViewModel.DraftPick>();
-            List<ViewModel.DraftPick> myTeam_RB = new List<ViewModel.DraftPick>();
-            List<ViewModel.DraftPick> myTeam_WR = new List<ViewModel.DraftPick>();
-            List<ViewModel.DraftPick> myTeam_TE = new List<ViewModel.DraftPick>();
-            List<ViewModel.DraftPick> myTeam_K = new List<ViewModel.DraftPick>();
-            List<ViewModel.DraftPick> myTeam_BN = new List<ViewModel.DraftPick>();
 
             try
             {
+                var fanTeams = _draftEngine.fantasyTeams;
+
+                Dictionary<string, Dictionary<string, int>> dictMasterFanTeams = new Dictionary<string, Dictionary<string, int>>();
+                foreach (var team in fanTeams)
+                {
+                    var playerData = _draftEngine.draftPicksForTeam(team.ID);
+                    if (playerData != null)
+                    {
+                        var rosterCount = BuildFanTeamPositionData((List<ViewModel.DraftPick>)playerData);
+                        dictMasterFanTeams.Add(team.Name, rosterCount);
+                    }
+                }
+
+                result.ObjData = dictMasterFanTeams.ToList();
                 result.StatusCode = 200;
-               
             }
             catch (Exception ex)
             {
@@ -457,10 +456,74 @@ namespace DraftService
 
             return result;
         }
-        public DataModel.Response.ReturnResult GetTeamRoster(int vFanTeamID) 
+        private Dictionary<string, int> BuildFanTeamPositionData(List<ViewModel.DraftPick> data)
+        {
+            string[] positionGroups = { "QB", "RB", "WR", "TE", "K", "DEF" };
+            int qb_Count = 0;
+            int rb_Count = 0;
+            int wr_Count = 0;
+            int te_Count = 0;
+            int k_Count = 0;
+            int def_Count = 0;
+
+            Dictionary<string, int> dictFanTeamPositions = new Dictionary<string, int>();
+            foreach (ViewModel.DraftPick item in data)
+            {
+                if (item.player != null)
+                    switch (item.player.Position)
+                    {
+                        case "QB":
+                            qb_Count++;
+                            break;
+                        case "RB":
+                            rb_Count++;
+                            break;
+                        case "WR":
+                            wr_Count++;
+                            break;
+                        case "TE":
+                            te_Count++;
+                            break;
+                        case "K":
+                            k_Count++;
+                            break;
+                        case "DEF":
+                            def_Count++;
+                            break;
+                    }
+            }
+
+            foreach (string pos in positionGroups)
+            {
+                switch (pos)
+                {
+                    case "QB":
+                        dictFanTeamPositions.Add("QB", qb_Count);
+                        break;
+                    case "RB":
+                        dictFanTeamPositions.Add("RB", rb_Count);
+                        break;
+                    case "WR":
+                        dictFanTeamPositions.Add("WR", wr_Count);
+                        break;
+                    case "TE":
+                        dictFanTeamPositions.Add("TE", te_Count);
+                        break;
+                    case "K":
+                        dictFanTeamPositions.Add("K", k_Count);
+                        break;
+                    case "DEF":
+                        dictFanTeamPositions.Add("DEF", def_Count);
+                        break;
+                }
+            }
+
+            return dictFanTeamPositions;
+        }
+        public DataModel.Response.ReturnResult GetTeamRoster(int vFanTeamID)
         {
             var result = new DataModel.Response.ReturnResult();
-            Dictionary<string,int> dictStarters = new Dictionary<string, int>() {
+            Dictionary<string, int> dictStarters = new Dictionary<string, int>() {
                 {"QB", 1 },
                 {"RB", 2 },
                 {"WR", 2 },

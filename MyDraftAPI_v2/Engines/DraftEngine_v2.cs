@@ -37,6 +37,7 @@ namespace MyDraftAPI_v2
             {"B3", new ViewModel.DraftPick() },
             {"B4", new ViewModel.DraftPick() }
         };
+        private List<Database.Model.UserLeagueTeams> _userLeagueTeams = new List<UserLeagueTeams>();
 
         #region Properties
         public int MyDraftFanTeamID
@@ -64,12 +65,19 @@ namespace MyDraftAPI_v2
             {
                 return _draftPicks;
             }
-            //set => _draftPicks = (List<ViewModel.DraftPick>)value;
             set { _draftPicks = (List<ViewModel.DraftPick>?)value; }
         }
         public ViewModel.DraftStatus? draftStatus
         {
             get { return _draftStatus; }
+        }
+        public List<ViewModel.UserLeageTeamItem>? fantasyTeams
+        {
+            get
+            {
+                return (List<ViewModel.UserLeageTeamItem>?)_league.teams;
+            }
+            //set => _league.teams = (List<ViewModel.UserLeageTeamItem>)value;
         }
         #endregion
 
@@ -84,8 +92,6 @@ namespace MyDraftAPI_v2
 
             _draftPicks = new List<ViewModel.DraftPick>();
             _draftPickMap = new Dictionary<int, ViewModel.DraftPick>();
-
-            //ActiveLeague = new ViewModel.ActiveLeague();
         }
 
         public void InitializeLeagueData_v2()
@@ -139,7 +145,6 @@ namespace MyDraftAPI_v2
                     #endregion
 
                     #region DraftPicks  
-                    //_draftPicks = _draftSvc.draftPicksForLeague(leagueID).ToList();
                     _draftPicks = db.UserDraftSelection
                             .Where(x => x.LeagueID == _activeMyDraftLeague.ID)
                             .Select(i => new ViewModel.DraftPick()
