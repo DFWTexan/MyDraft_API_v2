@@ -183,11 +183,11 @@ namespace MyDraftAPI_v2
                                             q => (DataModel.Enums.ProTeams)Enum.Parse(typeof(DataModel.Enums.ProTeams), q.Abbr),
                                             q => new Dictionary<DataModel.Enums.Position, List<ViewModel.DepthChartPlayer>>()
                                             {
-                                                { DataModel.Enums.Position.QB, GetPlayersForPositionAndTeam(q.ID, DataModel.Enums.Position.QB) },
-                                                { DataModel.Enums.Position.RB, GetPlayersForPositionAndTeam(q.ID, DataModel.Enums.Position.RB) },
-                                                { DataModel.Enums.Position.WR, GetPlayersForPositionAndTeam(q.ID, DataModel.Enums.Position.WR) },
-                                                { DataModel.Enums.Position.TE, GetPlayersForPositionAndTeam(q.ID, DataModel.Enums.Position.TE) },
-                                                { DataModel.Enums.Position.K, GetPlayersForPositionAndTeam(q.ID, DataModel.Enums.Position.K) },
+                                                { DataModel.Enums.Position.QB, GetPlayersForPositionAndTeam(3, q.ID, DataModel.Enums.Position.QB) },
+                                                { DataModel.Enums.Position.RB, GetPlayersForPositionAndTeam(4, q.ID, DataModel.Enums.Position.RB) },
+                                                { DataModel.Enums.Position.WR, GetPlayersForPositionAndTeam(6, q.ID, DataModel.Enums.Position.WR) },
+                                                { DataModel.Enums.Position.TE, GetPlayersForPositionAndTeam(3, q.ID, DataModel.Enums.Position.TE) },
+                                                { DataModel.Enums.Position.PK, GetPlayersForPositionAndTeam(2, q.ID, DataModel.Enums.Position.PK) },
                                             }
                                         );
                     #endregion
@@ -309,7 +309,7 @@ namespace MyDraftAPI_v2
             return draftPicks;
         }
         // Helper method to get players for a specific position and team
-        private List<ViewModel.DepthChartPlayer> GetPlayersForPositionAndTeam(int teamId, DataModel.Enums.Position position)
+        private List<ViewModel.DepthChartPlayer> GetPlayersForPositionAndTeam(int limitTake, int teamId, DataModel.Enums.Position position)
         {
             using (var db = new AppDataContext(_dbOptionsBuilder.Options))
             {
@@ -324,6 +324,7 @@ namespace MyDraftAPI_v2
                         Team = i.ProTeam.Abbr,
                     })
                     .AsNoTracking()
+                    .Take(limitTake)
                     .ToList();
             }
         }

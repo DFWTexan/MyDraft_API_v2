@@ -6,7 +6,7 @@
         RB = 2,
         WR = 3,
         TE = 4,
-        K = 5,
+        PK = 5,
     }
     public enum ProTeams
     {
