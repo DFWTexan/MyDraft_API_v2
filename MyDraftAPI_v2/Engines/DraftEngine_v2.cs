@@ -39,6 +39,7 @@ namespace MyDraftAPI_v2
             {"B4", new ViewModel.DraftPick() }
         };
         private List<Database.Model.UserLeagueTeams> _userLeagueTeams = new List<UserLeagueTeams>();
+        private Dictionary<string, Dictionary<string, List<ViewModel.DepthChartPlayer>>> _teamDepthChart = new Dictionary<string, Dictionary<string, List<ViewModel.DepthChartPlayer>>>();
 
         #region Properties
         public int MyDraftFanTeamID
@@ -79,6 +80,11 @@ namespace MyDraftAPI_v2
                 return (List<ViewModel.UserLeageTeamItem>?)_league.teams;
             }
             //set => _league.teams = (List<ViewModel.UserLeageTeamItem>)value;
+        }
+        public Dictionary<string, Dictionary<string, List<ViewModel.DepthChartPlayer>>>teamDepthChart
+        {
+            get { return _teamDepthChart; }
+            set { _teamDepthChart = value; }
         }
         #endregion
 
@@ -169,6 +175,24 @@ namespace MyDraftAPI_v2
                     {
                         _draftPickMap.Add((int)draftPick.overallPick, draftPick);
                     }
+                    #endregion
+
+                    #region TeamDepthChart
+                    _teamDepthChart = db.ProTeam
+                                        .ToDictionary(
+                                            q => q.Abbr,
+                                            q => new Dictionary<string, List<ViewModel.DepthChartPlayer>>()
+                                            {
+                                                {"QB", new List<ViewModel.DepthChartPlayer>() },
+                                                {"RB", new List<ViewModel.DepthChartPlayer>() },
+                                                {"WR", new List<ViewModel.DepthChartPlayer>() },
+                                                {"TE", new List<ViewModel.DepthChartPlayer>() },
+                                                {"K", new List<ViewModel.DepthChartPlayer>() },
+                                                {"DEF", new List<ViewModel.DepthChartPlayer>() },
+                                            }
+                                        );
+
+                    //_teamDepthChart = (Dictionary<string, Dictionary<string, ViewModel.DepthChartPlayer>>)teamDepthChart;
                     #endregion
 
                 }
@@ -292,8 +316,6 @@ namespace MyDraftAPI_v2
             return draftPicks;
         }
         #endregion
-
-
 
         #region //  Draft Pick Manipulation  //
         public ViewModel.DraftPick onTheClockDraftPick()
@@ -462,7 +484,6 @@ namespace MyDraftAPI_v2
                 }
             }
         }
-
         private void StartTimer()
         {
             //_timer.Change(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
