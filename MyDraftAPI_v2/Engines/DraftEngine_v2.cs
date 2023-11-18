@@ -319,7 +319,7 @@ namespace MyDraftAPI_v2
                     .Where(player => player.TeamID == teamId && player.PositionID == (int)position)
                     .Select(i => new ViewModel.DepthChartPlayer
                     {
-                        Name = i.Player.FirstName + " " + i.Player.LastName,
+                        Name = i.Player.LastName,
                         Position = i.Player.Position,
                         Team = i.ProTeam.Abbr,
                     })

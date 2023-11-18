@@ -10,6 +10,10 @@ using MyDraftAPI_v2.Services.Algorithms;
 using MyDraftAPI_v2;
 using MyDraftLib.Utilities;
 using Windows.UI.Xaml;
+using System.Windows.Markup;
+using System;
+using DataModel.Enums;
+using System.Diagnostics.Eventing.Reader;
 #pragma warning disable
 
 namespace DraftService
@@ -581,12 +585,37 @@ namespace DraftService
         public DataModel.Response.ReturnResult GetPositionDepthChart(string vPosition)
         {
             var result = new DataModel.Response.ReturnResult();
-                        
+            DataModel.Enums.Position pos = (DataModel.Enums.Position)Enum.Parse(typeof(DataModel.Enums.Position), vPosition);
+            Dictionary<string, List<ViewModel.DepthChartPlayer>> dict_Output = new Dictionary<string, List<ViewModel.DepthChartPlayer>>();
+            
             try
             {
                 result.StatusCode = 200;
                 var depthCharts = _draftEngine.teamDepthChart;
-                result.ObjData = depthCharts;
+
+                foreach (var team in _draftEngine.teamDepthChart)
+                {
+                    ProTeams teamAbbreviation = team.Key;
+                    List<ViewModel.DepthChartPlayer> depthChartItems = new List<ViewModel.DepthChartPlayer>();
+
+                    if (team.Value.ContainsKey((DataModel.Enums.Position)pos))
+                    {
+                        foreach (var qb in team.Value[(DataModel.Enums.Position)pos])
+                        {
+                            var depthChartItem = new ViewModel.DepthChartPlayer()
+                            {
+                                Name = qb.Name,
+                                Team = teamAbbreviation.ToString(),
+                                Position = pos.ToString(),
+                            };
+
+                            depthChartItems.Add(depthChartItem);
+                        }
+                    }
+                    dict_Output.Add(teamAbbreviation.ToString(), depthChartItems);
+                }
+
+                result.ObjData = dict_Output.ToArray();
 
             }
             catch (Exception ex)
