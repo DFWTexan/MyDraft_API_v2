@@ -133,5 +133,19 @@ namespace MyDraftAPI_v2.Controllers
 
             return StatusCode(result.StatusCode, result.ObjData);
         }
+
+        /// <summary>
+        ///     
+        /// Get Position Depter Chart for Pro Teams
+        ///
+        [HttpGet("{position}")]
+        public ActionResult GetPositionDepthChart(string position)
+        {
+            var service = new DraftService.DraftSvc(_db, _config, null, null, _draftEngine);
+
+            var result = service.GetPositionDepthChart(position);
+
+            return StatusCode(result.StatusCode, result.ObjData);
+        }
     }
 }

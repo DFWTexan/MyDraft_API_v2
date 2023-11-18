@@ -578,5 +578,24 @@ namespace DraftService
 
             return result;
         }
+        public DataModel.Response.ReturnResult GetPositionDepthChart(string vPosition)
+        {
+            var result = new DataModel.Response.ReturnResult();
+                        
+            try
+            {
+                result.StatusCode = 200;
+                var depthCharts = _draftEngine.teamDepthChart;
+                result.ObjData = depthCharts;
+
+            }
+            catch (Exception ex)
+            {
+                result.StatusCode = 500;
+                result.ErrMessage = ex.Message;
+            }
+
+            return result;
+        }
     }
 }

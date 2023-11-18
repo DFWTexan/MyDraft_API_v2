@@ -39,7 +39,7 @@ namespace MyDraftAPI_v2
             {"B4", new ViewModel.DraftPick() }
         };
         private List<Database.Model.UserLeagueTeams> _userLeagueTeams = new List<UserLeagueTeams>();
-        private Dictionary<string, Dictionary<string, List<ViewModel.DepthChartPlayer>>> _teamDepthChart = new Dictionary<string, Dictionary<string, List<ViewModel.DepthChartPlayer>>>();
+        private Dictionary<DataModel.Enums.ProTeams, Dictionary<DataModel.Enums.Position, List<ViewModel.DepthChartPlayer>>> _teamDepthChart = new Dictionary<DataModel.Enums.ProTeams, Dictionary<DataModel.Enums.Position, List<ViewModel.DepthChartPlayer>>>();
 
         #region Properties
         public int MyDraftFanTeamID
@@ -81,7 +81,7 @@ namespace MyDraftAPI_v2
             }
             //set => _league.teams = (List<ViewModel.UserLeageTeamItem>)value;
         }
-        public Dictionary<string, Dictionary<string, List<ViewModel.DepthChartPlayer>>>teamDepthChart
+        public Dictionary<DataModel.Enums.ProTeams, Dictionary<DataModel.Enums.Position, List<ViewModel.DepthChartPlayer>>>teamDepthChart
         {
             get { return _teamDepthChart; }
             set { _teamDepthChart = value; }
@@ -180,19 +180,16 @@ namespace MyDraftAPI_v2
                     #region TeamDepthChart
                     _teamDepthChart = db.ProTeam
                                         .ToDictionary(
-                                            q => q.Abbr,
-                                            q => new Dictionary<string, List<ViewModel.DepthChartPlayer>>()
+                                            q => (DataModel.Enums.ProTeams)Enum.Parse(typeof(DataModel.Enums.ProTeams), q.Abbr),
+                                            q => new Dictionary<DataModel.Enums.Position, List<ViewModel.DepthChartPlayer>>()
                                             {
-                                                {"QB", new List<ViewModel.DepthChartPlayer>() },
-                                                {"RB", new List<ViewModel.DepthChartPlayer>() },
-                                                {"WR", new List<ViewModel.DepthChartPlayer>() },
-                                                {"TE", new List<ViewModel.DepthChartPlayer>() },
-                                                {"K", new List<ViewModel.DepthChartPlayer>() },
-                                                {"DEF", new List<ViewModel.DepthChartPlayer>() },
+                                                { DataModel.Enums.Position.QB, GetPlayersForPositionAndTeam(q.ID, DataModel.Enums.Position.QB) },
+                                                { DataModel.Enums.Position.RB, GetPlayersForPositionAndTeam(q.ID, DataModel.Enums.Position.RB) },
+                                                { DataModel.Enums.Position.WR, GetPlayersForPositionAndTeam(q.ID, DataModel.Enums.Position.WR) },
+                                                { DataModel.Enums.Position.TE, GetPlayersForPositionAndTeam(q.ID, DataModel.Enums.Position.TE) },
+                                                { DataModel.Enums.Position.K, GetPlayersForPositionAndTeam(q.ID, DataModel.Enums.Position.K) },
                                             }
                                         );
-
-                    //_teamDepthChart = (Dictionary<string, Dictionary<string, ViewModel.DepthChartPlayer>>)teamDepthChart;
                     #endregion
 
                 }
@@ -201,10 +198,6 @@ namespace MyDraftAPI_v2
                     throw;
                 }
             };
-
-            //_typeAuction = await DraftManager.isAuctionDraft();
-
-            //await Task.Run(() => calculateCustomScoringAsync());
         }
 
         //public async Task calculateCustomScoringAsync()
@@ -314,6 +307,25 @@ namespace MyDraftAPI_v2
                 }
             }
             return draftPicks;
+        }
+        // Helper method to get players for a specific position and team
+        private List<ViewModel.DepthChartPlayer> GetPlayersForPositionAndTeam(int teamId, DataModel.Enums.Position position)
+        {
+            using (var db = new AppDataContext(_dbOptionsBuilder.Options))
+            {
+                return db.DepthChart
+                    .OrderBy(DepthChart => DepthChart.Rank)
+                    .Include(player => player.Player)
+                    .Where(player => player.TeamID == teamId && player.PositionID == (int)position)
+                    .Select(i => new ViewModel.DepthChartPlayer
+                    {
+                        Name = i.Player.FirstName + " " + i.Player.LastName,
+                        Position = i.Player.Position,
+                        Team = i.ProTeam.Abbr,
+                    })
+                    .AsNoTracking()
+                    .ToList();
+            }
         }
         #endregion
 
@@ -428,6 +440,7 @@ namespace MyDraftAPI_v2
         //    }
         //}
         // * */
+        
         public async Task updateOnTheClock()
         {
             ViewModel.DraftPick otcPick = onTheClockDraftPick();
