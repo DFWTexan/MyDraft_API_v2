@@ -13,7 +13,7 @@ namespace Database.Model
         public int TeamID { get; set; }
         [Required]
         public int? Round { get; set; }
-        public int PlayerID { get; set; }
+        public int? PlayerID { get; set; }
         public DateTime? CreateDate { get; set; }
         public bool? IsKeeper { get; set; }
         public int? PickInRound { get; set; }

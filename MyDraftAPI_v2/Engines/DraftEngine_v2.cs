@@ -26,16 +26,20 @@ namespace MyDraftAPI_v2
         private int _myDraftFanTeamID = 1;
         private Dictionary<string, ViewModel.DraftPick> _rosterDict = new Dictionary<string, ViewModel.DraftPick>() {
             {"QB", new ViewModel.DraftPick() },
-            {"RB", new ViewModel.DraftPick() },
+            {"RB1", new ViewModel.DraftPick() },
+            {"RB2", new ViewModel.DraftPick() },
             {"WR1", new ViewModel.DraftPick() },
             {"WR2", new ViewModel.DraftPick() },
             {"TE", new ViewModel.DraftPick() },
             {"K1", new ViewModel.DraftPick() },
+            {"D1", new ViewModel.DraftPick() },
             {"B1", new ViewModel.DraftPick() },
             {"B2", new ViewModel.DraftPick() },
             {"B3", new ViewModel.DraftPick() },
             {"B4", new ViewModel.DraftPick() }
         };
+        private List<Database.Model.UserLeagueTeams> _userLeagueTeams = new List<UserLeagueTeams>();
+        private Dictionary<DataModel.Enums.ProTeams, Dictionary<DataModel.Enums.Position, List<ViewModel.DepthChartPlayer>>> _teamDepthChart = new Dictionary<DataModel.Enums.ProTeams, Dictionary<DataModel.Enums.Position, List<ViewModel.DepthChartPlayer>>>();
 
         #region Properties
         public int MyDraftFanTeamID
@@ -63,12 +67,24 @@ namespace MyDraftAPI_v2
             {
                 return _draftPicks;
             }
-            //set => _draftPicks = (List<ViewModel.DraftPick>)value;
             set { _draftPicks = (List<ViewModel.DraftPick>?)value; }
         }
         public ViewModel.DraftStatus? draftStatus
         {
             get { return _draftStatus; }
+        }
+        public List<ViewModel.UserLeageTeamItem>? fantasyTeams
+        {
+            get
+            {
+                return (List<ViewModel.UserLeageTeamItem>?)_league.teams;
+            }
+            //set => _league.teams = (List<ViewModel.UserLeageTeamItem>)value;
+        }
+        public Dictionary<DataModel.Enums.ProTeams, Dictionary<DataModel.Enums.Position, List<ViewModel.DepthChartPlayer>>>teamDepthChart
+        {
+            get { return _teamDepthChart; }
+            set { _teamDepthChart = value; }
         }
         #endregion
 
@@ -83,8 +99,6 @@ namespace MyDraftAPI_v2
 
             _draftPicks = new List<ViewModel.DraftPick>();
             _draftPickMap = new Dictionary<int, ViewModel.DraftPick>();
-
-            //ActiveLeague = new ViewModel.ActiveLeague();
         }
 
         public void InitializeLeagueData_v2()
@@ -138,7 +152,6 @@ namespace MyDraftAPI_v2
                     #endregion
 
                     #region DraftPicks  
-                    //_draftPicks = _draftSvc.draftPicksForLeague(leagueID).ToList();
                     _draftPicks = db.UserDraftSelection
                             .Where(x => x.LeagueID == _activeMyDraftLeague.ID)
                             .Select(i => new ViewModel.DraftPick()
@@ -164,16 +177,27 @@ namespace MyDraftAPI_v2
                     }
                     #endregion
 
+                    #region TeamDepthChart
+                    _teamDepthChart = db.ProTeam
+                                        .ToDictionary(
+                                            q => (DataModel.Enums.ProTeams)Enum.Parse(typeof(DataModel.Enums.ProTeams), q.Abbr),
+                                            q => new Dictionary<DataModel.Enums.Position, List<ViewModel.DepthChartPlayer>>()
+                                            {
+                                                { DataModel.Enums.Position.QB, GetPlayersForPositionAndTeam(3, q.ID, DataModel.Enums.Position.QB) },
+                                                { DataModel.Enums.Position.RB, GetPlayersForPositionAndTeam(4, q.ID, DataModel.Enums.Position.RB) },
+                                                { DataModel.Enums.Position.WR, GetPlayersForPositionAndTeam(6, q.ID, DataModel.Enums.Position.WR) },
+                                                { DataModel.Enums.Position.TE, GetPlayersForPositionAndTeam(3, q.ID, DataModel.Enums.Position.TE) },
+                                                { DataModel.Enums.Position.PK, GetPlayersForPositionAndTeam(2, q.ID, DataModel.Enums.Position.PK) },
+                                            }
+                                        );
+                    #endregion
+
                 }
                 catch (Exception ex)
                 {
                     throw;
                 }
             };
-
-            //_typeAuction = await DraftManager.isAuctionDraft();
-
-            //await Task.Run(() => calculateCustomScoringAsync());
         }
 
         //public async Task calculateCustomScoringAsync()
@@ -240,7 +264,7 @@ namespace MyDraftAPI_v2
             {
                 if (draftPick.teamID == fanTeamID)
                 {
-                    if (draftPick.playerID != 0)
+                    if (draftPick.playerID > 0)
                     {
                         using (var db = new AppDataContext(_dbOptionsBuilder.Options))
                         {
@@ -258,23 +282,51 @@ namespace MyDraftAPI_v2
         public Dictionary<string, ViewModel.DraftPick> draftPicksForTeam_v2(int vFanTeamID)
         {
             Dictionary<string, ViewModel.DraftPick> draftPicks = _rosterDict;
+            HashSet<ViewModel.DraftPick> uniqueValues = new HashSet<ViewModel.DraftPick>();
 
             var picks = draftPicksForTeam(vFanTeamID);
             foreach (var pick in picks)
             {
                 if (pick.player != null)
                 {
-                    foreach (var draftPick in _rosterDict.ToList())
+                    foreach (var draftPickKey in _rosterDict.Keys.ToList())
                     {
-                        if (draftPick.Key == pick.player.Position)
+                        string positionPrefix = draftPickKey.Substring(0, 2);
+
+                        if (positionPrefix == pick.player.Position.Trim() &&
+                            (!draftPicks.ContainsKey(draftPickKey) || !uniqueValues.Contains(pick)))
                         {
-                            draftPicks[draftPick.Key] = pick;
+                            draftPicks[draftPickKey] = pick;
+                            uniqueValues.Add(pick);
+                        }
+                        else if (!draftPicks.ContainsKey(draftPickKey) || draftPicks[draftPickKey].teamID != vFanTeamID)
+                        {
+                            draftPicks[draftPickKey] = new ViewModel.DraftPick();
                         }
                     }
                 }
             }
-
             return draftPicks;
+        }
+        // Helper method to get players for a specific position and team
+        private List<ViewModel.DepthChartPlayer> GetPlayersForPositionAndTeam(int limitTake, int teamId, DataModel.Enums.Position position)
+        {
+            using (var db = new AppDataContext(_dbOptionsBuilder.Options))
+            {
+                return db.DepthChart
+                    .OrderBy(DepthChart => DepthChart.Rank)
+                    .Include(player => player.Player)
+                    .Where(player => player.TeamID == teamId && player.PositionID == (int)position)
+                    .Select(i => new ViewModel.DepthChartPlayer
+                    {
+                        Name = i.Player.LastName,
+                        Position = i.Player.Position,
+                        Team = i.ProTeam.Abbr,
+                    })
+                    .AsNoTracking()
+                    .Take(limitTake)
+                    .ToList();
+            }
         }
         #endregion
 
@@ -389,6 +441,7 @@ namespace MyDraftAPI_v2
         //    }
         //}
         // * */
+        
         public async Task updateOnTheClock()
         {
             ViewModel.DraftPick otcPick = onTheClockDraftPick();
@@ -445,7 +498,6 @@ namespace MyDraftAPI_v2
                 }
             }
         }
-
         private void StartTimer()
         {
             //_timer.Change(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));

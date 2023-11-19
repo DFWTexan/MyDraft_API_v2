@@ -91,5 +91,61 @@ namespace MyDraftAPI_v2.Controllers
 
             return StatusCode(result.StatusCode, result.ObjData);
         }
+
+        /// <summary>
+        ///     
+        /// Get All Roster position counts
+        ///
+        [HttpGet]
+        public ActionResult GetRosterTotalPositionCount()
+        {
+            var service = new DraftService.DraftSvc(_db, _config, null, null, _draftEngine);
+
+            var result = service.GetRosterTotalPositionCount();
+
+            return StatusCode(result.StatusCode, result.ObjData);
+        }
+
+        /// <summary>
+        ///     
+        /// Get Roster for Fantasy Team
+        ///
+        //[HttpGet("{fanTeamID}")]
+        //public ActionResult GetTeamRoster(int fanTeamID)
+        //{
+        //    var service = new DraftService.DraftSvc(_db, _config, null, null, _draftEngine);
+
+        //    var result = service.GetTeamRoster(fanTeamID);
+
+        //    return StatusCode(result.StatusCode, result.ObjData);
+        //}
+
+        /// <summary>
+        ///     
+        /// Get Fan Team Selections order
+        ///
+        [HttpGet("{fanTeamID}")]
+        public ActionResult GetTeamSelections(int fanTeamID)
+        {
+            var service = new DraftService.DraftSvc(_db, _config, null, null, _draftEngine);
+
+            var result = service.GetTeamSelections(fanTeamID);
+
+            return StatusCode(result.StatusCode, result.ObjData);
+        }
+
+        /// <summary>
+        ///     
+        /// Get Position Depter Chart for Pro Teams
+        ///
+        [HttpGet("{position}")]
+        public ActionResult GetPositionDepthChart(string position)
+        {
+            var service = new DraftService.DraftSvc(_db, _config, null, null, _draftEngine);
+
+            var result = service.GetPositionDepthChart(position);
+
+            return StatusCode(result.StatusCode, result.ObjData);
+        }
     }
 }

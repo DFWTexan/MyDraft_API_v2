@@ -10,6 +10,10 @@ using MyDraftAPI_v2.Services.Algorithms;
 using MyDraftAPI_v2;
 using MyDraftLib.Utilities;
 using Windows.UI.Xaml;
+using System.Windows.Markup;
+using System;
+using DataModel.Enums;
+using System.Diagnostics.Eventing.Reader;
 #pragma warning disable
 
 namespace DraftService
@@ -67,7 +71,6 @@ namespace DraftService
                 return new ViewModel.DraftStatus(vleagueID, 0, 0, false);
             }
         }
-
         public List<ViewModel.DraftPick> draftPicksForLeague(int leagueID)
         {
             List<ViewModel.DraftPick> returnResult = new List<ViewModel.DraftPick>();
@@ -267,6 +270,7 @@ namespace DraftService
             int cnt_WR = 0;
             int cnt_TE = 0;
             int cnt_K = 0;
+            int cnt_DEF = 0;
             int cnt_BN = 0;
 
             try
@@ -304,17 +308,21 @@ namespace DraftService
                             pick.PositionGroup = "KICKER";
                             pick.SortOrder = 5;
                             break;
+                        case "D1":
+                            pick.@int = ++cnt_DEF;
+                            pick.PositionGroup = "DEFENSE";
+                            pick.SortOrder = 6;
+                            break;
                         default:  // "BENCH" is the defaut
                             pick.@int = ++cnt_BN;
                             pick.PositionGroup = "BENCH";
-                            pick.SortOrder = 6;
+                            pick.SortOrder = 7;
                             break;
                     }
 
                     pick.PlayerName = item.Value.player != null ? item.Value.player.FirstName + ' ' + item.Value.player.LastName : "";
                     fanTeamPicks.Add(pick);
                 }
-
 
                 result.ObjData = fanTeamPicks.OrderBy(o => o.SortOrder).ToList();
             }
@@ -329,20 +337,15 @@ namespace DraftService
         public DataModel.Response.ReturnResult GetDraftPicksByPosition()
         {
             var result = new DataModel.Response.ReturnResult();
-            string[] positionGroups = { "QB", "RB", "WR", "TE", "K1" };
+            string[] positionGroups = { "QB", "RB", "WR", "TE", "K1", "D1" };
             List<ViewModel.DraftedByPositionItem> draftedPositions = new List<DraftedByPositionItem>();
-
-            //Dictionary<int, ViewModel.DraftPositionPick> dict_PositionGroup = new Dictionary<int, DraftPositionPick>();
-            //for (int i = 1; i <= _draftEngine.ActiveMyDraftLeague.NumberOfRounds; i++)
-            //{
-            //    dict_PositionGroup.Add(i, new ViewModel.DraftPositionPick());
-            //}
 
             List<ViewModel.DraftPick> drafted_QB = new List<ViewModel.DraftPick>();
             List<ViewModel.DraftPick> drafted_RB = new List<ViewModel.DraftPick>();
             List<ViewModel.DraftPick> drafted_WR = new List<ViewModel.DraftPick>();
             List<ViewModel.DraftPick> drafted_TE = new List<ViewModel.DraftPick>();
             List<ViewModel.DraftPick> drafted_K = new List<ViewModel.DraftPick>();
+            List<ViewModel.DraftPick> drafted_D = new List<ViewModel.DraftPick>();
 
             try
             {
@@ -381,6 +384,7 @@ namespace DraftService
                     {"WR",drafted_WR },
                     {"TE",drafted_TE },
                     {"K1",drafted_K },
+                    {"D1",drafted_D },
                 };
 
                 foreach (string posGroup in positionGroups)
@@ -388,7 +392,7 @@ namespace DraftService
                     int round = 0;
                     var draftedPosItem = new ViewModel.DraftedByPositionItem()
                     {
-                        PositionGroup = posGroup,
+                        PositionGroup = posGroup == "K1" ? "K" : posGroup == "D1" ? "DEF" : posGroup,
                         Count = dictDraftedPlayerByPositions[posGroup].Count,
                         RoundPicks = new Dictionary<int, Dictionary<int, List<DraftPositionPick>>>()
                     };
@@ -403,7 +407,7 @@ namespace DraftService
                     {
                         if (item.player.Position == posGroup)
                         {
-                            dict_PositionGroup[(int)item.round].Add( new ViewModel.DraftPositionPick()
+                            dict_PositionGroup[(int)item.round].Add(new ViewModel.DraftPositionPick()
                             {
                                 PositionGroup = item.player.Position,
                                 PlayerName = item.player.FirstName + " " + item.player.LastName,
@@ -416,8 +420,203 @@ namespace DraftService
                     draftedPositions.Add(draftedPosItem);
                 }
 
-                //result.ObjData = dictDraftedPlayerByPositions.ToList();
                 result.ObjData = draftedPositions.ToList();
+            }
+            catch (Exception ex)
+            {
+                result.StatusCode = 500;
+                result.ErrMessage = ex.Message;
+            }
+
+            return result;
+        }
+        public DataModel.Response.ReturnResult GetRosterTotalPositionCount()
+        {
+            var result = new DataModel.Response.ReturnResult();
+
+            try
+            {
+                var fanTeams = _draftEngine.fantasyTeams;
+
+                Dictionary<string, Dictionary<string, int>> dictMasterFanTeams = new Dictionary<string, Dictionary<string, int>>();
+                foreach (var team in fanTeams)
+                {
+                    var playerData = _draftEngine.draftPicksForTeam(team.ID);
+                    if (playerData != null)
+                    {
+                        var rosterCount = BuildFanTeamPositionData((List<ViewModel.DraftPick>)playerData);
+                        dictMasterFanTeams.Add(team.Name, rosterCount);
+                    }
+                }
+
+                result.ObjData = dictMasterFanTeams.ToList();
+                result.StatusCode = 200;
+            }
+            catch (Exception ex)
+            {
+                result.StatusCode = 500;
+                result.ErrMessage = ex.Message;
+            }
+
+            return result;
+        }
+        private Dictionary<string, int> BuildFanTeamPositionData(List<ViewModel.DraftPick> data)
+        {
+            string[] positionGroups = { "QB", "RB", "WR", "TE", "K", "DEF" };
+            int qb_Count = 0;
+            int rb_Count = 0;
+            int wr_Count = 0;
+            int te_Count = 0;
+            int k_Count = 0;
+            int def_Count = 0;
+
+            Dictionary<string, int> dictFanTeamPositions = new Dictionary<string, int>();
+            foreach (ViewModel.DraftPick item in data)
+            {
+                if (item.player != null)
+                    switch (item.player.Position)
+                    {
+                        case "QB":
+                            qb_Count++;
+                            break;
+                        case "RB":
+                            rb_Count++;
+                            break;
+                        case "WR":
+                            wr_Count++;
+                            break;
+                        case "TE":
+                            te_Count++;
+                            break;
+                        case "K":
+                            k_Count++;
+                            break;
+                        case "DEF":
+                            def_Count++;
+                            break;
+                    }
+            }
+
+            foreach (string pos in positionGroups)
+            {
+                switch (pos)
+                {
+                    case "QB":
+                        dictFanTeamPositions.Add("QB", qb_Count);
+                        break;
+                    case "RB":
+                        dictFanTeamPositions.Add("RB", rb_Count);
+                        break;
+                    case "WR":
+                        dictFanTeamPositions.Add("WR", wr_Count);
+                        break;
+                    case "TE":
+                        dictFanTeamPositions.Add("TE", te_Count);
+                        break;
+                    case "K":
+                        dictFanTeamPositions.Add("K", k_Count);
+                        break;
+                    case "DEF":
+                        dictFanTeamPositions.Add("DEF", def_Count);
+                        break;
+                }
+            }
+
+            return dictFanTeamPositions;
+        }
+        //public DataModel.Response.ReturnResult GetTeamRoster(int vFanTeamID)
+        //{
+        //    var result = new DataModel.Response.ReturnResult();
+        //    Dictionary<string, int> dictStarters = new Dictionary<string, int>() {
+        //        {"QB", 1 },
+        //        {"RB", 2 },
+        //        {"WR", 2 },
+        //        {"TE", 1 },
+        //        {"K1", 1 },
+        //    };
+
+        //    List<ViewModel.DraftPick> myTeam_QB = new List<ViewModel.DraftPick>();
+        //    List<ViewModel.DraftPick> myTeam_RB = new List<ViewModel.DraftPick>();
+        //    List<ViewModel.DraftPick> myTeam_WR = new List<ViewModel.DraftPick>();
+        //    List<ViewModel.DraftPick> myTeam_TE = new List<ViewModel.DraftPick>();
+        //    List<ViewModel.DraftPick> myTeam_K = new List<ViewModel.DraftPick>();
+        //    List<ViewModel.DraftPick> myTeam_BN = new List<ViewModel.DraftPick>();
+
+        //    try
+        //    {
+        //        result.StatusCode = 200;
+        //        var draftPicks = GetDraftPicksByFanTeam(vFanTeamID);
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        result.StatusCode = 500;
+        //        result.ErrMessage = ex.Message;
+        //    }
+
+        //    return result;
+        //}
+        public DataModel.Response.ReturnResult GetTeamSelections(int vFanTeamID)
+        {
+            var result = new DataModel.Response.ReturnResult();
+            Dictionary<int, ViewModel.DraftPick> dictTeamSelections = new Dictionary<int, ViewModel.DraftPick>();
+
+            try
+            {
+                result.StatusCode = 200;
+                
+                int cnt = 1;
+                var teamPicks = _draftEngine.draftPicksForTeam(vFanTeamID).OrderBy(q => q.overallPick);
+                foreach (var teamPick in teamPicks)
+                {
+                    dictTeamSelections.Add(cnt++, teamPick);
+                }
+
+                result.ObjData = dictTeamSelections.ToArray();
+            }
+            catch (Exception ex)
+            {
+                result.StatusCode = 500;
+                result.ErrMessage = ex.Message;
+            }
+
+            return result;
+        }
+        public DataModel.Response.ReturnResult GetPositionDepthChart(string vPosition)
+        {
+            var result = new DataModel.Response.ReturnResult();
+            DataModel.Enums.Position pos = (DataModel.Enums.Position)Enum.Parse(typeof(DataModel.Enums.Position), vPosition);
+            Dictionary<string, List<ViewModel.DepthChartPlayer>> dict_Output = new Dictionary<string, List<ViewModel.DepthChartPlayer>>();
+            
+            try
+            {
+                result.StatusCode = 200;
+                var depthCharts = _draftEngine.teamDepthChart;
+
+                foreach (var team in _draftEngine.teamDepthChart)
+                {
+                    ProTeams teamAbbreviation = team.Key;
+                    List<ViewModel.DepthChartPlayer> depthChartItems = new List<ViewModel.DepthChartPlayer>();
+
+                    if (team.Value.ContainsKey((DataModel.Enums.Position)pos))
+                    {
+                        foreach (var qb in team.Value[(DataModel.Enums.Position)pos])
+                        {
+                            var depthChartItem = new ViewModel.DepthChartPlayer()
+                            {
+                                Name = qb.Name,
+                                Team = teamAbbreviation.ToString(),
+                                Position = pos.ToString(),
+                            };
+
+                            depthChartItems.Add(depthChartItem);
+                        }
+                    }
+                    dict_Output.Add(teamAbbreviation.ToString(), depthChartItems);
+                }
+
+                result.ObjData = dict_Output.ToArray();
+
             }
             catch (Exception ex)
             {
