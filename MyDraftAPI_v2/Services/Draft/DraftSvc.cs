@@ -533,7 +533,7 @@ namespace DraftService
             try
             {
                 result.StatusCode = 200;
-                
+
                 int cnt = 1;
                 var teamPicks = _draftEngine.draftPicksForTeam(vFanTeamID).OrderBy(q => q.overallPick);
                 foreach (var teamPick in teamPicks)
@@ -556,7 +556,7 @@ namespace DraftService
             var result = new DataModel.Response.ReturnResult();
             DataModel.Enums.Position pos = (DataModel.Enums.Position)Enum.Parse(typeof(DataModel.Enums.Position), vPosition);
             Dictionary<string, List<ViewModel.DepthChartPlayer>> dict_Output = new Dictionary<string, List<ViewModel.DepthChartPlayer>>();
-            
+
             try
             {
                 result.StatusCode = 200;
@@ -576,6 +576,7 @@ namespace DraftService
                                 Name = qb.Name,
                                 Team = teamAbbreviation.ToString(),
                                 Position = pos.ToString(),
+                                IsDrafted = isPlayerDrafted((int)qb.PlayerID),
                             };
 
                             depthChartItems.Add(depthChartItem);
@@ -597,11 +598,22 @@ namespace DraftService
         }
         #endregion
 
+        #region // Data Helpers //
+        private bool isPlayerDrafted(int vPlayerID)
+        {
+            bool isDrafted = _db.UserDraftSelection
+                            .AsNoTracking()
+                            .Any(x => x.PlayerID == vPlayerID);
+
+            return isDrafted;
+        }
+        #endregion
+
         #region // Draft Events //
         public DataModel.Response.ReturnResult ExecuteDraftPick(int vOverAll, int vPlayerID)
         {
             var result = new DataModel.Response.ReturnResult();
-            
+
             try
             {
                 result.StatusCode = 200;

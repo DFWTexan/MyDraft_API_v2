@@ -4,8 +4,8 @@
     {
         QB = 1,
         RB = 2,
-        WR = 3,
-        TE = 4,
+        WR = 4,
+        TE = 3,
         PK = 5,
     }
     public enum PlayerSortValue
