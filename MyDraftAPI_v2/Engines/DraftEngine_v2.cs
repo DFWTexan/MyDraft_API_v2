@@ -2,7 +2,7 @@
 using DbData;
 using Microsoft.EntityFrameworkCore;
 using MyDraftAPI_v2.FantasyDataModel;
-using MyDraftAPI_v2.FantasyDataModel.Draft;
+//using MyDraftAPI_v2.FantasyDataModel.Draft;
 using MyDraftAPI_v2.Managers;
 using MyDraftLib.Utilities;
 #pragma warning disable 
@@ -20,9 +20,9 @@ namespace MyDraftAPI_v2
 
         private FanDataModel.FantasyLeague? _league;
         private ViewModel.ActiveLeague? _activeMyDraftLeague;
-        private List<ViewModel.DraftPick>? _draftPicks;
+        private List<MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick>? _draftPicks;
         private ViewModel.DraftStatus? _draftStatus;
-        private IDictionary<int, ViewModel.DraftPick> _draftPickMap;
+        private IDictionary<int, MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick> _draftPickMap;
         private int _myDraftFanTeamID = 1;
         private Dictionary<string, ViewModel.DraftPick> _rosterDict = new Dictionary<string, ViewModel.DraftPick>() {
             {"QB", new ViewModel.DraftPick() },
@@ -61,13 +61,13 @@ namespace MyDraftAPI_v2
             get { return _league; }
             set { _league = value; }
         }
-        public List<ViewModel.DraftPick>? draftPicks
+        public List<MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick>? draftPicks
         {
             get
             {
                 return _draftPicks;
             }
-            set { _draftPicks = (List<ViewModel.DraftPick>?)value; }
+            set { _draftPicks = (List<MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick>?)value; }
         }
         public ViewModel.DraftStatus? draftStatus
         {
@@ -97,8 +97,8 @@ namespace MyDraftAPI_v2
             _dbOptionsBuilder = new DbContextOptionsBuilder<AppDataContext>();
             _dbOptionsBuilder.UseSqlServer(_connectionString);
 
-            _draftPicks = new List<ViewModel.DraftPick>();
-            _draftPickMap = new Dictionary<int, ViewModel.DraftPick>();
+            _draftPicks = new List<MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick>();
+            _draftPickMap = new Dictionary<int, MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick>();
         }
 
         public void InitializeLeagueData_v2()
@@ -154,7 +154,7 @@ namespace MyDraftAPI_v2
                     #region DraftPicks  
                     _draftPicks = db.UserDraftSelection
                             .Where(x => x.LeagueID == _activeMyDraftLeague.ID)
-                            .Select(i => new ViewModel.DraftPick()
+                            .Select(i => new MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick()
                             {
                                 leagueID = i.LeagueID,
                                 overallPick = i.OverallPick,
@@ -169,9 +169,9 @@ namespace MyDraftAPI_v2
                     #endregion
 
                     #region DraftPickMap
-                    _draftPickMap = new Dictionary<int, ViewModel.DraftPick>(_draftPicks.Count);
+                    _draftPickMap = new Dictionary<int, MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick>(_draftPicks.Count);
 
-                    foreach (ViewModel.DraftPick draftPick in _draftPicks)
+                    foreach (MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick draftPick in _draftPicks)
                     {
                         _draftPickMap.Add((int)draftPick.overallPick, draftPick);
                     }
@@ -245,10 +245,10 @@ namespace MyDraftAPI_v2
         }
 
         #region // Data Helper //
-        public IList<ViewModel.DraftPick> draftPicksForMyTeam()
+        public IList<MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick> draftPicksForMyTeam()
         {
-            IList<ViewModel.DraftPick> draftPicks = new List<ViewModel.DraftPick>();
-            foreach (ViewModel.DraftPick draftPick in _draftPicks)
+            IList<MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick> draftPicks = new List<MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick>();
+            foreach (MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick draftPick in _draftPicks)
             {
                 if (draftPick.teamID == _myDraftFanTeamID)
                 {
@@ -260,25 +260,38 @@ namespace MyDraftAPI_v2
         public IList<ViewModel.DraftPick> draftPicksForTeam(int fanTeamID)
         {
             IList<ViewModel.DraftPick> draftPicks = new List<ViewModel.DraftPick>();
-            foreach (ViewModel.DraftPick draftPick in _draftPicks)
+
+            using (var db = new AppDataContext(_dbOptionsBuilder.Options))
             {
-                if (draftPick.teamID == fanTeamID)
+                foreach (MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick draftPick in _draftPicks)
                 {
-                    if (draftPick.playerID > 0)
+                    if (draftPick.teamID == fanTeamID)
                     {
-                        using (var db = new AppDataContext(_dbOptionsBuilder.Options))
+                        if (draftPick.playerID > 0)
                         {
                             draftPick.player = draftPick.playerID != 0 ? db.Player
                                                                         .Where(q => q.ID == draftPick.playerID)
                                                                         .FirstOrDefault() : null;
                         }
-                    }
 
-                    draftPicks.Add(draftPick);
+                        // Map MyDraftPick to ViewModel.DraftPick
+                        ViewModel.DraftPick viewModelDraftPick = new ViewModel.DraftPick
+                        {
+                            // Map other properties as needed
+                            teamID = draftPick.teamID,
+                            playerID = draftPick.playerID,
+                            // Add more properties if needed
+                            player = draftPick.player // Assuming Player is a property in ViewModel.DraftPick
+                        };
+
+                        draftPicks.Add(viewModelDraftPick);
+                    }
                 }
             }
+
             return draftPicks;
         }
+
         public Dictionary<string, ViewModel.DraftPick> draftPicksForTeam_v2(int vFanTeamID)
         {
             Dictionary<string, ViewModel.DraftPick> draftPicks = _rosterDict;
@@ -332,11 +345,11 @@ namespace MyDraftAPI_v2
         #endregion
 
         #region //  Draft Pick Manipulation  //
-        public ViewModel.DraftPick onTheClockDraftPick()
+        public MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick onTheClockDraftPick()
         {
             return draftPickForOverall(_draftStatus.CurrentPick);
         }
-        public static async Task<Boolean> saveDraftPick(ViewModel.DraftPick draftPick)
+        public static async Task<Boolean> saveDraftPick(MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick draftPick)
         {
             double timestamp = TNUtility.DateTimeToUnixTimestamp(DateTime.Now);
             await Task.Delay(2000);
@@ -346,7 +359,7 @@ namespace MyDraftAPI_v2
             //        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
             //        draftPick.playerID, draftPick.leagueID, draftPick.teamID, draftPick.overall, draftPick.round, draftPick.pickInRound, draftPick.auctionValue, draftPick.isKeeper ? 1 : 0, timestamp);
         }
-        public ViewModel.DraftPick? nextAvailableDraftPickAfterOverall(int overall)
+        public MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick? nextAvailableDraftPickAfterOverall(int overall)
         {
             int totalPicks = _draftPicks.Count;
             if (totalPicks <= overall)
@@ -358,7 +371,7 @@ namespace MyDraftAPI_v2
             int startIndex = overall >= 0 ? overall : 0; // Start at 0 or greater
             for (int i = startIndex; i < totalPicks; i++)
             {
-                ViewModel.DraftPick draftPick = _draftPicks[i];
+                MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick draftPick = _draftPicks[i];
                 if (draftPick.playerID == null)
                 {
                     return draftPick;
@@ -366,7 +379,7 @@ namespace MyDraftAPI_v2
             }
             return null;
         }
-        public ViewModel.DraftPick draftPickForOverall(int overall)
+        public MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick draftPickForOverall(int overall)
         {
 #pragma warning disable CS8603 // Possible null reference return.
             return _draftPickMap.ContainsKey(overall) ? _draftPickMap[overall] : null;
@@ -386,7 +399,7 @@ namespace MyDraftAPI_v2
                 }
             }
 
-            ViewModel.DraftPick otcPick = draftPickForOverall(overall);
+            MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick otcPick = draftPickForOverall(overall);
             if (otcPick != null)
             {
                 _draftStatus.CurrentPick = (int)otcPick.overallPick;
@@ -395,7 +408,7 @@ namespace MyDraftAPI_v2
         }
         public async Task changeDraftPickToTeam(int overall, FantasyTeam team)
         {
-            ViewModel.DraftPick draftPick = draftPickForOverall(overall);
+            MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick draftPick = draftPickForOverall(overall);
             draftPick.teamID = team.identifier;
             await saveDraftPick(draftPick);
         }
@@ -445,14 +458,14 @@ namespace MyDraftAPI_v2
         
         public async Task updateOnTheClock()
         {
-            ViewModel.DraftPick otcPick = onTheClockDraftPick();
+            MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick otcPick = onTheClockDraftPick();
             if (otcPick != null && otcPick.playerID == null)
 
                 return;
 
             int otcOverall = otcPick != null ? (int)otcPick.overallPick : 0;
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-            ViewModel.DraftPick nextOTC = nextAvailableDraftPickAfterOverall(otcOverall);
+            MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick nextOTC = nextAvailableDraftPickAfterOverall(otcOverall);
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             if (nextOTC == null)
             {
@@ -487,11 +500,11 @@ namespace MyDraftAPI_v2
         #region //  Draft Munipulation  //
         public async Task executeDraftPick(int overall, int playerID)
         {
-            //DraftPick draftPick = draftPickForOverall(overall);
-            //if (draftPick == null)
-            //    return;
+            MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick draftPick = draftPickForOverall(overall);
+            if (draftPick == null)
+                return;
 
-            //DraftPickMemento draftPickMemento = draftPick.getState();
+            MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPickMemento draftPickMemento = draftPick.getState();
             //DraftMemento draftMemento = new DraftMemento();
             //draftMemento.leagueID = _league.identifier;
             //draftMemento.onTheClock = _draftStatus.onTheClock;

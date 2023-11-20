@@ -102,8 +102,6 @@ namespace DraftService
                 returnResult.Add(draftPick);
             }
 
-            _draftEngine.draftPicks = returnResult.ToList();
-
             return returnResult;
         }
         public void saveDraftPicks(IList<ViewModel.DraftPick> draftPicks)
