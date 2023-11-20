@@ -34,10 +34,15 @@ namespace PlayerService
                 //var players = from q in _db.vw_PlayerListItem.AsSplitQuery() select q;
                 var players = _db.vw_PlayerListItem.AsSplitQuery();
 
-                // FilterSORT: Point Value
+                // FilterSORT: Point, AAV or ADP Value
                 if (vInput.pointValue != null)
                 {
-                    players = players.OrderByDescending(q => q.PointsVal);
+                    if(vInput.pointValue == "[POINTS]")
+                        players = players.OrderByDescending(q => q.PointsVal);
+                    else if(vInput.pointValue == "[ADP]")
+                        players = players.OrderByDescending(q => q.ADPPoints);
+                    else if (vInput.pointValue == "[AAV]")
+                        players = players.OrderByDescending(q => q.AAVPoints);
                 }
 
                 // Filter: Position Value
@@ -49,7 +54,14 @@ namespace PlayerService
                 // Filter: Draft Status Value
                 if (vInput.draftStatus != null)
                 {
-                    players = players.Where(q => q.Position == vInput.positionValue);
+                    if(vInput.draftStatus == "[DRAFTED]")
+                    {
+                        players = players.Where(q => q.IsDrafted == true);
+                    }
+                    else if(vInput.draftStatus == "[AVAILABLE]")
+                    {
+                        players = players.Where(q => q.IsDrafted == false);
+                    }
                 }
 
                 result.ObjData = players;

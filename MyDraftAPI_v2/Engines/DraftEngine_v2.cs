@@ -319,7 +319,8 @@ namespace MyDraftAPI_v2
                     .Where(player => player.TeamID == teamId && player.PositionID == (int)position)
                     .Select(i => new ViewModel.DepthChartPlayer
                     {
-                        Name = i.Player.LastName,
+                        Name = 
+                        i.Player.LastName,
                         Position = i.Player.Position,
                         Team = i.ProTeam.Abbr,
                     })
@@ -482,6 +483,38 @@ namespace MyDraftAPI_v2
             await saveDraftStatus(_draftStatus);
         }
         #endregion //  Draft Pick Manipulation  //
+
+        #region //  Draft Munipulation  //
+        public async Task executeDraftPick(int overall, int playerID)
+        {
+            //DraftPick draftPick = draftPickForOverall(overall);
+            //if (draftPick == null)
+            //    return;
+
+            //DraftPickMemento draftPickMemento = draftPick.getState();
+            //DraftMemento draftMemento = new DraftMemento();
+            //draftMemento.leagueID = _league.identifier;
+            //draftMemento.onTheClock = _draftStatus.onTheClock;
+            //draftMemento.draftPickMemento = draftPickMemento;
+            ////await DraftManager.pushDraftMementoToUndoStack(draftMemento);
+            //await DraftManager.clearDraftMementoRedoStack(_league.identifier);
+
+            //draftPick.playerID = playerID;
+            //draftPick.isKeeper = isKeeper;
+            //await DraftManager.saveDraftPick(draftPick);
+
+            //DraftPick otcPick = onTheClockDraftPick();
+            //if (otcPick.playerID != null)
+            //{
+            //    await updateOnTheClock();
+            //}
+
+            //if (DidChangeDraftPick != null)
+            //{
+            //    DidChangeDraftPick(this, draftPick);
+            //}
+        }
+        #endregion //  Draft Picks  //  
 
         public async Task saveDraftStatus(ViewModel.DraftStatus vDraftStatus)
         {

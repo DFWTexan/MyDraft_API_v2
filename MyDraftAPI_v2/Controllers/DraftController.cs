@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using DbData;
 #pragma warning disable 
 
@@ -11,6 +12,7 @@ namespace MyDraftAPI_v2.Controllers
         private readonly AppDataContext _db;
         private readonly IConfiguration _config;
         private readonly ILogger<DraftController> _logger;
+        private UtilityService.Utility _utility;
 
         private DraftEngine_v2 _draftEngine;
 
@@ -20,18 +22,20 @@ namespace MyDraftAPI_v2.Controllers
             _config = config;
             _logger = logger;
             _draftEngine = draftEngine;
+            _utility = new UtilityService.Utility(_db, _config);
         }
 
+        #region // Draft Data //
         /// <summary>
         ///     
         /// Get All DraftStatus
         ///
         [HttpGet]
-        public ActionResult GetDraftStatus()
+        public async Task<ActionResult> GetDraftStatus()
         {
             var result = new DataModel.Response.ReturnResult();
 
-            result.ObjData = _draftEngine.draftStatus;
+            result.ObjData = await Task.Run(() => _draftEngine.draftStatus);
 
             return StatusCode(result.StatusCode = 200, result.ObjData);
         }
@@ -41,11 +45,11 @@ namespace MyDraftAPI_v2.Controllers
         /// Get All Daft Picks for League
         ///
         [HttpPut]
-        public ActionResult GetDraftPicksForLeague([FromBody] ViewModel.ActiveLeague vInput)
+        public async Task<ActionResult> GetDraftPicksForLeague([FromBody] ViewModel.ActiveLeague vInput)
         {
             var service = new DraftService.DraftSvc(_db, _config, null, null, _draftEngine);
 
-            var result = service.GetDraftPicksForLeague(vInput);
+            var result = await Task.Run(() => service.GetDraftPicksForLeague(vInput));
 
             return StatusCode(result.StatusCode, result.ObjData);
         }
@@ -55,11 +59,11 @@ namespace MyDraftAPI_v2.Controllers
         /// Get All Daft Picks for League
         ///
         [HttpGet]
-        public ActionResult GetDraftPicksForLeague_v2()
+        public async Task<ActionResult> GetDraftPicksForLeague_v2()
         {
             var service = new DraftService.DraftSvc(_db, _config, null, null, _draftEngine);
 
-            var result = service.GetDraftPicksForLeague_v2();
+            var result = await Task.Run(() => service.GetDraftPicksForLeague_v2());
 
             return StatusCode(result.StatusCode, result.ObjData);
         }
@@ -69,11 +73,11 @@ namespace MyDraftAPI_v2.Controllers
         /// Get All Daft Picks for Fantasy Team
         ///
         [HttpGet("{fanTeamID}")]
-        public ActionResult GetDraftPicksByFanTeam(int fanTeamID)
+        public async Task<ActionResult> GetDraftPicksByFanTeam(int fanTeamID)
         {
             var service = new DraftService.DraftSvc(_db, _config, null, null, _draftEngine);
 
-            var result = service.GetDraftPicksByFanTeam(fanTeamID);
+            var result = await Task.Run(() => service.GetDraftPicksByFanTeam(fanTeamID));
 
             return StatusCode(result.StatusCode, result.ObjData);
         }
@@ -83,11 +87,11 @@ namespace MyDraftAPI_v2.Controllers
         /// Get All Position Daft Picks for League
         ///
         [HttpGet]
-        public ActionResult GetDraftPicksByPosition()
+        public async Task<ActionResult> GetDraftPicksByPosition()
         {
             var service = new DraftService.DraftSvc(_db, _config, null, null, _draftEngine);
 
-            var result = service.GetDraftPicksByPosition();
+            var result = await Task.Run(() => service.GetDraftPicksByPosition());
 
             return StatusCode(result.StatusCode, result.ObjData);
         }
@@ -97,11 +101,11 @@ namespace MyDraftAPI_v2.Controllers
         /// Get All Roster position counts
         ///
         [HttpGet]
-        public ActionResult GetRosterTotalPositionCount()
+        public async Task<ActionResult> GetRosterTotalPositionCount()
         {
             var service = new DraftService.DraftSvc(_db, _config, null, null, _draftEngine);
 
-            var result = service.GetRosterTotalPositionCount();
+            var result = await Task.Run(() => service.GetRosterTotalPositionCount());
 
             return StatusCode(result.StatusCode, result.ObjData);
         }
@@ -125,11 +129,11 @@ namespace MyDraftAPI_v2.Controllers
         /// Get Fan Team Selections order
         ///
         [HttpGet("{fanTeamID}")]
-        public ActionResult GetTeamSelections(int fanTeamID)
+        public async Task<ActionResult> GetTeamSelections(int fanTeamID)
         {
             var service = new DraftService.DraftSvc(_db, _config, null, null, _draftEngine);
 
-            var result = service.GetTeamSelections(fanTeamID);
+            var result = await Task.Run(() => service.GetTeamSelections(fanTeamID));
 
             return StatusCode(result.StatusCode, result.ObjData);
         }
@@ -139,13 +143,38 @@ namespace MyDraftAPI_v2.Controllers
         /// Get Position Depter Chart for Pro Teams
         ///
         [HttpGet("{position}")]
-        public ActionResult GetPositionDepthChart(string position)
+        public async Task<ActionResult> GetPositionDepthChart(string position)
         {
             var service = new DraftService.DraftSvc(_db, _config, null, null, _draftEngine);
 
-            var result = service.GetPositionDepthChart(position);
+            var result = await Task.Run(() => service.GetPositionDepthChart(position));
 
             return StatusCode(result.StatusCode, result.ObjData);
         }
+        #endregion // Draft Data Methods //
+
+        #region // Draft Event Methods //
+        /// <summary>
+        ///     
+        /// Execute Draft Pick Selection
+        ///
+        [HttpPost("{overall}/{playerID}")]
+        public async Task<ActionResult> ExecuteDraftPick(int overall, int playerID)
+        {
+            try
+            {
+                var service = new DraftService.DraftSvc(_db, _config, null, _utility, _draftEngine);
+
+                var result = await Task.Run(() => service.ExecuteDraftPick(overall, playerID));
+
+                return StatusCode(result.StatusCode, result.ObjData);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new List<string>() { "Server Error" });
+            }
+            
+        }
+        #endregion // Draft Events //
     }
 }

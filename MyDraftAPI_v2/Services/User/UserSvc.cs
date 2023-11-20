@@ -21,29 +21,51 @@ namespace UserService
             _draftEngine = draftEngine;
         }
 
-        public DataModel.Response.ReturnResult Login(ViewModel.UserInfo vInput)
+        //public DataModel.Response.ReturnResult Login(ViewModel.UserInfo vInput)
+        //{
+        //    var result = new DataModel.Response.ReturnResult();
+        //    var service = new LeagueService.LeagueSvc(_db, _config, null, null, _draftEngine);
+
+        //    try
+        //    {
+        //        // TBD: Convert to LOGIN with provided Credentials...
+        //        var userInfo = new ViewModel.UserInfo() { UserID = 1, UserName = "EMFTest_User", IsLoggedIn = true };
+        //        var activeLeague = service.GetActiveLeague(userInfo.UserID);
+
+        //        _draftEngine.InitializeLeagueData_v2();
+
+        //        result.StatusCode = 200;
+        //        result.ObjData = userInfo;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        result.StatusCode = 500;
+        //        result.ErrMessage = ex.Message;
+        //    }
+
+        //    return result;
+        //}
+
+        public DataModel.Response.ReturnResult Login_v2(ViewModel.UserInfo vInput)
         {
-            var result = new DataModel.Response.ReturnResult();
             var service = new LeagueService.LeagueSvc(_db, _config, null, null, _draftEngine);
 
             try
             {
+                ///
                 // TBD: Convert to LOGIN with provided Credentials...
+                ///
                 var userInfo = new ViewModel.UserInfo() { UserID = 1, UserName = "EMFTest_User", IsLoggedIn = true };
                 var activeLeague = service.GetActiveLeague(userInfo.UserID);
 
                 _draftEngine.InitializeLeagueData_v2();
 
-                result.StatusCode = 200;
-                result.ObjData = userInfo;
+                return _utility.SuccessResult(userInfo);
             }
             catch (Exception ex)
             {
-                result.StatusCode = 500;
-                result.ErrMessage = ex.Message;
+                return _utility.ExceptionReturnResult(ex);
             }
-
-            return result;
         }
     }
 }

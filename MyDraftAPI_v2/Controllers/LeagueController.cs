@@ -11,6 +11,7 @@ namespace MyDraftAPI_v2.Controllers
         private readonly AppDataContext _db;
         private readonly IConfiguration _config;
         private readonly ILogger<LeagueController> _logger;
+        private UtilityService.Utility _utility;
 
         private DraftEngine_v2 _draftEngine;
 
@@ -20,6 +21,7 @@ namespace MyDraftAPI_v2.Controllers
             _config = config;
             _logger = logger;
             _draftEngine = draftEngine;
+            _utility = new UtilityService.Utility(_db, _config);
         }
 
         /// <summary>
@@ -27,11 +29,11 @@ namespace MyDraftAPI_v2.Controllers
         /// Get Active League
         ///
         [HttpGet]
-        public ActionResult GetActiveLeague()
+        public async Task<ActionResult> GetActiveLeague()
         {
-            var service = new LeagueService.LeagueSvc(_db, _config, null, null, _draftEngine);
+            var service = new LeagueService.LeagueSvc(_db, _config, null, _utility, _draftEngine);
 
-            var result = service.GetActiveLeague();
+            var result = await Task.Run(() => service.GetActiveLeague());
 
             return StatusCode(result.StatusCode, result.ObjData);
         }
@@ -41,9 +43,9 @@ namespace MyDraftAPI_v2.Controllers
         /// Get Initialize League Data
         ///
         [HttpGet]
-        public ActionResult InitLeageData()
+        public async Task<ActionResult> InitLeageData()
         {
-            _draftEngine.InitializeLeagueData_v2();
+            await Task.Run(() => _draftEngine.InitializeLeagueData_v2());
 
             return Ok();
         }
@@ -54,11 +56,11 @@ namespace MyDraftAPI_v2.Controllers
         /// Get Active League
         ///
         [HttpGet("{id}")]
-        public ActionResult TeamsForLeague(int id)
+        public async Task<ActionResult> TeamsForLeague(int id)
         {
-            var service = new LeagueService.LeagueSvc(_db, _config, null, null, _draftEngine);
+            var service = new LeagueService.LeagueSvc(_db, _config, null, _utility, _draftEngine);
 
-            var result = service.TeamsForLeague(id);
+            var result = await Task.Run(() => service.TeamsForLeague(id));
 
             return StatusCode(result.StatusCode, result.ObjData);
         }
