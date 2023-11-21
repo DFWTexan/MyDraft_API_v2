@@ -128,6 +128,7 @@ namespace MyDraftAPI_v2
                         {
                             LeagueID = i.LeagueID,
                             CurrentPick = i.CurrentPick,
+                            CurrentRound = i.CurrentRound,
                             fanTeamName = i.fanTeamName,
                             onTheClock = i.onTheClock,
                             IsComplete = i.IsComplete,
@@ -137,15 +138,6 @@ namespace MyDraftAPI_v2
 
                     if (_draftStatus != null)
                     {
-                        //_draftStatus = new ViewModel.DraftStatus()
-                        //{
-                        //    LeagueID = draftStatus.LeagueID,
-                        //    CurrentPick = draftStatus.CurrentPick,
-                        //    fanTeamName = draftStatus.fanTeamName,
-                        //    onTheClock = draftStatus.onTheClock,
-                        //    IsComplete = draftStatus.IsComplete
-                        //};
-
                         var teamInfo = db.UserLeagueTeam
                                         .Where(q => q.ID == draftStatus.onTheClock)
                                         .AsNoTracking()
@@ -279,14 +271,14 @@ namespace MyDraftAPI_v2
                                                                         .FirstOrDefault() : null;
                         }
 
-                        // Map MyDraftPick to ViewModel.DraftPick
                         ViewModel.DraftPick viewModelDraftPick = new ViewModel.DraftPick
                         {
-                            // Map other properties as needed
+                            round = draftPick.round,
+                            pickInRound = draftPick.pickInRound,
+                            overallPick = draftPick.overallPick,
                             teamID = draftPick.teamID,
                             playerID = draftPick.playerID,
-                            // Add more properties if needed
-                            player = draftPick.player // Assuming Player is a property in ViewModel.DraftPick
+                            player = draftPick.player 
                         };
 
                         draftPicks.Add(viewModelDraftPick);
@@ -533,6 +525,7 @@ namespace MyDraftAPI_v2
                 if (draftStatus != null)
                 {
                     draftStatus.CurrentPick = vDraftStatus.CurrentPick;
+                    draftStatus.CurrentRound = (int)vOtcPick.round;
                     draftStatus.IsComplete = vDraftStatus.IsComplete;
                     draftStatus.onTheClock = (int)(vOtcPick != null ? vOtcPick.teamID : null);
                     draftStatus.fanTeamName = vOtcPick != null ? db.UserLeagueTeam
@@ -545,6 +538,7 @@ namespace MyDraftAPI_v2
                         UniverseID = draftStatus.UniverseID,
                         LeagueID = draftStatus.LeagueID,
                         CurrentPick = draftStatus.CurrentPick,
+                        CurrentRound = draftStatus.CurrentRound,
                         fanTeamName = draftStatus.fanTeamName,
                         onTheClock = draftStatus.onTheClock,
                         IsComplete = draftStatus.IsComplete

@@ -8,6 +8,7 @@ namespace Database.Model
         public int UniverseID { get; set; }
         public int LeagueID { get; set; }
         public int CurrentPick { get; set; }
+        public int CurrentRound { get; set; }
         public int onTheClock { get; set; }
         [MaxLength(50)]
         public string? fanTeamName { get; set; }
