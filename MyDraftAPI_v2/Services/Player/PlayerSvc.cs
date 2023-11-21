@@ -76,6 +76,14 @@ namespace PlayerService
             return result;
         }
 
+        private bool isPlayerDrafted(int vPlayerID)
+        {
+            bool isDrafted = _db.UserDraftSelection
+                            .AsNoTracking()
+                            .Any(x => x.PlayerID == vPlayerID);
+
+            return isDrafted;
+        }
         public DataModel.Response.ReturnResult GetPlayerByID(int id)
         {
             var result = new DataModel.Response.ReturnResult();
@@ -99,7 +107,8 @@ namespace PlayerService
                     College = player.College,
                     IsRookie = player.IsRookie,
                     PhotoUrl = player.PhotoUrl,
-                    Status = player.Status
+                    Status = player.Status,
+                    IsDrafted = isPlayerDrafted(player.ID)
                 };  
                 
                 var position = _db.Positions.Where(x => x.Abbr == player.Position).SingleOrDefault();
