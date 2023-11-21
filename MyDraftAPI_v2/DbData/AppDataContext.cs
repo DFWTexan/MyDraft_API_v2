@@ -127,6 +127,10 @@ namespace DbData
             modelBuilder.Entity<Database.Model.ADP>()
                 .Property(p => p.PPRValue)
                 .HasColumnType("decimal(5,2)");
+
+            //modelBuilder.Entity<Database.Model.UserDraftSelections>()
+            //    .Property(p => p.TiemStamp)
+            //    .HasDefaultValueSql("getdate()");
             #endregion
         }
 
