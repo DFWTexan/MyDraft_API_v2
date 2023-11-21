@@ -64,7 +64,7 @@ namespace DraftService
                     .FirstOrDefault();
 
                 if (teamInfo != null)
-                    result.fanTeam = teamInfo.Name;
+                    result.fanTeamName = teamInfo.Name;
 
                 return result;
             }

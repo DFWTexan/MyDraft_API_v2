@@ -121,33 +121,37 @@ namespace MyDraftAPI_v2
                     #region DraftStatus  
                     var result = new ViewModel.DraftStatus();
 
-                    var draftStatus = db.UserDraftStatus
+                    _draftStatus = db.UserDraftStatus
                         .Where(x => x.LeagueID == _activeMyDraftLeague.ID)
                         .Select(i => new ViewModel.DraftStatus()
                         {
                             LeagueID = i.LeagueID,
                             CurrentPick = i.CurrentPick,
+                            fanTeamName = i.fanTeamName,
+                            onTheClock = i.onTheClock,
                             IsComplete = i.IsComplete,
                         })
                         .AsNoTracking()
                         .FirstOrDefault();
 
-                    if (draftStatus != null)
+                    if (_draftStatus != null)
                     {
-                        _draftStatus = new ViewModel.DraftStatus()
-                        {
-                            LeagueID = draftStatus.LeagueID,
-                            CurrentPick = draftStatus.CurrentPick,
-                            IsComplete = draftStatus.IsComplete
-                        };
+                        //_draftStatus = new ViewModel.DraftStatus()
+                        //{
+                        //    LeagueID = draftStatus.LeagueID,
+                        //    CurrentPick = draftStatus.CurrentPick,
+                        //    fanTeamName = draftStatus.fanTeamName,
+                        //    onTheClock = draftStatus.onTheClock,
+                        //    IsComplete = draftStatus.IsComplete
+                        //};
 
                         var teamInfo = db.UserLeagueTeam
-                                        .Where(q => q.ID == draftStatus.CurrentPick)
+                                        .Where(q => q.ID == draftStatus.onTheClock)
                                         .AsNoTracking()
                                         .FirstOrDefault();
 
                         if (teamInfo != null)
-                            _draftStatus.fanTeam = teamInfo.Name;
+                            _draftStatus.fanTeamName = teamInfo.Name;
                     }
                     #endregion
 
