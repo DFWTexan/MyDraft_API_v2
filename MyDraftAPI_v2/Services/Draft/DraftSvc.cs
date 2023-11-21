@@ -14,6 +14,7 @@ using System.Windows.Markup;
 using System;
 using DataModel.Enums;
 using System.Diagnostics.Eventing.Reader;
+using Microsoft.Data.SqlClient;
 #pragma warning disable
 
 namespace DraftService
