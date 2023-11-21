@@ -81,7 +81,7 @@ namespace MyDraftAPI_v2
             }
             //set => _league.teams = (List<ViewModel.UserLeageTeamItem>)value;
         }
-        public Dictionary<DataModel.Enums.ProTeams, Dictionary<DataModel.Enums.Position, List<ViewModel.DepthChartPlayer>>>teamDepthChart
+        public Dictionary<DataModel.Enums.ProTeams, Dictionary<DataModel.Enums.Position, List<ViewModel.DepthChartPlayer>>> teamDepthChart
         {
             get { return _teamDepthChart; }
             set { _teamDepthChart = value; }
@@ -324,7 +324,6 @@ namespace MyDraftAPI_v2
             }
             return draftPicks;
         }
-        // Helper method to get players for a specific position and team
         private List<ViewModel.DepthChartPlayer> GetPlayersForPositionAndTeam(int limitTake, int teamId, DataModel.Enums.Position position)
         {
             using (var db = new AppDataContext(_dbOptionsBuilder.Options))
@@ -374,9 +373,8 @@ namespace MyDraftAPI_v2
                         userDraftSelecton.OverallPick = draftPick.overallPick;
                         userDraftSelecton.Round = draftPick.round;
                         userDraftSelecton.PickInRound = draftPick.pickInRound;
-                        //userDraftSelecton.AuctionValue = draftPick.auctionValue;
                         userDraftSelecton.IsKeeper = draftPick.isKeeper;
-                        //userDraftSelecton. timestamp;
+                        userDraftSelecton.DraftedTimeStamp = DateTime.Now;
 
                         db.Update(userDraftSelecton);
                         await db.SaveChangesAsync();
@@ -398,19 +396,16 @@ namespace MyDraftAPI_v2
         {
             int totalPicks = _draftPicks.Count;
             if (totalPicks <= overall)
-            {
                 return null;
-            }
+
 
             // Iterate over all draft picks after the overall pick. Stop when an empty spot (playerID == nil) is found.
             int startIndex = overall >= 0 ? overall : 0; // Start at 0 or greater
             for (int i = startIndex; i < totalPicks; i++)
             {
                 MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick draftPick = _draftPicks[i];
-                if (draftPick.playerID == null)
-                {
+                if (draftPick.player == null)
                     return draftPick;
-                }
             }
             return null;
         }
@@ -429,16 +424,14 @@ namespace MyDraftAPI_v2
             else
             {
                 if (_draftStatus.CurrentPick == overall)
-                {
                     return;
-                }
             }
 
             MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick otcPick = draftPickForOverall(overall);
             if (otcPick != null)
             {
                 _draftStatus.CurrentPick = (int)otcPick.overallPick;
-                await saveDraftStatus(_draftStatus);
+                saveDraftStatus(_draftStatus);
             }
         }
         public async Task changeDraftPickToTeam(int overall, FantasyTeam team)
@@ -490,7 +483,7 @@ namespace MyDraftAPI_v2
         //    }
         //}
         // * */
-        public async Task updateOnTheClock()
+        public void updateOnTheClock(MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick vOtcPick)
         {
             MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick otcPick = onTheClockDraftPick();
             if (otcPick != null && otcPick.playerID == null)
@@ -502,7 +495,7 @@ namespace MyDraftAPI_v2
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             if (nextOTC == null)
             {
-                await setDraftComplete();
+                setDraftComplete();
                 return;
             }
 
@@ -514,35 +507,40 @@ namespace MyDraftAPI_v2
                 // Update the OTC pick. If none can be found then declare the draft complete.
                 if (otcPick != null)
                 {
-                    _draftStatus = new ViewModel.DraftStatus(_league.identifier, _draftStatus.CurrentPick, 0, false);
-                    await saveDraftStatus(_draftStatus);
+                    _draftStatus = new ViewModel.DraftStatus(_activeMyDraftLeague.UniverseID, _activeMyDraftLeague.ID, _draftStatus.CurrentPick, false);
+                    saveDraftStatus(_draftStatus, otcPick);
                 }
                 else
                 {
-                    await setDraftComplete();
+                    setDraftComplete();
                 }
             }
         }
-        private async Task setDraftComplete()
+        private void setDraftComplete()
         {
-            _draftStatus = new ViewModel.DraftStatus(_league.identifier, _league.rounds * _league.numTeams + 1, 0, true); // Set on the clock to 1 pick beyond the end of the draft
-            await saveDraftStatus(_draftStatus);
+            _draftStatus = new ViewModel.DraftStatus(_activeMyDraftLeague.UniverseID, _activeMyDraftLeague.ID, _league.rounds * _league.numTeams + 1, true); // Set on the clock to 1 pick beyond the end of the draft
+            saveDraftStatus(_draftStatus);
         }
-        public async Task saveDraftStatus(ViewModel.DraftStatus vDraftStatus)
+        public void saveDraftStatus(ViewModel.DraftStatus vDraftStatus, MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick vOtcPick = null)
         {
             using (var db = new AppDataContext(_dbOptionsBuilder.Options))
             {
                 var draftStatus = db.UserDraftStatus
-                    .Where(x => x.LeagueID == vDraftStatus.LeagueID)
+                    .Where(x => x.UniverseID == vDraftStatus.UniverseID && x.LeagueID == vDraftStatus.LeagueID)
                     .FirstOrDefault();
 
                 if (draftStatus != null)
                 {
                     draftStatus.CurrentPick = vDraftStatus.CurrentPick;
                     draftStatus.IsComplete = vDraftStatus.IsComplete;
+                    draftStatus.onTheClock = (int)(vOtcPick != null ? vOtcPick.teamID : null);
+                    draftStatus.fanTeamName = vOtcPick != null ? db.UserLeagueTeam
+                                                                    .Where(q => q.ID == vOtcPick.teamID)
+                                                                    .Select(i => i.Name)
+                                                                    .FirstOrDefault() : null;
 
                     db.Update(draftStatus);
-                    await db.SaveChangesAsync();
+                    db.SaveChangesAsync();
                 }
                 else
                 {
@@ -554,14 +552,14 @@ namespace MyDraftAPI_v2
                     };
 
                     db.Add(draftStatus);
-                    await db.SaveChangesAsync();
+                    db.SaveChangesAsync();
                 }
             }
         }
         #endregion //  Draft Pick Manipulation  //
 
         #region //  Draft Event  //
-        public async Task executeDraftPick(int overall, int playerID)
+        public void executeDraftPick(int overall, int playerID)
         {
             MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick draftPick = draftPickForOverall(overall);
             if (draftPick == null)
@@ -570,7 +568,7 @@ namespace MyDraftAPI_v2
             {
                 MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPickMemento draftPickMemento = draftPick.getState();
                 MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftMemento draftMemento = new MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftMemento();
-                
+
                 ////TODO:  NOT SURE IF THIS IS NEEDED
                 //draftMemento.leagueID = _league.identifier;
                 //draftMemento.onTheClock = _draftStatus.onTheClock;
@@ -579,23 +577,22 @@ namespace MyDraftAPI_v2
                 //await DraftManager.clearDraftMementoRedoStack(_league.identifier);
 
                 draftPick.playerID = playerID;
-                //draftPick.isKeeper = isKeeper;
-                await saveDraftPick(draftPick);
+                saveDraftPick(draftPick);
 
                 MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick otcPick = onTheClockDraftPick();
                 if (otcPick.playerID != null)
                 {
-                    await updateOnTheClock();
+                    updateOnTheClock(otcPick);
                 }
             }
             catch (Exception ex)
             {
                 throw;
             }
-            
+
         }
         #endregion
-        
+
         private void StartTimer()
         {
             //_timer.Change(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));

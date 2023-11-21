@@ -19,7 +19,7 @@ namespace Database.Model
         public int? PositionPick { get; set; }
         public int? PositionRound { get; set; }
         //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime? TiemStamp { get; set; }
+        public DateTime? DraftedTimeStamp { get; set; }
         public bool? IsKeeper { get; set; }
 
         //#region Foreign Keys
