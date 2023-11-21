@@ -5,6 +5,7 @@ using MyDraftAPI_v2.FantasyDataModel;
 //using MyDraftAPI_v2.FantasyDataModel.Draft;
 using MyDraftAPI_v2.Managers;
 using MyDraftLib.Utilities;
+using ViewModel;
 #pragma warning disable 
 
 namespace MyDraftAPI_v2
@@ -486,7 +487,7 @@ namespace MyDraftAPI_v2
         public void updateOnTheClock(MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick vOtcPick)
         {
             MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick otcPick = onTheClockDraftPick();
-            if (otcPick != null && otcPick.playerID == null)
+            if (otcPick != null && otcPick.playerID == 0)
                 return;
 
             int otcOverall = otcPick != null ? (int)otcPick.overallPick : 0;
@@ -538,7 +539,17 @@ namespace MyDraftAPI_v2
                                                                     .Where(q => q.ID == vOtcPick.teamID)
                                                                     .Select(i => i.Name)
                                                                     .FirstOrDefault() : null;
-
+                    
+                    _draftStatus = new ViewModel.DraftStatus()
+                    {
+                        UniverseID = draftStatus.UniverseID,
+                        LeagueID = draftStatus.LeagueID,
+                        CurrentPick = draftStatus.CurrentPick,
+                        fanTeamName = draftStatus.fanTeamName,
+                        onTheClock = draftStatus.onTheClock,
+                        IsComplete = draftStatus.IsComplete
+                    };
+                    
                     db.Update(draftStatus);
                     db.SaveChangesAsync();
                 }
@@ -580,7 +591,7 @@ namespace MyDraftAPI_v2
                 saveDraftPick(draftPick);
 
                 MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick otcPick = onTheClockDraftPick();
-                if (otcPick.playerID != null)
+                if (otcPick.playerID != 0)
                 {
                     updateOnTheClock(otcPick);
                 }
