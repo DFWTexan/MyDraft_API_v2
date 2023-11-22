@@ -630,6 +630,30 @@ namespace DraftService
         }
         #endregion
 
+        #region // MISC //
+        public DataModel.Response.ReturnResult ProTeamList()
+        {
+            try
+            {
+                var proTeams = _db.ProTeam
+                    .OrderBy(q => q.NickName)
+                    .Select(i => new ProTeamListItem()
+                    {
+                        Value = i.ID,
+                        Lable = i.NickName,
+                    })
+                    .AsNoTracking()
+                    .ToList();
+                
+                return _utility.SuccessResult(proTeams);
+            }
+            catch (Exception ex)
+            {
+                return _utility.ExceptionReturnResult(ex);
+            }
+        }
+        #endregion
+
         #region // Method Template //
         /// <summary>
         ///              TEMPLATE FOR NEW METHODS

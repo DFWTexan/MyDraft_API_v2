@@ -6,6 +6,7 @@ namespace ViewModel
     public class PlayerInfo : Player
     {
         public bool IsDrafted { get; set; }
+        public string? ProTeamName { get; set; }
         public List<DepthChartItem> DepthChart { get; set; }
         public List<PlayerNewsItem> PlayerNews { get; set; }
 

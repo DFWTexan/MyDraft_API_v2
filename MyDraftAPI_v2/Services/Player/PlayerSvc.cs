@@ -89,7 +89,10 @@ namespace PlayerService
             var result = new DataModel.Response.ReturnResult();
             try
             {
-                var player = _db.Player.Where(x => x.ID == id).SingleOrDefault();
+                var player = _db.Player
+                    .Include(x => x.ProTeam)
+                    .Where(x => x.ID == id)
+                    .SingleOrDefault();
                 
                 var playerInfo = new ViewModel.PlayerInfo
                 {
@@ -108,7 +111,8 @@ namespace PlayerService
                     IsRookie = player.IsRookie,
                     PhotoUrl = player.PhotoUrl,
                     Status = player.Status,
-                    IsDrafted = isPlayerDrafted(player.ID)
+                    IsDrafted = isPlayerDrafted(player.ID),
+                    ProTeamName = player.ProTeam.NickName != null ? player.ProTeam.City + " " + player.ProTeam.NickName : "N/A"
                 };  
                 
                 var position = _db.Positions.Where(x => x.Abbr == player.Position).SingleOrDefault();

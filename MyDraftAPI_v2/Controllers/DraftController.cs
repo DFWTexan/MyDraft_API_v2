@@ -176,5 +176,21 @@ namespace MyDraftAPI_v2.Controllers
             
         }
         #endregion // Draft Events //
+
+        #region // MISC //
+        /// <summary>
+        ///     
+        /// Get Pro Team List
+        ///
+        [HttpGet]
+        public async Task<ActionResult> ProTeamList()
+        {
+            var service = new DraftService.DraftSvc(_db, _config, null, _utility, _draftEngine);
+
+            var result = await Task.Run(() => service.ProTeamList());
+
+            return StatusCode(result.StatusCode, result.ObjData);
+        }
+        #endregion
     }
 }
