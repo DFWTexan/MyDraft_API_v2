@@ -9,6 +9,7 @@ namespace Database.Model
         public string? LastName { get; set;}
         public string? PhotoURL { get; set; }
         public string? Position { get; set; }
+        public string? TeamAbbr { get; set; }
         [Column(TypeName = "decimal(3,2)")]
         public decimal PointsVal { get; set; }
         [Column(TypeName = "decimal(3,2)")]
