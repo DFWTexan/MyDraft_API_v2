@@ -633,6 +633,8 @@ namespace DraftService
         #region // MISC //
         public DataModel.Response.ReturnResult ProTeamList()
         {
+            var output = new List<ProTeamListItem>();
+            
             try
             {
                 var proTeams = _db.ProTeam
@@ -640,11 +642,16 @@ namespace DraftService
                     .Select(i => new ProTeamListItem()
                     {
                         Value = i.ID,
-                        Lable = i.NickName,
+                        Label = i.NickName,
                     })
                     .AsNoTracking()
                     .ToList();
                 
+                foreach (var item in proTeams)
+                {
+                    output.Add(item);
+                }
+
                 return _utility.SuccessResult(proTeams);
             }
             catch (Exception ex)
