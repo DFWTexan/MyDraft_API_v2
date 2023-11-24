@@ -14,6 +14,7 @@ using System.Windows.Markup;
 using System;
 using DataModel.Enums;
 using System.Diagnostics.Eventing.Reader;
+using Microsoft.Data.SqlClient;
 #pragma warning disable
 
 namespace DraftService
@@ -40,6 +41,7 @@ namespace DraftService
             _draftEngine = draftEngine;
         }
 
+        #region // Draft Data //
         public ViewModel.DraftStatus DraftStatus(int vUniversID, int vleagueID)
         {
             var result = new ViewModel.DraftStatus();
@@ -62,7 +64,7 @@ namespace DraftService
                     .FirstOrDefault();
 
                 if (teamInfo != null)
-                    result.fanTeam = teamInfo.Name;
+                    result.fanTeamName = teamInfo.Name;
 
                 return result;
             }
@@ -100,8 +102,6 @@ namespace DraftService
                 }
                 returnResult.Add(draftPick);
             }
-
-            _draftEngine.draftPicks = returnResult.ToList();
 
             return returnResult;
         }
@@ -524,38 +524,6 @@ namespace DraftService
 
             return dictFanTeamPositions;
         }
-        //public DataModel.Response.ReturnResult GetTeamRoster(int vFanTeamID)
-        //{
-        //    var result = new DataModel.Response.ReturnResult();
-        //    Dictionary<string, int> dictStarters = new Dictionary<string, int>() {
-        //        {"QB", 1 },
-        //        {"RB", 2 },
-        //        {"WR", 2 },
-        //        {"TE", 1 },
-        //        {"K1", 1 },
-        //    };
-
-        //    List<ViewModel.DraftPick> myTeam_QB = new List<ViewModel.DraftPick>();
-        //    List<ViewModel.DraftPick> myTeam_RB = new List<ViewModel.DraftPick>();
-        //    List<ViewModel.DraftPick> myTeam_WR = new List<ViewModel.DraftPick>();
-        //    List<ViewModel.DraftPick> myTeam_TE = new List<ViewModel.DraftPick>();
-        //    List<ViewModel.DraftPick> myTeam_K = new List<ViewModel.DraftPick>();
-        //    List<ViewModel.DraftPick> myTeam_BN = new List<ViewModel.DraftPick>();
-
-        //    try
-        //    {
-        //        result.StatusCode = 200;
-        //        var draftPicks = GetDraftPicksByFanTeam(vFanTeamID);
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        result.StatusCode = 500;
-        //        result.ErrMessage = ex.Message;
-        //    }
-
-        //    return result;
-        //}
         public DataModel.Response.ReturnResult GetTeamSelections(int vFanTeamID)
         {
             var result = new DataModel.Response.ReturnResult();
@@ -564,7 +532,7 @@ namespace DraftService
             try
             {
                 result.StatusCode = 200;
-                
+
                 int cnt = 1;
                 var teamPicks = _draftEngine.draftPicksForTeam(vFanTeamID).OrderBy(q => q.overallPick);
                 foreach (var teamPick in teamPicks)
@@ -587,7 +555,7 @@ namespace DraftService
             var result = new DataModel.Response.ReturnResult();
             DataModel.Enums.Position pos = (DataModel.Enums.Position)Enum.Parse(typeof(DataModel.Enums.Position), vPosition);
             Dictionary<string, List<ViewModel.DepthChartPlayer>> dict_Output = new Dictionary<string, List<ViewModel.DepthChartPlayer>>();
-            
+
             try
             {
                 result.StatusCode = 200;
@@ -607,6 +575,7 @@ namespace DraftService
                                 Name = qb.Name,
                                 Team = teamAbbreviation.ToString(),
                                 Position = pos.ToString(),
+                                IsDrafted = isPlayerDrafted((int)qb.PlayerID),
                             };
 
                             depthChartItems.Add(depthChartItem);
@@ -626,5 +595,92 @@ namespace DraftService
 
             return result;
         }
+        #endregion
+
+        #region // Data Helpers //
+        private bool isPlayerDrafted(int vPlayerID)
+        {
+            bool isDrafted = _db.UserDraftSelection
+                            .AsNoTracking()
+                            .Any(x => x.PlayerID == vPlayerID);
+
+            return isDrafted;
+        }
+        #endregion
+
+        #region // Draft Events //
+        public DataModel.Response.ReturnResult ExecuteDraftPick(int vOverAll, int vPlayerID)
+        {
+            var result = new DataModel.Response.ReturnResult();
+
+            try
+            {
+                result.StatusCode = 200;
+
+                _draftEngine.executeDraftPick(vOverAll, vPlayerID);
+
+                //result.ObjData = new { EMFTest = "Endpoint Working..." };
+
+                return _utility.SuccessResult(new { EMFTest = new { Success = true } });
+            }
+            catch (Exception ex)
+            {
+                return _utility.ExceptionReturnResult(ex);
+            }
+        }
+        #endregion
+
+        #region // MISC //
+        public DataModel.Response.ReturnResult ProTeamList()
+        {
+            var output = new List<ProTeamListItem>();
+            
+            try
+            {
+                var proTeams = _db.ProTeam
+                    .OrderBy(q => q.NickName)
+                    .Select(i => new ProTeamListItem()
+                    {
+                        Value = i.ID,
+                        Label = i.NickName,
+                    })
+                    .AsNoTracking()
+                    .ToList();
+                
+                foreach (var item in proTeams)
+                {
+                    output.Add(item);
+                }
+
+                return _utility.SuccessResult(proTeams);
+            }
+            catch (Exception ex)
+            {
+                return _utility.ExceptionReturnResult(ex);
+            }
+        }
+        #endregion
+
+        #region // Method Template //
+        /// <summary>
+        ///              TEMPLATE FOR NEW METHODS
+        /// </summary>
+        /// <param name="vVariable"></param>
+        /// <returns></returns>
+        public DataModel.Response.ReturnResult TemplateMethod(int vVariable)
+        {
+            var result = new DataModel.Response.ReturnResult();
+            try
+            {
+                // Code Here
+
+                return _utility.SuccessResult(new { EMFTest = new { Success = true } });
+            }
+            catch (Exception ex)
+            {
+                return _utility.ExceptionReturnResult(ex);
+            }
+        }
+        #endregion
     }
 }

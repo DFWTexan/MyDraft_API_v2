@@ -66,7 +66,6 @@ namespace DbData
         public DbSet<Database.Model.vw_PlayerListItem> vw_PlayerListItem { get; set; }
         #endregion
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Database.Model.Player>().ToTable("Players");
@@ -91,10 +90,13 @@ namespace DbData
                 .HasKey(k => new { k.PlayerID, k.PositionID, k.TeamID });
 
             modelBuilder.Entity<Database.Model.UserDraftSelections>()
-                .HasKey(k => new { k.LeagueID, k.PlayerID, k.TeamID, k.Round });
+                .HasKey(k => new { k.LeagueID, k.TeamID, k.Round });
 
             modelBuilder.Entity<Database.Model.PlayerPosition>()
                 .HasKey(k => new { k.PlayerID, k.PositionID });
+
+            modelBuilder.Entity<Database.Model.UserDraftStatus>()
+                .HasKey(k => new { k.UniverseID, k.LeagueID });
             #endregion
 
             #region Views
@@ -125,6 +127,10 @@ namespace DbData
             modelBuilder.Entity<Database.Model.ADP>()
                 .Property(p => p.PPRValue)
                 .HasColumnType("decimal(5,2)");
+
+            //modelBuilder.Entity<Database.Model.UserDraftSelections>()
+            //    .Property(p => p.TiemStamp)
+            //    .HasDefaultValueSql("getdate()");
             #endregion
         }
 

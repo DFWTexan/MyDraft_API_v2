@@ -4,6 +4,7 @@ using DbData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MyDraftAPI_v2.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    partial class AppDataContextModelSnapshot : ModelSnapshot
+    [Migration("20231121010250_20231120B")]
+    partial class _20231120B
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -396,7 +399,7 @@ namespace MyDraftAPI_v2.Migrations
                     b.Property<int?>("Round")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DraftedTimeStamp")
+                    b.Property<DateTime?>("CreateDate")
                         .HasColumnType("datetime2");
 
                     b.Property<bool?>("IsKeeper")
@@ -409,7 +412,6 @@ namespace MyDraftAPI_v2.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("PlayerID")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int?>("PositionPick")
@@ -428,20 +430,17 @@ namespace MyDraftAPI_v2.Migrations
 
             modelBuilder.Entity("Database.Model.UserDraftStatus", b =>
                 {
-                    b.Property<int>("UniverseID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LeagueID")
-                        .HasColumnType("int");
-
                     b.Property<int>("CurrentPick")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CurrentRound")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsComplete")
                         .HasColumnType("bit");
+
+                    b.Property<int>("LeagueID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UniverseID")
+                        .HasColumnType("int");
 
                     b.Property<string>("fanTeamName")
                         .HasMaxLength(50)
@@ -449,8 +448,6 @@ namespace MyDraftAPI_v2.Migrations
 
                     b.Property<int>("onTheClock")
                         .HasColumnType("int");
-
-                    b.HasKey("UniverseID", "LeagueID");
 
                     b.HasIndex("LeagueID");
 

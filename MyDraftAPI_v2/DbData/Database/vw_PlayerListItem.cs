@@ -9,9 +9,13 @@ namespace Database.Model
         public string? LastName { get; set;}
         public string? PhotoURL { get; set; }
         public string? Position { get; set; }
+        public string? TeamAbbr { get; set; }
         [Column(TypeName = "decimal(3,2)")]
         public decimal PointsVal { get; set; }
         [Column(TypeName = "decimal(3,2)")]
-        public decimal PPRVal { get; set; }
+        public decimal AAVPoints { get; set; }
+        [Column(TypeName = "decimal(3,2)")]
+        public decimal ADPPoints { get; set; }
+        public bool IsDrafted { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+//using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Database.Model
 {
@@ -12,14 +12,15 @@ namespace Database.Model
         [Required]
         public int TeamID { get; set; }
         [Required]
-        public int? Round { get; set; }
         public int? PlayerID { get; set; }
-        public DateTime? CreateDate { get; set; }
-        public bool? IsKeeper { get; set; }
-        public int? PickInRound { get; set; }
+        public int? Round { get; set; }
         public int? OverallPick { get; set; }
+        public int? PickInRound { get; set; }
         public int? PositionPick { get; set; }
         public int? PositionRound { get; set; }
+        //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime? DraftedTimeStamp { get; set; }
+        public bool? IsKeeper { get; set; }
 
         //#region Foreign Keys
         //[ForeignKey("LeagueID")]

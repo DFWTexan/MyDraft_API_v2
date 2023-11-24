@@ -4,6 +4,7 @@ using DbData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MyDraftAPI_v2.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    partial class AppDataContextModelSnapshot : ModelSnapshot
+    [Migration("20231121150800_20231121A")]
+    partial class _20231121A
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -396,9 +399,6 @@ namespace MyDraftAPI_v2.Migrations
                     b.Property<int?>("Round")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DraftedTimeStamp")
-                        .HasColumnType("datetime2");
-
                     b.Property<bool?>("IsKeeper")
                         .HasColumnType("bit");
 
@@ -418,6 +418,9 @@ namespace MyDraftAPI_v2.Migrations
                     b.Property<int?>("PositionRound")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("TiemStamp")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("UniverseID")
                         .HasColumnType("int");
 
@@ -435,9 +438,6 @@ namespace MyDraftAPI_v2.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("CurrentPick")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CurrentRound")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsComplete")

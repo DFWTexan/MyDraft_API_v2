@@ -2,9 +2,10 @@
 using DbData;
 using Microsoft.EntityFrameworkCore;
 using MyDraftAPI_v2.FantasyDataModel;
-using MyDraftAPI_v2.FantasyDataModel.Draft;
+//using MyDraftAPI_v2.FantasyDataModel.Draft;
 using MyDraftAPI_v2.Managers;
 using MyDraftLib.Utilities;
+using ViewModel;
 #pragma warning disable 
 
 namespace MyDraftAPI_v2
@@ -20,9 +21,9 @@ namespace MyDraftAPI_v2
 
         private FanDataModel.FantasyLeague? _league;
         private ViewModel.ActiveLeague? _activeMyDraftLeague;
-        private List<ViewModel.DraftPick>? _draftPicks;
+        private List<MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick>? _draftPicks;
         private ViewModel.DraftStatus? _draftStatus;
-        private IDictionary<int, ViewModel.DraftPick> _draftPickMap;
+        private IDictionary<int, MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick> _draftPickMap;
         private int _myDraftFanTeamID = 1;
         private Dictionary<string, ViewModel.DraftPick> _rosterDict = new Dictionary<string, ViewModel.DraftPick>() {
             {"QB", new ViewModel.DraftPick() },
@@ -61,13 +62,13 @@ namespace MyDraftAPI_v2
             get { return _league; }
             set { _league = value; }
         }
-        public List<ViewModel.DraftPick>? draftPicks
+        public List<MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick>? draftPicks
         {
             get
             {
                 return _draftPicks;
             }
-            set { _draftPicks = (List<ViewModel.DraftPick>?)value; }
+            set { _draftPicks = (List<MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick>?)value; }
         }
         public ViewModel.DraftStatus? draftStatus
         {
@@ -81,7 +82,7 @@ namespace MyDraftAPI_v2
             }
             //set => _league.teams = (List<ViewModel.UserLeageTeamItem>)value;
         }
-        public Dictionary<DataModel.Enums.ProTeams, Dictionary<DataModel.Enums.Position, List<ViewModel.DepthChartPlayer>>>teamDepthChart
+        public Dictionary<DataModel.Enums.ProTeams, Dictionary<DataModel.Enums.Position, List<ViewModel.DepthChartPlayer>>> teamDepthChart
         {
             get { return _teamDepthChart; }
             set { _teamDepthChart = value; }
@@ -97,8 +98,8 @@ namespace MyDraftAPI_v2
             _dbOptionsBuilder = new DbContextOptionsBuilder<AppDataContext>();
             _dbOptionsBuilder.UseSqlServer(_connectionString);
 
-            _draftPicks = new List<ViewModel.DraftPick>();
-            _draftPickMap = new Dictionary<int, ViewModel.DraftPick>();
+            _draftPicks = new List<MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick>();
+            _draftPickMap = new Dictionary<int, MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick>();
         }
 
         public void InitializeLeagueData_v2()
@@ -121,40 +122,36 @@ namespace MyDraftAPI_v2
                     #region DraftStatus  
                     var result = new ViewModel.DraftStatus();
 
-                    var draftStatus = db.UserDraftStatus
+                    _draftStatus = db.UserDraftStatus
                         .Where(x => x.LeagueID == _activeMyDraftLeague.ID)
                         .Select(i => new ViewModel.DraftStatus()
                         {
                             LeagueID = i.LeagueID,
                             CurrentPick = i.CurrentPick,
+                            CurrentRound = i.CurrentRound,
+                            fanTeamName = i.fanTeamName,
+                            onTheClock = i.onTheClock,
                             IsComplete = i.IsComplete,
                         })
                         .AsNoTracking()
                         .FirstOrDefault();
 
-                    if (draftStatus != null)
+                    if (_draftStatus != null)
                     {
-                        _draftStatus = new ViewModel.DraftStatus()
-                        {
-                            LeagueID = draftStatus.LeagueID,
-                            CurrentPick = draftStatus.CurrentPick,
-                            IsComplete = draftStatus.IsComplete
-                        };
-
                         var teamInfo = db.UserLeagueTeam
-                                        .Where(q => q.ID == draftStatus.CurrentPick)
+                                        .Where(q => q.ID == draftStatus.onTheClock)
                                         .AsNoTracking()
                                         .FirstOrDefault();
 
                         if (teamInfo != null)
-                            _draftStatus.fanTeam = teamInfo.Name;
+                            _draftStatus.fanTeamName = teamInfo.Name;
                     }
                     #endregion
 
                     #region DraftPicks  
                     _draftPicks = db.UserDraftSelection
                             .Where(x => x.LeagueID == _activeMyDraftLeague.ID)
-                            .Select(i => new ViewModel.DraftPick()
+                            .Select(i => new MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick()
                             {
                                 leagueID = i.LeagueID,
                                 overallPick = i.OverallPick,
@@ -169,9 +166,9 @@ namespace MyDraftAPI_v2
                     #endregion
 
                     #region DraftPickMap
-                    _draftPickMap = new Dictionary<int, ViewModel.DraftPick>(_draftPicks.Count);
+                    _draftPickMap = new Dictionary<int, MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick>(_draftPicks.Count);
 
-                    foreach (ViewModel.DraftPick draftPick in _draftPicks)
+                    foreach (MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick draftPick in _draftPicks)
                     {
                         _draftPickMap.Add((int)draftPick.overallPick, draftPick);
                     }
@@ -245,10 +242,10 @@ namespace MyDraftAPI_v2
         }
 
         #region // Data Helper //
-        public IList<ViewModel.DraftPick> draftPicksForMyTeam()
+        public IList<MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick> draftPicksForMyTeam()
         {
-            IList<ViewModel.DraftPick> draftPicks = new List<ViewModel.DraftPick>();
-            foreach (ViewModel.DraftPick draftPick in _draftPicks)
+            IList<MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick> draftPicks = new List<MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick>();
+            foreach (MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick draftPick in _draftPicks)
             {
                 if (draftPick.teamID == _myDraftFanTeamID)
                 {
@@ -260,23 +257,35 @@ namespace MyDraftAPI_v2
         public IList<ViewModel.DraftPick> draftPicksForTeam(int fanTeamID)
         {
             IList<ViewModel.DraftPick> draftPicks = new List<ViewModel.DraftPick>();
-            foreach (ViewModel.DraftPick draftPick in _draftPicks)
+
+            using (var db = new AppDataContext(_dbOptionsBuilder.Options))
             {
-                if (draftPick.teamID == fanTeamID)
+                foreach (MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick draftPick in _draftPicks)
                 {
-                    if (draftPick.playerID > 0)
+                    if (draftPick.teamID == fanTeamID)
                     {
-                        using (var db = new AppDataContext(_dbOptionsBuilder.Options))
+                        if (draftPick.playerID > 0)
                         {
                             draftPick.player = draftPick.playerID != 0 ? db.Player
                                                                         .Where(q => q.ID == draftPick.playerID)
                                                                         .FirstOrDefault() : null;
                         }
-                    }
 
-                    draftPicks.Add(draftPick);
+                        ViewModel.DraftPick viewModelDraftPick = new ViewModel.DraftPick
+                        {
+                            round = draftPick.round,
+                            pickInRound = draftPick.pickInRound,
+                            overallPick = draftPick.overallPick,
+                            teamID = draftPick.teamID,
+                            playerID = draftPick.playerID,
+                            player = draftPick.player 
+                        };
+
+                        draftPicks.Add(viewModelDraftPick);
+                    }
                 }
             }
+
             return draftPicks;
         }
         public Dictionary<string, ViewModel.DraftPick> draftPicksForTeam_v2(int vFanTeamID)
@@ -308,7 +317,6 @@ namespace MyDraftAPI_v2
             }
             return draftPicks;
         }
-        // Helper method to get players for a specific position and team
         private List<ViewModel.DepthChartPlayer> GetPlayersForPositionAndTeam(int limitTake, int teamId, DataModel.Enums.Position position)
         {
             using (var db = new AppDataContext(_dbOptionsBuilder.Options))
@@ -319,6 +327,7 @@ namespace MyDraftAPI_v2
                     .Where(player => player.TeamID == teamId && player.PositionID == (int)position)
                     .Select(i => new ViewModel.DepthChartPlayer
                     {
+                        PlayerID = i.PlayerID,
                         Name = i.Player.LastName,
                         Position = i.Player.Position,
                         Team = i.ProTeam.Abbr,
@@ -331,41 +340,69 @@ namespace MyDraftAPI_v2
         #endregion
 
         #region //  Draft Pick Manipulation  //
-        public ViewModel.DraftPick onTheClockDraftPick()
+        public MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick onTheClockDraftPick()
         {
             return draftPickForOverall(_draftStatus.CurrentPick);
         }
-        public static async Task<Boolean> saveDraftPick(ViewModel.DraftPick draftPick)
+        public async Task<Boolean> saveDraftPick(MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick draftPick)
         {
-            double timestamp = TNUtility.DateTimeToUnixTimestamp(DateTime.Now);
-            await Task.Delay(2000);
-            return true;
             //return await DBAdapter.executeUpdate("INSERT OR REPLACE INTO " + TABLE_USER_DRAFT_RESULTS +
             //        " (player_id, league_id, team_id, overall, round, pick_in_round, auction_value, is_keeper, timestamp) " +
             //        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
             //        draftPick.playerID, draftPick.leagueID, draftPick.teamID, draftPick.overall, draftPick.round, draftPick.pickInRound, draftPick.auctionValue, draftPick.isKeeper ? 1 : 0, timestamp);
+            try
+            {
+                using (var db = new AppDataContext(_dbOptionsBuilder.Options))
+                {
+                    var userDraftSelecton = db.UserDraftSelection
+                        .Where(x => x.LeagueID == draftPick.leagueID && x.OverallPick == draftPick.overallPick)
+                        .FirstOrDefault();
+
+                    if (userDraftSelecton != null)
+                    {
+                        userDraftSelecton.PlayerID = draftPick.playerID;
+                        userDraftSelecton.LeagueID = draftPick.leagueID;
+                        userDraftSelecton.TeamID = (int)draftPick.teamID;
+                        userDraftSelecton.OverallPick = draftPick.overallPick;
+                        userDraftSelecton.Round = draftPick.round;
+                        userDraftSelecton.PickInRound = draftPick.pickInRound;
+                        userDraftSelecton.IsKeeper = draftPick.isKeeper;
+                        userDraftSelecton.DraftedTimeStamp = DateTime.Now;
+
+                        db.Update(userDraftSelecton);
+                        await db.SaveChangesAsync();
+
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
-        public ViewModel.DraftPick? nextAvailableDraftPickAfterOverall(int overall)
+        public MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick? nextAvailableDraftPickAfterOverall(int overall)
         {
             int totalPicks = _draftPicks.Count;
             if (totalPicks <= overall)
-            {
                 return null;
-            }
+
 
             // Iterate over all draft picks after the overall pick. Stop when an empty spot (playerID == nil) is found.
             int startIndex = overall >= 0 ? overall : 0; // Start at 0 or greater
             for (int i = startIndex; i < totalPicks; i++)
             {
-                ViewModel.DraftPick draftPick = _draftPicks[i];
-                if (draftPick.playerID == null)
-                {
+                MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick draftPick = _draftPicks[i];
+                if (draftPick.player == null)
                     return draftPick;
-                }
             }
             return null;
         }
-        public ViewModel.DraftPick draftPickForOverall(int overall)
+        public MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick draftPickForOverall(int overall)
         {
 #pragma warning disable CS8603 // Possible null reference return.
             return _draftPickMap.ContainsKey(overall) ? _draftPickMap[overall] : null;
@@ -380,21 +417,19 @@ namespace MyDraftAPI_v2
             else
             {
                 if (_draftStatus.CurrentPick == overall)
-                {
                     return;
-                }
             }
 
-            ViewModel.DraftPick otcPick = draftPickForOverall(overall);
+            MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick otcPick = draftPickForOverall(overall);
             if (otcPick != null)
             {
                 _draftStatus.CurrentPick = (int)otcPick.overallPick;
-                await saveDraftStatus(_draftStatus);
+                saveDraftStatus(_draftStatus);
             }
         }
         public async Task changeDraftPickToTeam(int overall, FantasyTeam team)
         {
-            ViewModel.DraftPick draftPick = draftPickForOverall(overall);
+            MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick draftPick = draftPickForOverall(overall);
             draftPick.teamID = team.identifier;
             await saveDraftPick(draftPick);
         }
@@ -441,21 +476,19 @@ namespace MyDraftAPI_v2
         //    }
         //}
         // * */
-        
-        public async Task updateOnTheClock()
+        public void updateOnTheClock(MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick vOtcPick)
         {
-            ViewModel.DraftPick otcPick = onTheClockDraftPick();
-            if (otcPick != null && otcPick.playerID == null)
-
+            MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick otcPick = onTheClockDraftPick();
+            if (otcPick != null && otcPick.playerID == 0)
                 return;
 
             int otcOverall = otcPick != null ? (int)otcPick.overallPick : 0;
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-            ViewModel.DraftPick nextOTC = nextAvailableDraftPickAfterOverall(otcOverall);
+            MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick nextOTC = nextAvailableDraftPickAfterOverall(otcOverall);
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             if (nextOTC == null)
             {
-                await setDraftComplete();
+                setDraftComplete();
                 return;
             }
 
@@ -467,37 +500,104 @@ namespace MyDraftAPI_v2
                 // Update the OTC pick. If none can be found then declare the draft complete.
                 if (otcPick != null)
                 {
-                    _draftStatus = new ViewModel.DraftStatus(_league.identifier, _draftStatus.CurrentPick, 0, false);
-                    await saveDraftStatus(_draftStatus);
+                    _draftStatus = new ViewModel.DraftStatus(_activeMyDraftLeague.UniverseID, _activeMyDraftLeague.ID, _draftStatus.CurrentPick, false);
+                    saveDraftStatus(_draftStatus, otcPick);
                 }
                 else
                 {
-                    await setDraftComplete();
+                    setDraftComplete();
                 }
             }
         }
-        private async Task setDraftComplete()
+        private void setDraftComplete()
         {
-            _draftStatus = new ViewModel.DraftStatus(_league.identifier, _league.rounds * _league.numTeams + 1, 0, true); // Set on the clock to 1 pick beyond the end of the draft
-            await saveDraftStatus(_draftStatus);
+            _draftStatus = new ViewModel.DraftStatus(_activeMyDraftLeague.UniverseID, _activeMyDraftLeague.ID, _league.rounds * _league.numTeams + 1, true); // Set on the clock to 1 pick beyond the end of the draft
+            saveDraftStatus(_draftStatus);
         }
-        #endregion //  Draft Pick Manipulation  //
-
-        public async Task saveDraftStatus(ViewModel.DraftStatus vDraftStatus)
+        public void saveDraftStatus(ViewModel.DraftStatus vDraftStatus, MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick vOtcPick = null)
         {
             using (var db = new AppDataContext(_dbOptionsBuilder.Options))
             {
-                try
+                var draftStatus = db.UserDraftStatus
+                    .Where(x => x.UniverseID == vDraftStatus.UniverseID && x.LeagueID == vDraftStatus.LeagueID)
+                    .FirstOrDefault();
+
+                if (draftStatus != null)
                 {
-                    db.Add(vDraftStatus);
-                    await db.SaveChangesAsync();
+                    draftStatus.CurrentPick = vDraftStatus.CurrentPick;
+                    draftStatus.CurrentRound = (int)vOtcPick.round;
+                    draftStatus.IsComplete = vDraftStatus.IsComplete;
+                    draftStatus.onTheClock = (int)(vOtcPick != null ? vOtcPick.teamID : null);
+                    draftStatus.fanTeamName = vOtcPick != null ? db.UserLeagueTeam
+                                                                    .Where(q => q.ID == vOtcPick.teamID)
+                                                                    .Select(i => i.Name)
+                                                                    .FirstOrDefault() : null;
+                    
+                    _draftStatus = new ViewModel.DraftStatus()
+                    {
+                        UniverseID = draftStatus.UniverseID,
+                        LeagueID = draftStatus.LeagueID,
+                        CurrentPick = draftStatus.CurrentPick,
+                        CurrentRound = draftStatus.CurrentRound,
+                        fanTeamName = draftStatus.fanTeamName,
+                        onTheClock = draftStatus.onTheClock,
+                        IsComplete = draftStatus.IsComplete
+                    };
+                    
+                    db.Update(draftStatus);
+                    db.SaveChangesAsync();
                 }
-                catch (Exception)
+                else
                 {
-                    throw;
+                    draftStatus = new Database.Model.UserDraftStatus()
+                    {
+                        LeagueID = vDraftStatus.LeagueID,
+                        CurrentPick = vDraftStatus.CurrentPick,
+                        IsComplete = vDraftStatus.IsComplete
+                    };
+
+                    db.Add(draftStatus);
+                    db.SaveChangesAsync();
                 }
             }
         }
+        #endregion //  Draft Pick Manipulation  //
+
+        #region //  Draft Event  //
+        public void executeDraftPick(int overall, int playerID)
+        {
+            MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick draftPick = draftPickForOverall(overall);
+            if (draftPick == null)
+                return;
+            try
+            {
+                MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPickMemento draftPickMemento = draftPick.getState();
+                MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftMemento draftMemento = new MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftMemento();
+
+                ////TODO:  NOT SURE IF THIS IS NEEDED
+                //draftMemento.leagueID = _league.identifier;
+                //draftMemento.onTheClock = _draftStatus.onTheClock;
+                //draftMemento.MyDraftPickMemento = draftPickMemento;
+                ////await DraftManager.pushDraftMementoToUndoStack(draftMemento);
+                //await DraftManager.clearDraftMementoRedoStack(_league.identifier);
+
+                draftPick.playerID = playerID;
+                saveDraftPick(draftPick);
+
+                MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick otcPick = onTheClockDraftPick();
+                if (otcPick.playerID != 0)
+                {
+                    updateOnTheClock(otcPick);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+        }
+        #endregion
+
         private void StartTimer()
         {
             //_timer.Change(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));

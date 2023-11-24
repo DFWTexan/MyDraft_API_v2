@@ -3,23 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ViewModel
 {
-    public class PlayerInfo
+    public class PlayerInfo : Player
     {
-        public int ID { get; set; }
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
-        public string? TeamAbbr { get; set; }
-        public int? ProTeamID { get; set; }
-        public DateTime? BirthDate { get; set; }
-        public int? Experience { get; set; }
-        public string? Position { get; set; }
-        public string? PositionGroup { get; set; }
-        public int? Weight { get; set; }
-        public string? Height { get; set; }
-        public string? College { get; set; }
-        public bool? IsRookie { get; set; }
-        public string? PhotoUrl { get; set; }
-        public string? Status { get; set; }
+        public bool IsDrafted { get; set; }
+        public string? ProTeamName { get; set; }
         public List<DepthChartItem> DepthChart { get; set; }
         public List<PlayerNewsItem> PlayerNews { get; set; }
 

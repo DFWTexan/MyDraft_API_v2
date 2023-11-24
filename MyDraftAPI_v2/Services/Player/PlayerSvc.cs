@@ -34,10 +34,15 @@ namespace PlayerService
                 //var players = from q in _db.vw_PlayerListItem.AsSplitQuery() select q;
                 var players = _db.vw_PlayerListItem.AsSplitQuery();
 
-                // FilterSORT: Point Value
+                // FilterSORT: Point, AAV or ADP Value
                 if (vInput.pointValue != null)
                 {
-                    players = players.OrderByDescending(q => q.PointsVal);
+                    if(vInput.pointValue == "[POINTS]")
+                        players = players.OrderByDescending(q => q.PointsVal);
+                    else if(vInput.pointValue == "[ADP]")
+                        players = players.OrderByDescending(q => q.ADPPoints);
+                    else if (vInput.pointValue == "[AAV]")
+                        players = players.OrderByDescending(q => q.AAVPoints);
                 }
 
                 // Filter: Position Value
@@ -49,7 +54,14 @@ namespace PlayerService
                 // Filter: Draft Status Value
                 if (vInput.draftStatus != null)
                 {
-                    players = players.Where(q => q.Position == vInput.positionValue);
+                    if(vInput.draftStatus == "[DRAFTED]")
+                    {
+                        players = players.Where(q => q.IsDrafted == true);
+                    }
+                    else if(vInput.draftStatus == "[AVAILABLE]")
+                    {
+                        players = players.Where(q => q.IsDrafted == false);
+                    }
                 }
 
                 result.ObjData = players;
@@ -64,12 +76,23 @@ namespace PlayerService
             return result;
         }
 
+        private bool isPlayerDrafted(int vPlayerID)
+        {
+            bool isDrafted = _db.UserDraftSelection
+                            .AsNoTracking()
+                            .Any(x => x.PlayerID == vPlayerID);
+
+            return isDrafted;
+        }
         public DataModel.Response.ReturnResult GetPlayerByID(int id)
         {
             var result = new DataModel.Response.ReturnResult();
             try
             {
-                var player = _db.Player.Where(x => x.ID == id).SingleOrDefault();
+                var player = _db.Player
+                    .Include(x => x.ProTeam)
+                    .Where(x => x.ID == id)
+                    .SingleOrDefault();
                 
                 var playerInfo = new ViewModel.PlayerInfo
                 {
@@ -87,7 +110,9 @@ namespace PlayerService
                     College = player.College,
                     IsRookie = player.IsRookie,
                     PhotoUrl = player.PhotoUrl,
-                    Status = player.Status
+                    Status = player.Status,
+                    IsDrafted = isPlayerDrafted(player.ID),
+                    ProTeamName = player.ProTeam.NickName != null ? player.ProTeam.City + " " + player.ProTeam.NickName : "N/A"
                 };  
                 
                 var position = _db.Positions.Where(x => x.Abbr == player.Position).SingleOrDefault();

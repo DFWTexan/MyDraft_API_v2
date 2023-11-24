@@ -11,6 +11,7 @@ namespace MyDraftAPI_v2.Controllers
         private readonly AppDataContext _db;
         private readonly IConfiguration _config;
         private readonly ILogger<PlayerController> _logger;
+        private UtilityService.Utility _utility;
 
         private DraftEngine_v2 _draftEngine;
 
@@ -20,6 +21,7 @@ namespace MyDraftAPI_v2.Controllers
             _config = config;
             _logger = logger;
             _draftEngine = draftEngine;
+            _utility = new UtilityService.Utility(_db, _config);
         }
 
         /// <summary>
@@ -27,11 +29,11 @@ namespace MyDraftAPI_v2.Controllers
         /// Get Filtered Players
         /// 
         [HttpPut]
-        public ActionResult GetPlayers([FromBody] ViewModel.FilterSortPlayer vInput)
+        public async Task<ActionResult> GetPlayers([FromBody] ViewModel.FilterSortPlayer vInput)
         {
-            var service = new PlayerService.PlayerSvc(_db, _config, null, null, _draftEngine);
+            var service = new PlayerService.PlayerSvc(_db, _config, null, _utility, _draftEngine);
 
-            var result = service.GetPlayers(vInput);
+            var result = await Task.Run(() => service.GetPlayers(vInput));
 
             return StatusCode(result.StatusCode, result.ObjData);
         }
@@ -41,11 +43,11 @@ namespace MyDraftAPI_v2.Controllers
         /// Get Player by ID
         /// 
         [HttpGet("{id}")]
-        public ActionResult GetPlayerByID(int id)
+        public async Task<ActionResult> GetPlayerByID(int id)
         {
-            var service = new PlayerService.PlayerSvc(_db, _config, null, null, _draftEngine);
+            var service = new PlayerService.PlayerSvc(_db, _config, null, _utility, _draftEngine);
 
-            var result =  service.GetPlayerByID(id);
+            var result = await Task.Run(() => service.GetPlayerByID(id));
 
             return StatusCode(result.StatusCode, result.ObjData);
         }

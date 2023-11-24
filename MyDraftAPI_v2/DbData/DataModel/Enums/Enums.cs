@@ -4,9 +4,31 @@
     {
         QB = 1,
         RB = 2,
-        WR = 3,
-        TE = 4,
+        WR = 4,
+        TE = 3,
         PK = 5,
+    }
+    public enum PlayerSortValue
+    {
+        ADP = 1,
+        AAV = 2,
+        DVBD = 3,
+        DVBD_Rank = 4,
+        Custom = 5,
+        Stats = 6,
+        Ratings = 7,
+    }
+    public enum PlayerSortDirection
+    {
+        Ascending = 1,
+        Descending = 2,
+    }
+    public enum PlayerDraftStatus
+    {
+        Undrafted = 1,
+        Drafted = 2,
+        WatchList = 3,
+        Removed = 4,
     }
     public enum ProTeams
     {

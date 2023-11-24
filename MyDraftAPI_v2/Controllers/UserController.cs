@@ -11,6 +11,7 @@ namespace MyDraftAPI_v2.Controllers
         private readonly AppDataContext _db;
         private readonly IConfiguration _config;
         private readonly ILogger<DraftController> _logger;
+        private UtilityService.Utility _utility;
 
         private DraftEngine_v2 _draftEngine;
 
@@ -20,6 +21,7 @@ namespace MyDraftAPI_v2.Controllers
             _config = config;
             _logger = logger;
             _draftEngine = draftEngine;
+            _utility = new UtilityService.Utility(_db, _config);
         }
 
         /// <summary>
@@ -27,13 +29,21 @@ namespace MyDraftAPI_v2.Controllers
         /// Login User
         ///
         [HttpPut]
-        public ActionResult Login([FromBody] ViewModel.UserInfo vInput)
+        public async Task<ActionResult> Login([FromBody] ViewModel.UserInfo vInput)
         {
-            var service = new UserService.UserSvc(_db, _config, null, null, _draftEngine);
+            try
+            {
+                var service = new UserService.UserSvc(_db, _config, null, _utility, _draftEngine);
 
-            var result = service.Login(vInput);
+                var result = await Task.Run(() => service.Login_v2(vInput));
 
-            return StatusCode(result.StatusCode, result.ObjData);
+                return StatusCode(result.StatusCode, result.ObjData);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new List<string>() { "Server Error" });
+            }
+            
         }
     }
 }
