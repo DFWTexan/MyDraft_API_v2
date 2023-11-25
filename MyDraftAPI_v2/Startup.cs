@@ -1,8 +1,11 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using MyDraftAPI_v2.Middleware;
+﻿using Microsoft.EntityFrameworkCore;
 using DbData;
+//-- JWT --//
+using JWTAuthentication.NET6._0.Auth;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using Microsoft.OpenApi.Models;
 
 namespace MyDraftAPI_v2
@@ -10,7 +13,7 @@ namespace MyDraftAPI_v2
     public class Startup
     {
         private static string[] settingsFile = { "appsettings.json" };
-
+        
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -32,22 +35,28 @@ namespace MyDraftAPI_v2
 
             services.AddHostedService<PostStartup>();
 
-            //services.AddSwaggerGen(c =>
-            //{
-            //    c.SwaggerDoc("{SWAGGER_VERSION}", new OpenApiInfo { Title = "{PROJECT_TITLE}", Version = "{SWAGGER_VERSION}" });
-            //});
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("{SWAGGER_VERSION}", new OpenApiInfo { Title = "{PROJECT_TITLE}", Version = "{SWAGGER_VERSION}" });
+            });
 
             //services.AddAuthorization();
+
+            //-- For Entity Framework
             services.AddDbContext<AppDataContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
 
             });
 
+            //-- For Identity
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppDataContext>()
+                .AddDefaultTokenProviders();
+
             services.Configure<CorsConfiguration>(Configuration.GetSection("corsConfiguration"));
             var corsPoly = Configuration.GetValue<string>("corsConfiguration:corsPoly").ToString().Split('|');
-            //var cors = Configuration["CORS"].ToString().Split('|');
-
+           
             services.AddCors(options =>
             {
                 options.AddPolicy("MyPolicy",
@@ -60,23 +69,66 @@ namespace MyDraftAPI_v2
                         .AllowCredentials();
                     });
             });
+            #region JWT
+            //-- Adding Authentication
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
 
+            //-- Adding Jwt Bearer
+            .AddJwtBearer(options =>
+             {
+                 options.SaveToken = true;
+                 options.RequireHttpsMetadata = false;
+                 options.TokenValidationParameters = new TokenValidationParameters()
+                 {
+                     ValidateIssuer = true,
+                     ValidateAudience = true,
+                     ValidAudience = Configuration["JWT:ValidAudience"],
+                     ValidIssuer = Configuration["JWT:ValidIssuer"],
+                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
+                 };
+
+                 //options.TokenValidationParameters = new TokenValidationParameters
+                 //{
+                 //    ValidIssuer = Configuration["Jwt:Issuer"],
+                 //    ValidAudience = Configuration["Jwt:Audience"],
+                 //    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
+                 //    ValidateIssuer = true,
+                 //    ValidateAudience = true,
+                 //    ValidateLifetime = false,
+                 //    ValidateIssuerSigningKey = true
+                 //};
+             });
+            #endregion
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy => policy.RequireClaim("Admin"));
+                options.AddPolicy("User", policy => policy.RequireClaim("User"));
+            });
             services.AddControllers();
+
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime appLifetime)
         {
 
-            //if (env.IsDevelopment())
-            //{
-            //    app.UseSwagger();
-            //    app.UseSwaggerUI();
-            //}
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
 
             //Our Custom middleware, which will used for handling the http requests and validation etc
             //app.UseCustomMiddleware(Configuration);
@@ -87,7 +139,7 @@ namespace MyDraftAPI_v2
 
             app.UseRouting();
 
-            //app.UseAuthentication();
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

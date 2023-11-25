@@ -1,20 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http;
-using System.Linq;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 #pragma warning disable 
 
 namespace DbData
 {
-    public class AppDataContext : DbContext
+    public class AppDataContext : IdentityDbContext<IdentityUser>
     {
         private readonly int _fanUniverse_ID;
 
         private readonly IHttpContextAccessor _httpContextAccessor;
-
-        //public AppDataContext()
-        //{
-        //}
-
+              
         public AppDataContext(DbContextOptions<AppDataContext> options) : base(options) 
         {
             //if (httpContextAccessor != null && httpContextAccessor.HttpContext != null)
@@ -43,7 +39,9 @@ namespace DbData
             //    _fanUniverse_ID = 101;
             //}
         }
+
         #region TABLES
+        //public DbSet<IdentityUser> Users { get; set; }
         public DbSet<Database.Model.Player> Player { get; set; }
         public DbSet<Database.Model.PlayerNews> PlayerNews { get; set; }
         public DbSet<Database.Model.Points> Points { get; set; }
@@ -60,6 +58,7 @@ namespace DbData
         public DbSet<Database.Model.DVDB> DVDB { get; set; }
         public DbSet<Database.Model.AAV> AAV { get; set; }
         public DbSet<Database.Model.ADP> ADP { get; set; }
+        public DbSet<Database.Model.MyDraftUser> MyDraftUser { get; set; }
         #endregion
 
         #region Views
@@ -68,6 +67,8 @@ namespace DbData
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Database.Model.Player>().ToTable("Players");
             modelBuilder.Entity<Database.Model.PlayerNews>().ToTable("PlayerNews");
             modelBuilder.Entity<Database.Model.Points>().ToTable("Points").HasNoKey();
@@ -84,8 +85,12 @@ namespace DbData
             modelBuilder.Entity<Database.Model.DVDB>().ToTable("DVDB").HasNoKey();
             modelBuilder.Entity<Database.Model.AAV>().ToTable("AAV").HasNoKey();
             modelBuilder.Entity<Database.Model.ADP>().ToTable("ADP").HasNoKey();
+            modelBuilder.Entity<Database.Model.MyDraftUser>().ToTable("MyDraftUser");
 
             #region Bridge Table Keys
+            //modelBuilder.Entity<IdentityUser<string>>()
+            //    .HasKey(l => new { l.Email, l.Id});
+
             modelBuilder.Entity<Database.Model.DepthChart>()
                 .HasKey(k => new { k.PlayerID, k.PositionID, k.TeamID });
 
@@ -97,6 +102,9 @@ namespace DbData
 
             modelBuilder.Entity<Database.Model.UserDraftStatus>()
                 .HasKey(k => new { k.UniverseID, k.LeagueID });
+
+            modelBuilder.Entity<Database.Model.MyDraftUser>()
+                .HasKey(k => new { k.UserUniqueID });
             #endregion
 
             #region Views

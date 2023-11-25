@@ -6,6 +6,9 @@ namespace Database.Model
     public partial class UserDraftSelections
     {
         [Required]
+        [MaxLength(450)]
+        public string? UserUniqueID { get; set; }
+        [Required]
         public int UniverseID { get; set; }
         [Required]
         public int LeagueID { get; set; }
