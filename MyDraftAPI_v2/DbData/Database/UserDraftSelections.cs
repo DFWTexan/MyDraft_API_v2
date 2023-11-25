@@ -1,15 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
-//using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Database.Model
 {
     public partial class UserDraftSelections
     {
-        [Required]
-        [MaxLength(450)]
-        public string? UserUniqueID { get; set; }
-        [Required]
-        public int UniverseID { get; set; }
+        //[Required]
+        //[MaxLength(450)]
+        //public string? UserUniqueID { get; set; }
+        //[Required]
+        //public int UniverseID { get; set; }
         [Required]
         public int LeagueID { get; set; }
         [Required]
@@ -25,13 +25,13 @@ namespace Database.Model
         public DateTime? DraftedTimeStamp { get; set; }
         public bool? IsKeeper { get; set; }
 
-        //#region Foreign Keys
-        //[ForeignKey("LeagueID")]
-        //public virtual UserLeague? League { get; set; }
+        #region Foreign Keys
+        [ForeignKey("LeagueID")]
+        public virtual UserLeague? League { get; set; }
         //[ForeignKey("TeamID")]
         //public virtual UserLeagueTeams? LeagueTeam { get; set; }
         //[ForeignKey("PlayerID")]
         //public virtual Player? Player { get; set; }
-        //#endregion
+        #endregion
     }
 }

@@ -28,12 +28,12 @@ namespace MyDraftAPI_v2.Controllers
         /// 
         /// Get Active League
         ///
-        [HttpGet]
-        public async Task<ActionResult> GetActiveLeague()
+        [HttpGet("{myDraftUserID}")]
+        public async Task<ActionResult> GetActiveLeague(int? myDraftUserID = 1)
         {
             var service = new LeagueService.LeagueSvc(_db, _config, null, _utility, _draftEngine);
 
-            var result = await Task.Run(() => service.GetActiveLeague());
+            var result = await Task.Run(() => service.GetActiveLeague(myDraftUserID));
 
             return StatusCode(result.StatusCode, result.ObjData);
         }

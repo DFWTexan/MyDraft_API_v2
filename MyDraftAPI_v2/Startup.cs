@@ -91,18 +91,7 @@ namespace MyDraftAPI_v2
                      ValidIssuer = Configuration["JWT:ValidIssuer"],
                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
                  };
-
-                 //options.TokenValidationParameters = new TokenValidationParameters
-                 //{
-                 //    ValidIssuer = Configuration["Jwt:Issuer"],
-                 //    ValidAudience = Configuration["Jwt:Audience"],
-                 //    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
-                 //    ValidateIssuer = true,
-                 //    ValidateAudience = true,
-                 //    ValidateLifetime = false,
-                 //    ValidateIssuerSigningKey = true
-                 //};
-             });
+            });
             #endregion
 
             services.AddAuthorization(options =>

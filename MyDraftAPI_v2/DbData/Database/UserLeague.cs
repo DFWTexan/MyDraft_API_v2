@@ -1,13 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Database.Model
 {
     public class UserLeague
     {
-        public int UniverseID { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ID { get; set; }
+        //public int UniverseID { get; set; }
         [MaxLength(450)]
         public string? UserUniqueID { get; set; }
-        public int ID { get; set; }
         [MaxLength(50)]
         public string? Name{ get; set; }
         [MaxLength(5)]
@@ -19,5 +22,7 @@ namespace Database.Model
         public int NumberOfTeams { get; set; }
         public int NumberOfRounds { get; set; }
         public DateTime LastActiveDate { get; set; }
+                   
+        public ICollection<UserLeagueTeams>? LeagueTeams { get; set; }
     }
 }
