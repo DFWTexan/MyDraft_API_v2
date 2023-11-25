@@ -1,4 +1,6 @@
-﻿using JWTAuthentication.NET6._0.Auth;
+﻿using Database.Model;
+using DbData;
+using JWTAuthentication.NET6._0.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -12,6 +14,7 @@ namespace JWTAuthentication.NET6._0.Controllers
     [ApiController]
     public class AuthenticateController : ControllerBase
     {
+        private readonly AppDataContext _db;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
@@ -19,11 +22,13 @@ namespace JWTAuthentication.NET6._0.Controllers
         public AuthenticateController(
             UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            AppDataContext db)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
+            _db = db;
         }
 
         [HttpPost]
@@ -75,12 +80,17 @@ namespace JWTAuthentication.NET6._0.Controllers
                 };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (!result.Succeeded)
-                {
-
-
                     return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
-                }
-                    
+                
+                var newUser = await _userManager.FindByNameAsync(model.Username);
+                MyDraftUser myDraftUser = new()
+                {
+                    UserUniqueID = newUser.Id,
+                    UserName = newUser.NormalizedUserName,
+                    UserEmail = newUser.NormalizedEmail,
+                };
+                _db.MyDraftUser.Add(myDraftUser);
+                _db.SaveChanges();
 
                 return Ok(new Response { Status = "Success", Message = "User created successfully!" });
             }

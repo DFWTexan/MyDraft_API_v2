@@ -11,5 +11,6 @@ namespace Database.Model
         public string? UserName { get; set; }
         [MaxLength(256)]
         public string? UserEmail { get; set; }
+        public DateTime? CreateDate { get; set; }
     }
 }

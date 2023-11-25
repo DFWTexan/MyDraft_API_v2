@@ -136,6 +136,10 @@ namespace DbData
                 .Property(p => p.PPRValue)
                 .HasColumnType("decimal(5,2)");
 
+            modelBuilder.Entity<Database.Model.MyDraftUser>()
+                .Property(p => p.CreateDate)
+                .HasDefaultValueSql("getdate()");
+
             //modelBuilder.Entity<Database.Model.UserDraftSelections>()
             //    .Property(p => p.TiemStamp)
             //    .HasDefaultValueSql("getdate()");
