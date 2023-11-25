@@ -41,7 +41,7 @@ namespace DbData
         }
 
         #region TABLES
-        public DbSet<IdentityUser> Users { get; set; }
+        //public DbSet<IdentityUser> Users { get; set; }
         public DbSet<Database.Model.Player> Player { get; set; }
         public DbSet<Database.Model.PlayerNews> PlayerNews { get; set; }
         public DbSet<Database.Model.Points> Points { get; set; }
@@ -58,6 +58,7 @@ namespace DbData
         public DbSet<Database.Model.DVDB> DVDB { get; set; }
         public DbSet<Database.Model.AAV> AAV { get; set; }
         public DbSet<Database.Model.ADP> ADP { get; set; }
+        public DbSet<Database.Model.MyDraftUser> MyDraftUser { get; set; }
         #endregion
 
         #region Views
@@ -84,10 +85,11 @@ namespace DbData
             modelBuilder.Entity<Database.Model.DVDB>().ToTable("DVDB").HasNoKey();
             modelBuilder.Entity<Database.Model.AAV>().ToTable("AAV").HasNoKey();
             modelBuilder.Entity<Database.Model.ADP>().ToTable("ADP").HasNoKey();
+            modelBuilder.Entity<Database.Model.MyDraftUser>().ToTable("MyDraftUser");
 
             #region Bridge Table Keys
-            modelBuilder.Entity<IdentityUser<string>>()
-                .HasKey(l => new { l.Email, l.Id});
+            //modelBuilder.Entity<IdentityUser<string>>()
+            //    .HasKey(l => new { l.Email, l.Id});
 
             modelBuilder.Entity<Database.Model.DepthChart>()
                 .HasKey(k => new { k.PlayerID, k.PositionID, k.TeamID });
@@ -100,6 +102,9 @@ namespace DbData
 
             modelBuilder.Entity<Database.Model.UserDraftStatus>()
                 .HasKey(k => new { k.UniverseID, k.LeagueID });
+
+            modelBuilder.Entity<Database.Model.MyDraftUser>()
+                .HasKey(k => new { k.UserUniqueID });
             #endregion
 
             #region Views

@@ -6,6 +6,8 @@ namespace Database.Model
     public class UserDraftStatus
     {
         public int UniverseID { get; set; }
+        [MaxLength(450)]
+        public string? UserUniqueID { get; set; } 
         public int LeagueID { get; set; }
         public int CurrentPick { get; set; }
         public int CurrentRound { get; set; }

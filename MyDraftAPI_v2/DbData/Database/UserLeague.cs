@@ -4,7 +4,9 @@ namespace Database.Model
 {
     public class UserLeague
     {
-        public int UniverseID { get; set; } 
+        public int UniverseID { get; set; }
+        [MaxLength(450)]
+        public string? UserUniqueID { get; set; }
         public int ID { get; set; }
         [MaxLength(50)]
         public string? Name{ get; set; }
