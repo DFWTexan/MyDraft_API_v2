@@ -1,9 +1,11 @@
 ﻿using DbData;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MyDraftAPI_v2.Controllers
 {
+    //[Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -28,14 +30,34 @@ namespace MyDraftAPI_v2.Controllers
         ///     
         /// Login User
         ///
-        [HttpPut]
-        public async Task<ActionResult> Login([FromBody] ViewModel.UserInfo vInput)
+        //[HttpPut]
+        //public async Task<ActionResult> Login([FromBody] ViewModel.UserInfo vInput)
+        //{
+        //    try
+        //    {
+        //        var service = new UserService.UserSvc(_db, _config, null, _utility, _draftEngine);
+
+        //        var result = await Task.Run(() => service.Login_v2(vInput));
+
+        //        return StatusCode(result.StatusCode, result.ObjData);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return StatusCode(500, new List<string>() { "Server Error" });
+        //    }
+        //}
+        /// <summary>
+        ///     
+        /// GET Login User
+        ///
+        [HttpGet]
+        public async Task<ActionResult> UserInfoStatus()
         {
             try
             {
                 var service = new UserService.UserSvc(_db, _config, null, _utility, _draftEngine);
 
-                var result = await Task.Run(() => service.Login_v2(vInput));
+                var result = await Task.Run(() => service.UserInfoStatus());
 
                 return StatusCode(result.StatusCode, result.ObjData);
             }
@@ -43,7 +65,6 @@ namespace MyDraftAPI_v2.Controllers
             {
                 return StatusCode(500, new List<string>() { "Server Error" });
             }
-            
         }
     }
 }

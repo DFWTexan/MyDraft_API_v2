@@ -53,7 +53,7 @@ namespace DraftService
 
             if (draftStatus != null)
             {
-                result.UniverseID = draftStatus.UniverseID;
+                //result.UniverseID = draftStatus.UniverseID;
                 result.LeagueID = draftStatus.LeagueID;
                 result.CurrentPick = draftStatus.CurrentPick;
                 result.IsComplete = draftStatus.IsComplete;
@@ -70,7 +70,7 @@ namespace DraftService
             }
             else
             {
-                return new ViewModel.DraftStatus(vleagueID, 0, 0, false);
+                return new ViewModel.DraftStatus(vleagueID, 0, false);
             }
         }
         public List<ViewModel.DraftPick> draftPicksForLeague(int leagueID)
@@ -129,7 +129,6 @@ namespace DraftService
                     //userDraftSelections.Add(usrSelection);
                     _db.UserDraftSelection.Add(new UserDraftSelections()
                     {
-                        UniverseID = i.UniverseID,
                         LeagueID = i.leagueID,
                         TeamID = (int)i.teamID,
                         PlayerID = (int)i.playerID,

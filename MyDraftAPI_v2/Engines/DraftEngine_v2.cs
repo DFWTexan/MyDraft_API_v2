@@ -1,11 +1,13 @@
 ﻿using Database.Model;
 using DbData;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using MyDraftAPI_v2.FantasyDataModel;
 //using MyDraftAPI_v2.FantasyDataModel.Draft;
 using MyDraftAPI_v2.Managers;
 using MyDraftLib.Utilities;
 using ViewModel;
+using Windows.UI.Xaml.Controls.Primitives;
 #pragma warning disable 
 
 namespace MyDraftAPI_v2
@@ -19,6 +21,7 @@ namespace MyDraftAPI_v2
         private readonly DbContextOptionsBuilder<AppDataContext> _dbOptionsBuilder;
         private System.Threading.Timer? _timer;
 
+        private ViewModel.UserInfo _myDraftUser = new ViewModel.UserInfo();
         private FanDataModel.FantasyLeague? _league;
         private ViewModel.ActiveLeague? _activeMyDraftLeague;
         private List<MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick>? _draftPicks;
@@ -43,6 +46,11 @@ namespace MyDraftAPI_v2
         private Dictionary<DataModel.Enums.ProTeams, Dictionary<DataModel.Enums.Position, List<ViewModel.DepthChartPlayer>>> _teamDepthChart = new Dictionary<DataModel.Enums.ProTeams, Dictionary<DataModel.Enums.Position, List<ViewModel.DepthChartPlayer>>>();
 
         #region Properties
+        public ViewModel.UserInfo MyDraftUser
+        {
+            get { return _myDraftUser; }
+            set { _myDraftUser = value; }
+        }
         public int MyDraftFanTeamID
         {
             get { return _myDraftFanTeamID; }
@@ -102,23 +110,46 @@ namespace MyDraftAPI_v2
             _draftPickMap = new Dictionary<int, MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick>();
         }
 
-        public void InitializeLeagueData_v2()
+        public void InitializeLeagueData_v2(int myDraftUserID)
         {
-            //_activeMyDraftLeague = vInput;
-
-            _league = new FanDataModel.FantasyLeague()
-            {
-                UniverseID = _activeMyDraftLeague.UniverseID,
-                identifier = _activeMyDraftLeague.ID,
-                draftType = _activeMyDraftLeague.DraftType,
-                //draftOrderType = vInput.DraftOrderType
-            };
-            _league.teams = (List<ViewModel.UserLeageTeamItem>)_activeMyDraftLeague.teams;
+            //_myDraftUser.UserID = myDraftUserID;
 
             using (var db = new AppDataContext(_dbOptionsBuilder.Options))
             {
                 try
                 {
+                    _activeMyDraftLeague = db.UserLeague
+                                             .Where(x => x.ID == myDraftUserID)
+                                             .OrderByDescending(q => q.LastActiveDate)
+                                             .Select(i => new ViewModel.ActiveLeague
+                                             {
+                                                 ID = i.ID,
+                                                 Name = i.Name,
+                                                 DraftType = i.DraftType,
+                                                 DraftOrder = i.DraftOrder,
+                                                 NumberOfRounds = i.NumberOfRounds,
+                                                 NumberOfTeams = i.NumberOfTeams,
+                                                 teams = i.LeagueTeams.Select(lt => new ViewModel.UserLeageTeamItem
+                                                 {
+                                                     ID = lt.ID,
+                                                     LeagueID = lt.LeagueID,
+                                                     Name = lt.Name,
+                                                     Abbreviation = lt.Abbreviation,
+                                                     DraftPosition = lt.DraftPosition,
+                                                     Owner = lt.Owner
+                                                 }).ToList()
+                                             })
+                                             .AsNoTracking()
+                                             .FirstOrDefault();
+
+                    _league = new FanDataModel.FantasyLeague()
+                {
+                    identifier = _activeMyDraftLeague.ID,
+                    draftType = _activeMyDraftLeague.DraftType,
+                };
+                _league.teams = (List<ViewModel.UserLeageTeamItem>)_activeMyDraftLeague.teams;
+
+                
                     #region DraftStatus  
                     var result = new ViewModel.DraftStatus();
 
@@ -196,6 +227,26 @@ namespace MyDraftAPI_v2
                 }
             };
         }
+
+        private static List<ViewModel.UserLeageTeamItem> GetUserLeageTeamItems(IList<Database.Model.UserLeagueTeams> leagueTeams)
+        {
+            List<ViewModel.UserLeageTeamItem> items = new List<ViewModel.UserLeageTeamItem>(); 
+            foreach(var team in leagueTeams)
+            {
+                items.Add(new ViewModel.UserLeageTeamItem()
+                {
+                    ID = team.ID,
+                    LeagueID = team.LeagueID,
+                    Name = team.Name,
+                    Abbreviation = team.Abbreviation,
+                    DraftPosition = team.DraftPosition,
+                    Owner = team.Owner
+                });
+            }
+
+            return items;
+        }
+               
 
         //public async Task calculateCustomScoringAsync()
         //{
@@ -278,7 +329,7 @@ namespace MyDraftAPI_v2
                             overallPick = draftPick.overallPick,
                             teamID = draftPick.teamID,
                             playerID = draftPick.playerID,
-                            player = draftPick.player 
+                            player = draftPick.player
                         };
 
                         draftPicks.Add(viewModelDraftPick);
@@ -500,7 +551,7 @@ namespace MyDraftAPI_v2
                 // Update the OTC pick. If none can be found then declare the draft complete.
                 if (otcPick != null)
                 {
-                    _draftStatus = new ViewModel.DraftStatus(_activeMyDraftLeague.UniverseID, _activeMyDraftLeague.ID, _draftStatus.CurrentPick, false);
+                    _draftStatus = new ViewModel.DraftStatus(_activeMyDraftLeague.ID, _draftStatus.CurrentPick, false);
                     saveDraftStatus(_draftStatus, otcPick);
                 }
                 else
@@ -511,7 +562,7 @@ namespace MyDraftAPI_v2
         }
         private void setDraftComplete()
         {
-            _draftStatus = new ViewModel.DraftStatus(_activeMyDraftLeague.UniverseID, _activeMyDraftLeague.ID, _league.rounds * _league.numTeams + 1, true); // Set on the clock to 1 pick beyond the end of the draft
+            _draftStatus = new ViewModel.DraftStatus(_activeMyDraftLeague.ID, _league.rounds * _league.numTeams + 1, true); // Set on the clock to 1 pick beyond the end of the draft
             saveDraftStatus(_draftStatus);
         }
         public void saveDraftStatus(ViewModel.DraftStatus vDraftStatus, MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick vOtcPick = null)
@@ -519,7 +570,7 @@ namespace MyDraftAPI_v2
             using (var db = new AppDataContext(_dbOptionsBuilder.Options))
             {
                 var draftStatus = db.UserDraftStatus
-                    .Where(x => x.UniverseID == vDraftStatus.UniverseID && x.LeagueID == vDraftStatus.LeagueID)
+                    .Where(x => x.LeagueID == vDraftStatus.LeagueID)
                     .FirstOrDefault();
 
                 if (draftStatus != null)
@@ -532,10 +583,9 @@ namespace MyDraftAPI_v2
                                                                     .Where(q => q.ID == vOtcPick.teamID)
                                                                     .Select(i => i.Name)
                                                                     .FirstOrDefault() : null;
-                    
+
                     _draftStatus = new ViewModel.DraftStatus()
                     {
-                        UniverseID = draftStatus.UniverseID,
                         LeagueID = draftStatus.LeagueID,
                         CurrentPick = draftStatus.CurrentPick,
                         CurrentRound = draftStatus.CurrentRound,
@@ -543,7 +593,7 @@ namespace MyDraftAPI_v2
                         onTheClock = draftStatus.onTheClock,
                         IsComplete = draftStatus.IsComplete
                     };
-                    
+
                     db.Update(draftStatus);
                     db.SaveChangesAsync();
                 }

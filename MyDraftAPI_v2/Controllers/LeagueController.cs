@@ -42,13 +42,13 @@ namespace MyDraftAPI_v2.Controllers
         /// 
         /// Get Initialize League Data
         ///
-        [HttpGet]
-        public async Task<ActionResult> InitLeageData()
-        {
-            await Task.Run(() => _draftEngine.InitializeLeagueData_v2());
+        //[HttpGet]
+        //public async Task<ActionResult> InitLeageData()
+        //{
+        //    await Task.Run(() => _draftEngine.InitializeLeagueData_v2());
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
 
 
         /// <summary>

@@ -101,7 +101,7 @@ namespace DbData
                 .HasKey(k => new { k.PlayerID, k.PositionID });
 
             modelBuilder.Entity<Database.Model.UserDraftStatus>()
-                .HasKey(k => new { k.UniverseID, k.LeagueID });
+                .HasKey(k => new { k.LeagueID });
 
             modelBuilder.Entity<Database.Model.MyDraftUser>()
                 .HasKey(k => new { k.UserUniqueID });
@@ -135,6 +135,10 @@ namespace DbData
             modelBuilder.Entity<Database.Model.ADP>()
                 .Property(p => p.PPRValue)
                 .HasColumnType("decimal(5,2)");
+
+            modelBuilder.Entity<Database.Model.MyDraftUser>()
+                .Property(p => p.CreateDate)
+                .HasDefaultValueSql("getdate()");
 
             //modelBuilder.Entity<Database.Model.UserDraftSelections>()
             //    .Property(p => p.TiemStamp)

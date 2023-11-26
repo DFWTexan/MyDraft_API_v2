@@ -4,6 +4,7 @@ using DbData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MyDraftAPI_v2.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    partial class AppDataContextModelSnapshot : ModelSnapshot
+    [Migration("20231125182603_emf20231125C")]
+    partial class emf20231125C
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -143,12 +146,6 @@ namespace MyDraftAPI_v2.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
-
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("UserEmail")
                         .HasMaxLength(256)
@@ -448,6 +445,14 @@ namespace MyDraftAPI_v2.Migrations
                     b.Property<int?>("PositionRound")
                         .HasColumnType("int");
 
+                    b.Property<int>("UniverseID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserUniqueID")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("LeagueID", "TeamID", "Round");
 
                     b.ToTable("UserDraftSelections", (string)null);
@@ -455,6 +460,9 @@ namespace MyDraftAPI_v2.Migrations
 
             modelBuilder.Entity("Database.Model.UserDraftStatus", b =>
                 {
+                    b.Property<int>("UniverseID")
+                        .HasColumnType("int");
+
                     b.Property<int>("LeagueID")
                         .HasColumnType("int");
 
@@ -467,6 +475,10 @@ namespace MyDraftAPI_v2.Migrations
                     b.Property<bool>("IsComplete")
                         .HasColumnType("bit");
 
+                    b.Property<string>("UserUniqueID")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("fanTeamName")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -474,7 +486,9 @@ namespace MyDraftAPI_v2.Migrations
                     b.Property<int>("onTheClock")
                         .HasColumnType("int");
 
-                    b.HasKey("LeagueID");
+                    b.HasKey("UniverseID", "LeagueID");
+
+                    b.HasIndex("LeagueID");
 
                     b.ToTable("UserDraftStatus", (string)null);
                 });
@@ -512,6 +526,9 @@ namespace MyDraftAPI_v2.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("NumberOfTeams")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UniverseID")
                         .HasColumnType("int");
 
                     b.Property<string>("UserUniqueID")
@@ -905,17 +922,6 @@ namespace MyDraftAPI_v2.Migrations
                     b.Navigation("AwayTeam");
 
                     b.Navigation("HomeTeam");
-                });
-
-            modelBuilder.Entity("Database.Model.UserDraftSelections", b =>
-                {
-                    b.HasOne("Database.Model.UserLeague", "League")
-                        .WithMany()
-                        .HasForeignKey("LeagueID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("League");
                 });
 
             modelBuilder.Entity("Database.Model.UserDraftStatus", b =>

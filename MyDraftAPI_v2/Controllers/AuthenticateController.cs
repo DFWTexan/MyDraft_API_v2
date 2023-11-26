@@ -1,7 +1,10 @@
-﻿using JWTAuthentication.NET6._0.Auth;
+﻿using Database.Model;
+using DbData;
+using JWTAuthentication.NET6._0.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using MyDraftAPI_v2;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -12,6 +15,8 @@ namespace JWTAuthentication.NET6._0.Controllers
     [ApiController]
     public class AuthenticateController : ControllerBase
     {
+        private readonly AppDataContext _db;
+        private DraftEngine_v2 _draftEngine;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
@@ -19,11 +24,15 @@ namespace JWTAuthentication.NET6._0.Controllers
         public AuthenticateController(
             UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            AppDataContext db,
+            DraftEngine_v2 draftEngine)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
+            _db = db;
+            _draftEngine = draftEngine;
         }
 
         [HttpPost]
@@ -47,6 +56,18 @@ namespace JWTAuthentication.NET6._0.Controllers
                 }
 
                 var token = GetToken(authClaims);
+
+                var myDraftUser = _db.MyDraftUser.Where(x => x.UserUniqueID == user.Id).FirstOrDefault(); 
+                if (myDraftUser != null)
+                {
+                    _draftEngine.MyDraftUser = new ViewModel.UserInfo() { 
+                        UserName = myDraftUser.UserName,
+                        UserEmail = myDraftUser.UserEmail,  
+                        IsLoggedIn = true,
+                    };
+                    _draftEngine.InitializeLeagueData_v2(myDraftUser.ID);
+                }
+                    
 
                 return Ok(new
                 {
@@ -75,12 +96,17 @@ namespace JWTAuthentication.NET6._0.Controllers
                 };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (!result.Succeeded)
-                {
-
-
                     return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
-                }
-                    
+                
+                var newUser = await _userManager.FindByNameAsync(model.Username);
+                MyDraftUser myDraftUser = new()
+                {
+                    UserUniqueID = newUser.Id,
+                    UserName = newUser.NormalizedUserName,
+                    UserEmail = newUser.NormalizedEmail,
+                };
+                _db.MyDraftUser.Add(myDraftUser);
+                _db.SaveChanges();
 
                 return Ok(new Response { Status = "Success", Message = "User created successfully!" });
             }
