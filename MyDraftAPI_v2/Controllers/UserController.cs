@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MyDraftAPI_v2.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class UserController : ControllerBase
