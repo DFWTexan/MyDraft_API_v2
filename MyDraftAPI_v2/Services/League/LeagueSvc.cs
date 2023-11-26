@@ -75,50 +75,6 @@ namespace LeagueService
 
         public DataModel.Response.ReturnResult GetActiveLeague()
         {
-            //var result = new DataModel.Response.ReturnResult();
-
-            //try
-            //{
-            //var activeLeague = _db.UserLeague.Take(1).OrderByDescending(q => q.LastActiveDate)
-            //    .Where(q => q.ID == vMyDraftUserID)
-            //    .Select(i => new ViewModel.ActiveLeague()
-            //    {
-            //        ID = i.ID,
-            //        Name = i.Name,
-            //        Abbr = i.Abbr,
-            //        Mode = i.Mode,
-            //        DraftType = i.DraftType,
-            //        DraftOrder = i.DraftOrder,
-            //        NumberOfTeams = i.NumberOfTeams,
-            //        NumberOfRounds = i.NumberOfRounds
-            //    })
-            //    .FirstOrDefault();
-
-            //var leagueTeams = _db.UserLeagueTeam.Where(q => q.LeagueID == activeLeague.ID).ToList();
-            //foreach(var i in leagueTeams)
-            //{
-            //    var addItem = new ViewModel.UserLeageTeamItem()
-            //    {
-            //        ID = i.ID,
-            //        Name = i.Name,
-            //        Abbreviation = i.Abbreviation,
-            //        DraftPosition = i.DraftPosition,
-            //        Owner = i.Owner
-            //    };
-
-            //    activeLeague.teams.Add(addItem);
-            //}
-
-            //_draftEngine.ActiveMyDraftLeague = activeLeague;
-
-            //result.ObjData = activeLeague;
-            //result.Success = true;
-            //}
-            //catch (Exception ex)
-            //{
-            //    result.Success = false;
-            //    result.ErrMessage = ex.Message;
-            //}
             try
             {
                 return _utility.SuccessResult(_draftEngine.ActiveMyDraftLeague);

@@ -37,20 +37,7 @@ namespace MyDraftAPI_v2.Controllers
 
             return StatusCode(result.StatusCode, result.ObjData);
         }
-
-        /// <summary>
-        /// 
-        /// Get Initialize League Data
-        ///
-        //[HttpGet]
-        //public async Task<ActionResult> InitLeageData()
-        //{
-        //    await Task.Run(() => _draftEngine.InitializeLeagueData_v2());
-
-        //    return Ok();
-        //}
-
-
+                
         /// <summary>
         /// 
         /// Get Active League

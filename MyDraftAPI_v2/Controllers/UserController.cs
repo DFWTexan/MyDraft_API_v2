@@ -28,26 +28,6 @@ namespace MyDraftAPI_v2.Controllers
 
         /// <summary>
         ///     
-        /// Login User
-        ///
-        //[HttpPut]
-        //public async Task<ActionResult> Login([FromBody] ViewModel.UserInfo vInput)
-        //{
-        //    try
-        //    {
-        //        var service = new UserService.UserSvc(_db, _config, null, _utility, _draftEngine);
-
-        //        var result = await Task.Run(() => service.Login_v2(vInput));
-
-        //        return StatusCode(result.StatusCode, result.ObjData);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return StatusCode(500, new List<string>() { "Server Error" });
-        //    }
-        //}
-        /// <summary>
-        ///     
         /// GET Login User
         ///
         [HttpGet]

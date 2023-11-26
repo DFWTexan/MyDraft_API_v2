@@ -112,8 +112,6 @@ namespace MyDraftAPI_v2
 
         public void InitializeLeagueData_v2(int myDraftUserID)
         {
-            //_myDraftUser.UserID = myDraftUserID;
-
             using (var db = new AppDataContext(_dbOptionsBuilder.Options))
             {
                 try
