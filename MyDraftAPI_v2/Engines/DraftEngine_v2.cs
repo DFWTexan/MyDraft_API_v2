@@ -21,6 +21,7 @@ namespace MyDraftAPI_v2
         private readonly DbContextOptionsBuilder<AppDataContext> _dbOptionsBuilder;
         private System.Threading.Timer? _timer;
 
+        private ViewModel.UserInfo _myDraftUser = new ViewModel.UserInfo();
         private FanDataModel.FantasyLeague? _league;
         private ViewModel.ActiveLeague? _activeMyDraftLeague;
         private List<MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick>? _draftPicks;
@@ -45,6 +46,11 @@ namespace MyDraftAPI_v2
         private Dictionary<DataModel.Enums.ProTeams, Dictionary<DataModel.Enums.Position, List<ViewModel.DepthChartPlayer>>> _teamDepthChart = new Dictionary<DataModel.Enums.ProTeams, Dictionary<DataModel.Enums.Position, List<ViewModel.DepthChartPlayer>>>();
 
         #region Properties
+        public ViewModel.UserInfo MyDraftUser
+        {
+            get { return _myDraftUser; }
+            set { _myDraftUser = value; }
+        }
         public int MyDraftFanTeamID
         {
             get { return _myDraftFanTeamID; }
@@ -104,8 +110,10 @@ namespace MyDraftAPI_v2
             _draftPickMap = new Dictionary<int, MyDraftAPI_v2.FantasyDataModel.Draft.MyDraftPick>();
         }
 
-        public void InitializeLeagueData_v2(int? myDraftUserID = 1)
+        public void InitializeLeagueData_v2(int myDraftUserID)
         {
+            //_myDraftUser.UserID = myDraftUserID;
+
             using (var db = new AppDataContext(_dbOptionsBuilder.Options))
             {
                 try

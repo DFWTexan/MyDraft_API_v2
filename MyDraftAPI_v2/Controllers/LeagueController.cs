@@ -28,12 +28,12 @@ namespace MyDraftAPI_v2.Controllers
         /// 
         /// Get Active League
         ///
-        [HttpGet("{myDraftUserID}")]
-        public async Task<ActionResult> GetActiveLeague(int? myDraftUserID = 1)
+        [HttpGet]
+        public async Task<ActionResult> GetActiveLeague()
         {
             var service = new LeagueService.LeagueSvc(_db, _config, null, _utility, _draftEngine);
 
-            var result = await Task.Run(() => service.GetActiveLeague(myDraftUserID));
+            var result = await Task.Run(() => service.GetActiveLeague());
 
             return StatusCode(result.StatusCode, result.ObjData);
         }
@@ -42,13 +42,13 @@ namespace MyDraftAPI_v2.Controllers
         /// 
         /// Get Initialize League Data
         ///
-        [HttpGet]
-        public async Task<ActionResult> InitLeageData()
-        {
-            await Task.Run(() => _draftEngine.InitializeLeagueData_v2());
+        //[HttpGet]
+        //public async Task<ActionResult> InitLeageData()
+        //{
+        //    await Task.Run(() => _draftEngine.InitializeLeagueData_v2());
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
 
 
         /// <summary>
