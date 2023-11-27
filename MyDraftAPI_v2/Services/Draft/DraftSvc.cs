@@ -112,7 +112,7 @@ namespace DraftService
 
             try
             {
-                List<UserDraftSelections> userDraftSelections = new List<UserDraftSelections>();
+                List<UserDraftSelection> userDraftSelections = new List<UserDraftSelection>();
                 foreach (var i in draftPicks)
                 {
                     //var usrSelection = new UserDraftSelections()
@@ -127,7 +127,7 @@ namespace DraftService
 
                     //};
                     //userDraftSelections.Add(usrSelection);
-                    _db.UserDraftSelection.Add(new UserDraftSelections()
+                    _db.UserDraftSelection.Add(new UserDraftSelection()
                     {
                         LeagueID = i.leagueID,
                         TeamID = (int)i.teamID,
@@ -618,9 +618,7 @@ namespace DraftService
 
                 _draftEngine.executeDraftPick(vOverAll, vPlayerID);
 
-                //result.ObjData = new { EMFTest = "Endpoint Working..." };
-
-                return _utility.SuccessResult(new { EMFTest = new { Success = true } });
+                return _utility.SuccessResult(new { ExecuteDraftPick = new { Success = true } });
             }
             catch (Exception ex)
             {

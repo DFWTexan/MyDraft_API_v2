@@ -8,9 +8,7 @@ namespace Database.Model
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
-        //public int UniverseID { get; set; }
-        [MaxLength(450)]
-        public string? UserUniqueID { get; set; }
+        public int MyDraftUserID { get; set; }
         [MaxLength(50)]
         public string? Name{ get; set; }
         [MaxLength(5)]
@@ -21,8 +19,14 @@ namespace Database.Model
         public string? DraftOrder { get; set; }
         public int NumberOfTeams { get; set; }
         public int NumberOfRounds { get; set; }
+        public int NumberOfStarters { get; set; }
         public DateTime LastActiveDate { get; set; }
-                   
-        public ICollection<UserLeagueTeams>? LeagueTeams { get; set; }
+        public ICollection<UserLeagueTeam>? LeagueTeams { get; set; }
+        public ICollection<UserDraftSelection>? UserDraftSelections { get; set; }
+
+        #region // Foreign Keys //
+        [ForeignKey("MyDraftUserID")]
+        public virtual MyDraftUser? MyDraftUser { get; set; }
+        #endregion
     }
 }

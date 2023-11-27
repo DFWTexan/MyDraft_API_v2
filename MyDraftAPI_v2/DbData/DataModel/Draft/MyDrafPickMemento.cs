@@ -1,6 +1,6 @@
 ﻿using MyDraftLib.Utilities;
 
-namespace MyDraftAPI_v2.FantasyDataModel.Draft
+namespace MyDraftAPI_v2.FantasyDataModel
 {
     public class MyDraftPickMemento
     {

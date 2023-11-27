@@ -31,13 +31,43 @@ namespace MyDraftAPI_v2.Controllers
         [HttpGet]
         public async Task<ActionResult> GetActiveLeague()
         {
-            var service = new LeagueService.LeagueSvc(_db, _config, null, _utility, _draftEngine);
+            try
+            {
+                var service = new LeagueService.LeagueSvc(_db, _config, null, _utility, _draftEngine);
 
-            var result = await Task.Run(() => service.GetActiveLeague());
+                var result = await Task.Run(() => service.GetActiveLeague());
 
-            return StatusCode(result.StatusCode, result.ObjData);
+                return StatusCode(result.StatusCode, result.ObjData);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new List<string>() { "Server Error" });
+            }
+            
         }
-                
+
+        /// <summary>
+        /// 
+        /// Create Fantasy League
+        ///
+        [HttpGet("{MyDraftUserID}")]
+        public async Task<ActionResult> CreateLeague(int MyDraftUserID)
+        {
+            try
+            {
+                var service = new LeagueService.LeagueSvc(_db, _config, null, _utility, _draftEngine);
+
+                var result = await Task.Run(() => service.CreateLeague(MyDraftUserID));
+
+                return StatusCode(result.StatusCode, result.ObjData);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new List<string>() { "Server Error" });
+            }
+
+        }
+
         /// <summary>
         /// 
         /// Get Active League
@@ -45,11 +75,19 @@ namespace MyDraftAPI_v2.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> TeamsForLeague(int id)
         {
-            var service = new LeagueService.LeagueSvc(_db, _config, null, _utility, _draftEngine);
+            try
+            {
+                var service = new LeagueService.LeagueSvc(_db, _config, null, _utility, _draftEngine);
 
-            var result = await Task.Run(() => service.TeamsForLeague(id));
+                var result = await Task.Run(() => service.TeamsForLeague(id));
 
-            return StatusCode(result.StatusCode, result.ObjData);
+                return StatusCode(result.StatusCode, result.ObjData);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new List<string>() { "Server Error" });
+            }
+            
         }
     }
 }

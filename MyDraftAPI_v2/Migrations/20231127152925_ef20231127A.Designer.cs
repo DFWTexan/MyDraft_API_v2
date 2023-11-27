@@ -4,6 +4,7 @@ using DbData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MyDraftAPI_v2.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    partial class AppDataContextModelSnapshot : ModelSnapshot
+    [Migration("20231127152925_ef20231127A")]
+    partial class ef20231127A
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -460,6 +463,8 @@ namespace MyDraftAPI_v2.Migrations
                     b.HasKey("ID");
 
                     b.HasIndex("LeagueID");
+
+                    b.HasIndex("TeamID");
 
                     b.ToTable("UserDraftSelections", (string)null);
                 });
@@ -930,7 +935,13 @@ namespace MyDraftAPI_v2.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Database.Model.UserLeagueTeam", "LeagueTeam")
+                        .WithMany()
+                        .HasForeignKey("TeamID");
+
                     b.Navigation("League");
+
+                    b.Navigation("LeagueTeam");
                 });
 
             modelBuilder.Entity("Database.Model.UserDraftStatus", b =>
