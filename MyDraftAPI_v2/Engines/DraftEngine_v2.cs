@@ -332,6 +332,19 @@ namespace MyDraftAPI_v2
                         db.UserDraftSelection.Add(newDraftPick);
                         db.SaveChanges();
                     }
+
+                    var newDraftStatus = new UserDraftStatus
+                    {
+                        LeagueID = newLeagueID,
+                        CurrentPick = 1,
+                        CurrentRound = 1,
+                        onTheClock = 1,
+                        fanTeamName = "My Team",
+                        IsComplete = false,
+                    };
+
+                    db.UserDraftStatus.Add(newDraftStatus);
+                    db.SaveChanges();
                     
                     return result;
                 }

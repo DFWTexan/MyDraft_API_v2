@@ -144,7 +144,7 @@ namespace DraftService
 
                 UserLeagueTeam team = teams[teamIndex];
                 int pickInRound = pickInRoundForOverallPick(overall, numberOfTeams);
-                MyDraftPick draftPick = new MyDraftPick(league.identifier, overall, round, pickInRound, 0, 0, 0, false);
+                MyDraftPick draftPick = new MyDraftPick(league.identifier, overall, round, pickInRound, team.ID, 0, 0, false);
                 draftPick.league = league;
                 draftPicks.Add(draftPick);
             }
