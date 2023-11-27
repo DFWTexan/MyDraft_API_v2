@@ -13,22 +13,21 @@ namespace ViewModel
         public string? DraftOrder { get; set; }
         public int NumberOfTeams { get; set; }
         public int NumberOfRounds { get; set; }
-        
-        public List<UserLeageTeamItem> teams { get; set; }
+        public DateTime? LastActiveDate { get; set; }
+        public List<UserLeagueTeamItem> teams { get; set; }
         public ActiveLeague()
         {
-            teams = new List<UserLeageTeamItem>();
+            teams = new List<UserLeagueTeamItem>();
         }
     }
 
-    public class UserLeageTeamItem
+    public class UserLeagueTeamItem : UserLeagueTeam
     {
-        public int UniversalID { get; set; }    
-        public int ID { get; set; }
-        public int LeagueID { get; set; }
-        public string? Name { get; set; }
-        public string? Abbreviation { get; set; }
-        public int DraftPosition { get; set; }
-        public string? Owner { get; set; }
+        //public int ID { get; set; }
+        //public int LeagueID { get; set; }
+        //public string? Name { get; set; }
+        //public string? Abbreviation { get; set; }
+        //public int DraftPosition { get; set; }
+        //public string? Owner { get; set; }
     }
 }

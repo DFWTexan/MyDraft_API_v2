@@ -32,7 +32,9 @@ namespace Database.Model
         public string? PhotoUrl { get; set; }
         [MaxLength(10)]
         public string? Status { get; set; }
-
+        public ICollection<PlayerNews>? PlayerNews { get; set; }
+        public ICollection<DepthChart>? DepthChart { get; set; }
+        //public ICollection<PlayerGame>? PlayerGames { get; set; }
         #region Foreign Keys
         [ForeignKey("ProTeamID")]
         public virtual ProTeam? ProTeam { get; set; }

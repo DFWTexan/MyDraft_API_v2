@@ -32,27 +32,5 @@ namespace UserService
                 return _utility.ExceptionReturnResult(ex);
             }
         }
-
-        //public DataModel.Response.ReturnResult Login_v2(ViewModel.UserInfo vInput)
-        //{
-        //    var service = new LeagueService.LeagueSvc(_db, _config, null, null, _draftEngine);
-
-        //    try
-        //    {
-        //        ///
-        //        // TBD: Convert to LOGIN with provided Credentials...
-        //        ///
-        //        var userInfo = new ViewModel.UserInfo() { UserID = 1, UserName = "EMFTest_User", IsLoggedIn = true };
-        //        var activeLeague = service.GetActiveLeague(userInfo.UserID);
-
-        //        _draftEngine.InitializeLeagueData_v2();
-
-        //        return _utility.SuccessResult(userInfo);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return _utility.ExceptionReturnResult(ex);
-        //    }
-        //}
     }
 }

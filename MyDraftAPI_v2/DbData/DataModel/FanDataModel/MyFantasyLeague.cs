@@ -1,21 +1,15 @@
-﻿using CodeTitans.Core.Generics;
-using DraftService;
-using MyDraftAPI_v2.FantasyDataModel;
+﻿using Database.Model;
 using MyDraftAPI_v2.Managers;
-using MyDraftLib.Utilities;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using ViewModel;
-#pragma warning disable 
 
-namespace FanDataModel
+namespace MyDraftAPI_v2.FantasyDataModel
 {
-    public class FantasyLeague
+    public class MyFantasyLeague
     {
-        public int UniverseID { get; set; }   
         public int identifier { get; set; }
-        public String name { get; set; }
-        public String abbr { get; set; }
+        public String? name { get; set; }
+        public String? abbr { get; set; }
         public bool isPPR
         {
             get
@@ -34,7 +28,7 @@ namespace FanDataModel
         public bool isIncludeIDP { get; set; }
         public bool isCombineWRTE { get; set; }
         public int userTeamID { get; set; }
-        public List<UserLeagueTeamItem>? teams { get; set; }
+        public IList<UserLeagueTeamItem>? teams { get; set; }
         public IDictionary<String, IDictionary<String, int>> rosterValues { get; set; }
         public String playerUniverse { get; set; }
         public String url { get; set; }
@@ -45,7 +39,7 @@ namespace FanDataModel
         public string mockDraft { get; set; }
         public int isPositionLimitEnabled { get; set; }
 
-        public List<FantasyTeam> fanTeams { get; set; }
+        public List<UserLeagueTeam> UserLeagueTeams { get; set; }
 
 
         #region DraftConfiguration
@@ -60,7 +54,7 @@ namespace FanDataModel
         public float auctionBudget { get; set; }
         public float auctionMinimumBid { get; set; }
 
-        public FantasyTeam myTeam
+        public UserLeagueTeam myTeam
         {
             get
             {
@@ -91,12 +85,43 @@ namespace FanDataModel
         static String kRosterLimitsValue = "value";
 
         // Constructor
-        public FantasyLeague()
+        public MyFantasyLeague()
         {
-            fanTeams = new List<FantasyTeam>();
+            UserLeagueTeams = new List<UserLeagueTeam>();
         }
 
-        public FantasyLeague(int identifier)
+        public MyFantasyLeague (UserLeague league)
+        {
+            this.identifier = league.ID;
+            this.name = league.Name;
+            this.abbr = league.Abbr;
+            this.siteID = league.Mode;
+            this.numTeams = league.NumberOfTeams;
+            this.isIncludeIDP = false;
+            this.isCombineWRTE = false;
+            this.userTeamID = 0;
+            this.teams = (IList<UserLeagueTeamItem>?)league.LeagueTeams;
+            this.rosterValues = null;
+            this.playerUniverse = "NFL";
+            this.url = "";
+            this.source = "";
+            this.auction_salaryCap = 0;
+            this.auction_player_min = 0;
+            this.leagueMode = 0;
+            this.mockDraft = "";
+            this.isPositionLimitEnabled = 0;
+            this.rounds = league.NumberOfRounds;
+            this.draftByTeamEnabled = false;
+            this.mockDraftEnabled = false;
+            this.draftType = league.DraftType;
+            this.draftOrderType = DraftOrderType.snake;
+            this.auctionBudget = 0;
+            this.auctionMinimumBid = 0;
+            this.processCustomScoringInProgress = false;
+            this.teamDEFRankingsSet = false;
+        }
+
+        public MyFantasyLeague(int identifier)
         {
             this.identifier = identifier;
             // TODO this.rosterValues = LeagueManager.getRosterLimits(Convert.ToString(identifier));
@@ -129,7 +154,7 @@ namespace FanDataModel
         //        }
         //}
 
-        public FantasyTeam teamWithID(int teamID)
+        public UserLeagueTeam teamWithID(int teamID)
         {
             //foreach (FantasyTeam team in teams)
             //{
@@ -141,7 +166,7 @@ namespace FanDataModel
             return null;
         }
 
-       
+
         public bool isTeamDEFRankingsSet()
         {
             return teamDEFRankingsSet;
@@ -163,7 +188,7 @@ namespace FanDataModel
                 return false;
             }
         }
-               
+
         //public async Task reloadScoringValues()
         //{
         //    customScoringValues = null;
@@ -353,7 +378,7 @@ namespace FanDataModel
                         //}
                         //else
                         //{
-                            position = "ALL";
+                        position = "ALL";
                         //}
 
                         //IDictionary<String, CustomScoringUserItem> userValues = await customScoringValuesMapForPosition(position);
@@ -465,26 +490,27 @@ namespace FanDataModel
 
         public static async Task<DraftOrderType> getDraftOrder()
         {
-            DraftOrderType typeResult = new DraftOrderType();
-            string orderType = await LeagueManager.getDraft_Order();
-            switch (orderType)
-            {
-                case "snake":
-                    typeResult = DraftOrderType.snake;
-                    break;
-                case "straight":
-                    typeResult = DraftOrderType.straight;
-                    break;
-                case "thirdRoundReversal":
-                    typeResult = DraftOrderType.thirdRoundReversal;
-                    break;
-                case "thirdRoundFlip":
-                    typeResult = DraftOrderType.thirdRoundFlip;
-                    break;
-                case "auction":
-                    typeResult = DraftOrderType.auction;
-                    break;
-            }
+            //DraftOrderType typeResult = new DraftOrderType();
+            //string orderType = await LeagueManager.getDraft_Order();
+            var typeResult = MyFantasyLeague.DraftOrderType.snake;
+            //switch (orderType)
+            //{
+            //    case "snake":
+            //        typeResult = DraftOrderType.snake;
+            //        break;
+            //    case "straight":
+            //        typeResult = DraftOrderType.straight;
+            //        break;
+            //    case "thirdRoundReversal":
+            //        typeResult = DraftOrderType.thirdRoundReversal;
+            //        break;
+            //    case "thirdRoundFlip":
+            //        typeResult = DraftOrderType.thirdRoundFlip;
+            //        break;
+            //    case "auction":
+            //        typeResult = DraftOrderType.auction;
+            //        break;
+            //}
             return typeResult;
         }
 
@@ -496,4 +522,3 @@ namespace FanDataModel
         //}
     }
 }
-

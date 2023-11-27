@@ -8,9 +8,8 @@ using MyDraftAPI_v2.Engines;
 using System.ComponentModel.DataAnnotations.Schema;
 using MyDraftLib.Utilities;
 using System.Diagnostics;
-using MyDraftAPI_v2.FantasyDataModel.Draft;
-using DraftService;
 using MyDraftAPI_v2;
+using ViewModel;
 #pragma warning disable 
 
 namespace LeagueService
@@ -37,88 +36,9 @@ namespace LeagueService
             _draftEngine = draftEngine;
         }
 
-        private class Val
-        {
-            public String value { get; set; }
-        }
-        private class boolVal
-        {
-            [Column("value")]
-            public int value { get; set; }
-        }
-        private class stringVal
-        {
-            [Column("value")]
-            public String value { get; set; }
-        }
-        private class ValueID
-        {
-            [Column("player_id")]
-            public String playerID { get; set; }
-        }
-        private class intVal
-        {
-            [Column("benchslots")]
-            public int benchslots { get; set; }
-        }
-        private class TypeVal
-        {
-            [Column("type_value")]
-            public String typeVal { get; set; }
-        }
-
-        private class DraftTypeVal
-        {
-            [Column("draft_type")]
-            public int drafttypeVal { get; set; }
-        }
-
+        #region // League //
         public DataModel.Response.ReturnResult GetActiveLeague()
         {
-            //var result = new DataModel.Response.ReturnResult();
-
-            //try
-            //{
-            //var activeLeague = _db.UserLeague.Take(1).OrderByDescending(q => q.LastActiveDate)
-            //    .Where(q => q.ID == vMyDraftUserID)
-            //    .Select(i => new ViewModel.ActiveLeague()
-            //    {
-            //        ID = i.ID,
-            //        Name = i.Name,
-            //        Abbr = i.Abbr,
-            //        Mode = i.Mode,
-            //        DraftType = i.DraftType,
-            //        DraftOrder = i.DraftOrder,
-            //        NumberOfTeams = i.NumberOfTeams,
-            //        NumberOfRounds = i.NumberOfRounds
-            //    })
-            //    .FirstOrDefault();
-
-            //var leagueTeams = _db.UserLeagueTeam.Where(q => q.LeagueID == activeLeague.ID).ToList();
-            //foreach(var i in leagueTeams)
-            //{
-            //    var addItem = new ViewModel.UserLeageTeamItem()
-            //    {
-            //        ID = i.ID,
-            //        Name = i.Name,
-            //        Abbreviation = i.Abbreviation,
-            //        DraftPosition = i.DraftPosition,
-            //        Owner = i.Owner
-            //    };
-
-            //    activeLeague.teams.Add(addItem);
-            //}
-
-            //_draftEngine.ActiveMyDraftLeague = activeLeague;
-
-            //result.ObjData = activeLeague;
-            //result.Success = true;
-            //}
-            //catch (Exception ex)
-            //{
-            //    result.Success = false;
-            //    result.ErrMessage = ex.Message;
-            //}
             try
             {
                 return _utility.SuccessResult(_draftEngine.ActiveMyDraftLeague);
@@ -128,138 +48,16 @@ namespace LeagueService
                 return _utility.ExceptionReturnResult(ex);
             }
         }
-
-        public async Task<FantasyLeague> createLeague()
+        public DataModel.Response.ReturnResult CreateLeague(int vMyDraftUserID)
         {
-            String LEAGUE_TEMP_NAME = "My League";
-            String LEAGUE_TEMP_ABBR = "ML";
-            int LEAGUE_TEMP_NUM_TEAMS = 12;
-            int LEAGUE_TEMP_ROSTER_SIZE = 16;
-            Boolean LEAGUE_TEMP_INCLUDE_IDP = false;
-            Boolean LEAGUE_TEMP_DRAFT_BY_TEAM = true;
-            FantasyLeague.DraftOrderType LEAGUE_TEMP_DRAFT_ORDER_TYPE = FantasyLeague.DraftOrderType.snake;
-            int LEAGUE_TEMP_DRAFT_TYPE = 1;
-
-            int uniqueIdentifier = await getMaxLeagueID() + 1;
-
-            FantasyLeague leagueContainer = new FantasyLeague(0);
-            leagueContainer.name = String.Format("{0} {1}", LEAGUE_TEMP_NAME, uniqueIdentifier);
-            leagueContainer.abbr = String.Format("{0}{1}", LEAGUE_TEMP_ABBR, uniqueIdentifier);
-            leagueContainer.numTeams = LEAGUE_TEMP_NUM_TEAMS;
-            leagueContainer.rounds = LEAGUE_TEMP_ROSTER_SIZE;
-            leagueContainer.isIncludeIDP = LEAGUE_TEMP_INCLUDE_IDP;
-            leagueContainer.draftByTeamEnabled = LEAGUE_TEMP_DRAFT_BY_TEAM;
-            leagueContainer.draftOrderType = LEAGUE_TEMP_DRAFT_ORDER_TYPE;
-            leagueContainer.draftType = LEAGUE_TEMP_DRAFT_TYPE;
-
-            //await Task.Delay(2000);
-            //Boolean success = await DBAdapter.executeUpdate("INSERT INTO " + TABLE_USER_LEAGUES + " (name, abbr, num_teams, num_rounds, draft_type, draft_by_team, include_idp, site_id, source) " +
-            // "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            // leagueContainer.name, leagueContainer.abbr, leagueContainer.numTeams, leagueContainer.rounds, leagueContainer.draftType, leagueContainer.draftByTeamEnabled, leagueContainer.isIncludeIDP, leagueContainer.siteID, leagueContainer.source);
-            //Boolean success = true;
-
-            var newLeague = new UserLeague
-            {
-                Name = leagueContainer.name,
-                Abbr = leagueContainer.abbr,
-                NumberOfTeams = leagueContainer.numTeams,
-                NumberOfRounds = leagueContainer.rounds,
-                DraftType = leagueContainer.draftType,
-                DraftOrder = leagueContainer.draftOrderType.ToString(),
-            };
-            _db.UserLeague.Add(newLeague);
-            _db.SaveChanges();
-
-            //if (!success)
-            //    return null;
-
-            int leagueID = await getMaxLeagueID();
-            var resultObj = await Task.Run(() => createTeams(leagueID, LEAGUE_TEMP_NUM_TEAMS));
-            FantasyLeague league = await getLeagueWithID(leagueID);
-
-            if (league.draftByTeamEnabled)
-            {
-                IList<DraftPick> draftPicks = (IList<DraftPick>)DraftPickGenerator.generateDraftPicks(league);
-                await DraftManager.saveDraftPicks(draftPicks);
-            }
-
-            return league;
-        }
-
-        public async Task<DataModel.Response.ReturnResult> createTeams(int leagueId, int numTeams)
-        {
-            var result = new DataModel.Response.ReturnResult();
             try
             {
-                int userTeamID = -1;
-                for (int i = 0; i < numTeams; i++)
-                {
-                    String name;
-                    String abbr;
-                    String owner;
-                    if (i == 0)
-                    {
-                        name = "My Team";
-                        abbr = "MY";
-                        owner = "Me";
-                    }
-                    else
-                    {
-                        int teamNameIdentifier = i + 1;
-                        name = String.Format("Team {0}", teamNameIdentifier);
-                        abbr = String.Format("TM{0}", teamNameIdentifier);
-                        owner = String.Format("Owner {0}", teamNameIdentifier);
-                    }
-
-                    //connection.Execute("INSERT INTO " + TABLE_USER_TEAMS + " (league_id, name, abbr, owner, draft_position) VALUES (?, ?, ?, ?, ?)",
-                    //    leagueID, name, abbr, owner, i + 1);
-                    var newLeagueTeam = new UserLeagueTeams
-                    {
-                        LeagueID = leagueId,
-                        Name = name,
-                        Abbreviation = abbr,
-                        Owner = owner,
-                        DraftPosition = i + 1
-                    };
-                    _db.UserLeagueTeam.Add(newLeagueTeam);
-                    _db.SaveChanges();
-
-                    if (i == 0)
-                    {
-                        userTeamID = await maxTeamID();
-                        //connection.Execute("UPDATE " + TABLE_USER_LEAGUES + " SET user_team_id = ? WHERE _id = ?", userTeamID, leagueID);
-                        var league = _db.UserLeague.Where(q => q.ID == leagueId).FirstOrDefault();
-                        league.ID = userTeamID;
-                        _db.SaveChanges();
-
-                    }
-                }
-
-                result.Success = true;
+                return _utility.SuccessResult(_draftEngine.createLeague(vMyDraftUserID));
             }
             catch (Exception ex)
             {
-                result.Success = false;
-                result.ErrMessage = ex.Message;
+                return _utility.ExceptionReturnResult(ex);
             }
-            return result;
-        }
-
-        public async Task<IList<FantasyTeam>> teamsForLeague(FantasyLeague league)
-        {
-            //await Task.Delay(2000);
-            //IList<FantasyTeam> teams = await DBAdapter.executeQuery<FantasyTeam>("SELECT * FROM " + TABLE_USER_TEAMS + " WHERE league_id = ? ORDER BY draft_position ASC", league.identifier);
-            //IList<FantasyTeam> teams = new List<FantasyTeam>();
-            IList<FantasyTeam> teams = (IList<FantasyTeam>)await _db.UserLeagueTeam.Where(q => q.LeagueID == league.identifier).OrderBy(q => q.DraftPosition).ToListAsync();
-
-            foreach (FantasyTeam team in teams)
-            {
-                team.league = league;
-                //team.auctionRosterCount = await team.getAuctionRosterCount();
-                //team.budgetAmount = await team.getAuctionAmountAvailable();
-            }
-
-            return teams;
         }
         public DataModel.Response.ReturnResult TeamsForLeague(int leagueID)
         {
@@ -291,40 +89,45 @@ namespace LeagueService
 
             return result;
         }
+        #endregion
 
-        public async Task<FantasyLeague> getLeagueWithID(int identifier)
+        #region // Properties //
+        private class Val
         {
-            //await Task.Delay(2000);
-            //IList<FantasyLeague> values = await DBAdapter.executeQuery<FantasyLeague>("SELECT * FROM " + TABLE_USER_LEAGUES + " WHERE _id = ?", identifier);
-            //IList<FantasyLeague> values = new List<FantasyLeague>();
-            IList<FantasyLeague> values = (IList<FantasyLeague>)await _db.UserLeague.Where(q => q.ID == identifier).ToListAsync();
-
-            FantasyLeague league = null;
-            if (values.Count() > 0)
-            {
-                league = values[0];
-                league.teams = await teamsForLeague(league);
-                await league.initializeAsyncValues();
-            }
-
-            return league;
+            public String value { get; set; }
         }
-
-        public static async Task<IList<string>> getLeagueIDs()
+        private class boolVal
         {
-            await Task.Delay(2000);
-            //IList<Val> values = await DBAdapter.executeQuery<Val>("SELECT _id AS value FROM " + TABLE_USER_LEAGUES + " ORDER BY _id ASC");
-            IList<Val> values = new List<Val>();
-
-            IList<string> leagueIDs = new List<string>();
-            foreach (Val value in values)
-            {
-                leagueIDs.Add(value.value);
-            }
-
-            return leagueIDs;
+            [Column("value")]
+            public int value { get; set; }
         }
-
+        private class stringVal
+        {
+            [Column("value")]
+            public String value { get; set; }
+        }
+        private class ValueID
+        {
+            [Column("player_id")]
+            public String playerID { get; set; }
+        }
+        private class intVal
+        {
+            [Column("benchslots")]
+            public int benchslots { get; set; }
+        }
+        private class TypeVal
+        {
+            [Column("type_value")]
+            public String typeVal { get; set; }
+        }
+        private class DraftTypeVal
+        {
+            [Column("draft_type")]
+            public int drafttypeVal { get; set; }
+        }
+        #endregion // Properties //
+        
         public static async Task<Boolean> deleteLeague(FantasyLeague league)
         {
             Boolean success = false;
@@ -348,8 +151,7 @@ namespace LeagueService
 
             return success;
         }
-
-        public static async Task updateLeague(FantasyLeague league)
+        public static async Task updateLeague(MyFantasyLeague league)
         {
             string query = string.Format(@"UPDATE {0} SET 
                                                 name = '{1}'
@@ -371,20 +173,6 @@ namespace LeagueService
             //await DBAdapter.executeUpdate(query);
 
         }
-
-        public async Task<int> getMaxLeagueID()
-        {
-            IList<Val> values = (IList<Val>)await Task.Run(() => _db.UserLeague.OrderByDescending(s => s.ID).Select(q => q.ID).ToListAsync());
-
-            int result = 0;
-            if (values.Count() > 0)
-            {
-                result = Convert.ToInt32(values[0].value);
-            }
-
-            return result;
-        }
-
         public static async Task<Boolean> isOtherLeagues()
         {
             await Task.Delay(2000);
@@ -394,8 +182,7 @@ namespace LeagueService
             Boolean result = Convert.ToInt32(results[0].value) > 1;
             return result;
         }
-
-        public static async Task<Boolean> checkPositionLimits(FantasyLeague league)
+        public static async Task<Boolean> checkPositionLimits(MyDraftAPI_v2.FantasyDataModel.MyFantasyLeague league)
         {
             await Task.Delay(2000);
             //IList<Val> results = await DBAdapter.executeQuery<Val>(string.Format("select * from user_roster_config where maximum > 0 and league_id = {0}", league.identifier));
@@ -404,8 +191,7 @@ namespace LeagueService
             Boolean result = results.Count() > 0;
             return result;
         }
-
-        public static async Task<Boolean> isPositionLimitEnabled(FantasyLeague league)
+        public static async Task<Boolean> isPositionLimitEnabled(MyFantasyLeague league)
         {
             bool result = false;
             await Task.Delay(2000);
@@ -423,104 +209,104 @@ namespace LeagueService
 
             return result;
         }
-
-        public async Task<FantasyTeam> createTeamFromTeam(FantasyTeam team, FantasyLeague league)
+        public async Task<UserLeagueTeam> createTeamFromTeam(UserLeagueTeam team, MyFantasyLeague league)
         {
             //await Task.Delay(2000);
             //await DBAdapter.executeUpdate("INSERT INTO " + TABLE_USER_TEAMS + " (name, abbr, league_id) VALUES (?, ?, ?)",
             //        team.name, team.abbr, league.identifier);
 
-            int lastInsertID = await maxTeamID();
-            FantasyTeam newTeam = new FantasyTeam();
+            //int lastInsertID = maxTeamID();
+            UserLeagueTeam newTeam = new UserLeagueTeam();
             //FantasyTeam newTeam = await getTeamWithID(Convert.ToString(lastInsertID), league);
             return newTeam;
         }
-
-        public async Task<int> maxTeamID()
+        public int maxTeamID()
         {
-            IList<Val> values = (IList<Val>)await Task.Run(() => _db.UserLeagueTeam.OrderByDescending(s => s.ID).Select(q => q.ID).ToListAsync());
+            //int result = 0;
+            //string query = string.Format(@"select max(_id) as value from user_teams");
+            ////List<intVal> values = await DBAdapter.executeQuery<intVal>(query.ToString());
+            //List<intVal> values = new List<intVal>();
 
-            int result = 0;
-            if (values.Count() > 0)
-            {
-                result = Convert.ToInt32(values[0].value);
-            }
-            return result;
+            //var item = values.FirstOrDefault();
+            //result = item.benchslots;
+
+            //return result;
+            var maxLeagueID = _db.UserLeague
+                                 .Max(q => q.ID);
+
+            return maxLeagueID;
         }
-
-        public async Task<FantasyTeam> getTeamWithID(String teamID, FantasyLeague league)
-        {
-            await Task.Delay(2000);
-            //IList<FantasyTeam> values = await DBAdapter.executeQuery<FantasyTeam>("SELECT * FROM " + TABLE_USER_TEAMS + " WHERE _id = ?",
-            //                         teamID);
-            IList<FantasyTeam> values = new List<FantasyTeam>();
-
-            FantasyTeam team = null;
-            if (values.Count() > 0)
-            {
-                team = values[0];
-
-                if (league == null)
-                {
-                    league = await getLeagueWithID(team.leagueID);
-                }
-
-                team.league = league;
-            }
-
-            return team;
-        }
-
+        //public async Task<UserLeagueTeam> getTeamWithID(String teamID, MyFantasyLeague league)
+        //{
+        //    await Task.Delay(2000);
+        //    //IList<FantasyTeam> values = await DBAdapter.executeQuery<FantasyTeam>("SELECT * FROM " + TABLE_USER_TEAMS + " WHERE _id = ?",
+        //    //                         teamID);
+        //    IList<UserLeagueTeam> values = new List<UserLeagueTeam>();
+        //    UserLeagueTeam team = null;
+        //    if (values.Count() > 0)
+        //    {
+        //        team = values[0];
+        //        if (league == null)
+        //        {
+        //            league = getLeagueWithID(team.leagueID);
+        //        }
+        //        team.league = league;
+        //    }
+        //    return team;
+        //}
         //public static async Task updateTeam(FantasyTeam team)
         //{
         //    await DBAdapter.executeUpdate("UPDATE " + TABLE_USER_TEAMS + " SET name = ?, abbr = ?, draft_position = ?, owner = ? WHERE _id = ?",
         //     team.name, team.abbr, team.draftPosition, team.owner, team.identifier);
         //}
-
-        public static async Task deleteTeam(FantasyTeam team)
+        public static async Task deleteTeam(UserLeagueTeamItem team)
         {
-            FantasyLeague league = team.league;
+            //MyFantasyLeague league = team.league;
             await Task.Delay(2000);
             //await DBAdapter.executeUpdate("DELETE FROM " + TABLE_USER_TEAMS + " WHERE _id = ?", team.identifier);
-            league.teams.Remove(team);
-            await DraftManager.resetDraftData(league);
+            //league.teams.Remove(team);
+            //await DraftManager.resetDraftData(league);
         }
-
-        public async Task<FantasyTeam> createTeamForLeague(FantasyLeague league)
+        public UserLeagueTeamItem createTeamForLeague(MyFantasyLeague league)
         {
-            FantasyTeam lastTeam = league.teams.Last();
-            int nextDraftPosition = lastTeam.draftPosition + 1;
-            String name = String.Format("Team {0}", nextDraftPosition);
-            String abbr = String.Format("TM{0}", nextDraftPosition);
-            String owner = String.Format("Owner {0}", nextDraftPosition);
-
-            //await Task.Delay(2000);
-            //bool success = await DBAdapter.executeUpdate("INSERT INTO " + TABLE_USER_TEAMS + " (league_id, name, abbr, owner, draft_position) VALUES (?, ?, ?, ?, ?)",
-            //    league.identifier, name, abbr, owner, nextDraftPosition);
-            bool success = true;
-            if (success)
+            try
             {
-                int nextTeamID = await maxTeamID();
-                FantasyTeam team = await getTeamWithID(Convert.ToString(nextTeamID), league);
-                league.teams.Add(team);
+                UserLeagueTeamItem lastTeam = (UserLeagueTeamItem)league.teams.Last();
+                int nextDraftPosition = lastTeam.DraftPosition + 1;
+                String name = String.Format("Team {0}", nextDraftPosition);
+                String abbr = String.Format("TM{0}", nextDraftPosition);
+                String owner = String.Format("Owner {0}", nextDraftPosition);
 
-                await DraftManager.resetDraftData(league);
-                return team;
+                //await Task.Delay(2000);
+                //bool success = await DBAdapter.executeUpdate("INSERT INTO " + TABLE_USER_TEAMS + " (league_id, name, abbr, owner, draft_position) VALUES (?, ?, ?, ?, ?)",
+                //    league.identifier, name, abbr, owner, nextDraftPosition);
+                var newTeam = new UserLeagueTeamItem()
+                {
+                    LeagueID = league.identifier,
+                    Name = name,
+                    Abbreviation = abbr,
+                    Owner = owner,
+                    DraftPosition = nextDraftPosition
+                };
+                _db.UserLeagueTeam.Add(newTeam);
+                _db.SaveChanges();
+
+                return newTeam;
             }
-            else
+            catch (Exception)
             {
+
                 return null;
             }
         }
-
-        public async Task updateTeamsForLeague(FantasyLeague league)
+        public async Task updateTeamsForLeague(MyFantasyLeague league)
         {
             if (!league.draftByTeamEnabled)
             {
                 return;
             }
 
-            List<FantasyTeam> teams = new List<FantasyTeam>(league.teams);
+            List<UserLeagueTeamItem> teams = new List<UserLeagueTeamItem>((IEnumerable<UserLeagueTeamItem>)league.teams);
             int newTeamCount = league.numTeams;
             if (teams.Count() == newTeamCount)
             {
@@ -532,9 +318,9 @@ namespace LeagueService
                 // The user decreased the number of teams
                 int startIndex = newTeamCount;
                 int length = teams.Count() - newTeamCount;
-                List<FantasyTeam> subArray = teams.GetRange(startIndex, length);
+                List<UserLeagueTeamItem> subArray = teams.GetRange(startIndex, length);
 
-                foreach (FantasyTeam team in subArray)
+                foreach (UserLeagueTeamItem team in subArray)
                 {
                     await deleteTeam(team);
                 }
@@ -546,26 +332,24 @@ namespace LeagueService
                 int length = newTeamCount - teams.Count();
                 for (int i = 0; i < length; i++)
                 {
-                    teams.Add(await createTeamForLeague(league));
+                    teams.Add(createTeamForLeague(league));
                 }
             }
 
-            league.teams = teams;
+            league.teams = (IList<UserLeagueTeamItem>)teams;
 
-            if (league.myTeam == null)
-            {
-                FantasyTeam team = league.teams.First<FantasyTeam>();
-                league.userTeamID = team.identifier;
-                await updateLeague(league);
-            }
+            //if (league.myTeam == null)
+            //{
+            //    UserLeagueTeam team = league.teams.First<UserLeagueTeam>();
+            //    league.userTeamID = team.identifier;
+            //    await updateLeague(league);
+            //}
         }
-
         //public static async Task setMyTeam(FantasyTeam team, FantasyLeague league)
         //{
         //    await DBAdapter.executeUpdate("UPDATE " + TABLE_USER_LEAGUES + " SET user_team_id = ? WHERE _id = ?",
         //            team.identifier, league.identifier);
         //}
-
         public static async Task<int> getDraft_Type()
         {
             int result = 0;
@@ -589,7 +373,6 @@ namespace LeagueService
             }
             return result;
         }
-
         public static async Task<string> getDraft_Order()
         {
             string result = string.Empty;
@@ -606,7 +389,6 @@ namespace LeagueService
 
             return result;
         }
-
         public static async Task<FantasyTeam> getMyTeamForLeague(FantasyLeague league)
         {
             await Task.Delay(2000);
@@ -623,24 +405,23 @@ namespace LeagueService
 
             return team;
         }
+        //public IList<UserLeagueTeam> getTeamsForPlayerID(String playerID)
+        //{
+        //    //await Task.Delay(2000);
+        //    //IList<int> values = await DBAdapter.executeQuery<int>("SELECT team_id AS value FROM " + TABLE_USER_ROSTER + " WHERE player_id = ?",
+        //    //        playerID);
+        //    IList<int> values = new List<int>();
 
-        public async Task<IList<FantasyTeam>> getTeamsForPlayerID(String playerID)
-        {
-            await Task.Delay(2000);
-            //IList<int> values = await DBAdapter.executeQuery<int>("SELECT team_id AS value FROM " + TABLE_USER_ROSTER + " WHERE player_id = ?",
-            //        playerID);
-            IList<int> values = new List<int>();
+        //    IList<UserLeagueTeam> teams = new List<UserLeagueTeam>();
+        //    foreach (int value in values)
+        //    {
+        //        String teamID = Convert.ToString(value);
+        //        UserLeagueTeam team = getTeamWithID(teamID, null);
+        //        teams.Add(team);
+        //    }
 
-            IList<FantasyTeam> teams = new List<FantasyTeam>();
-            foreach (int value in values)
-            {
-                String teamID = Convert.ToString(value);
-                FantasyTeam team = await getTeamWithID(teamID, null);
-                teams.Add(team);
-            }
-
-            return teams;
-        }
+        //    return teams;
+        //}
 
         //public static async Task addPlayerToTeam(String playerID, FantasyTeam team, Boolean isKeeper)
         //{
@@ -653,12 +434,10 @@ namespace LeagueService
         //    await DBAdapter.executeUpdate("DELETE FROM " + TABLE_USER_ROSTER + " WHERE player_id = ? AND team_id = ?",
         //            playerID, teamID);
         //}
-
         public static async Task<IList<String>> getPlayerIDsForTeam(FantasyTeam team)
         {
             return await getPlayerIDsForTeam(team, PlayerManager.HealthStatus.HealthStatusAll);
         }
-
         public static async Task<IList<String>> getPlayerIDsForTeam(FantasyTeam team, PlayerManager.HealthStatus status)
         {
             await Task.Delay(2000);
@@ -677,7 +456,6 @@ namespace LeagueService
 
             return await PlayerManager.getPlayerIDsWithHealthStatus(playerIDs, status);
         }
-
         public static async Task<int> getBenchSlots(FantasyLeague league)
         {
             int result = 0;
@@ -715,7 +493,6 @@ namespace LeagueService
         }
 
         #region // Auction //
-
         #endregion // Auction //
 
         #region Custom Scoring
@@ -1228,28 +1005,28 @@ namespace LeagueService
             [Column("key_full")]
             public string keyFull { get; set; }
         }
-        public async Task<IDictionary<int, double>> getLeagueRankings()
-        {
-            IDictionary<int, double> teamTotPoints = new Dictionary<int, double>();
-            IList<FantasyTeam> _fanTeams = await teamsForLeague(MyDraftEngine.Instance.league);
-            var rosterConfig = await LeagueManager.getRosterConfig(MyDraftEngine.Instance.league.identifier.ToString());
-            foreach (FantasyTeam team in _fanTeams)
-            {
-                Dictionary<string, double> _itm = new Dictionary<string, double>();
-                foreach (var item in rosterConfig)
-                {
-                    var posTotal = await LeagueManager.getTeamPositionTotal(MyDraftEngine.Instance.league.identifier, team.identifier, item.positionKey, item.value);
-                    foreach (var pts in posTotal)
-                    {
-                        _itm.Add(pts.Key, pts.Value);
-                    }
-                }
-                teamTotPoints.Add(team.identifier, _itm.Sum(x => x.Value));
-            }
-            //var list = teamTotPoints.Values.ToList();
-            //list.Sort();
-            return teamTotPoints;
-        }
+        //public async Task<IDictionary<int, double>> getLeagueRankings()
+        //{
+        //    IDictionary<int, double> teamTotPoints = new Dictionary<int, double>();
+        //    IList<UserLeagueTeam> _fanTeams = await teamsForLeague(MyDraftEngine.Instance.league);
+        //    var rosterConfig = await LeagueManager.getRosterConfig(MyDraftEngine.Instance.league.identifier.ToString());
+        //    foreach (UserLeagueTeam team in _fanTeams)
+        //    {
+        //        Dictionary<string, double> _itm = new Dictionary<string, double>();
+        //        foreach (var item in rosterConfig)
+        //        {
+        //            var posTotal = await LeagueManager.getTeamPositionTotal(MyDraftEngine.Instance.league.identifier, team.identifier, item.positionKey, item.value);
+        //            foreach (var pts in posTotal)
+        //            {
+        //                _itm.Add(pts.Key, pts.Value);
+        //            }
+        //        }
+        //        teamTotPoints.Add(team.identifier, _itm.Sum(x => x.Value));
+        //    }
+        //    //var list = teamTotPoints.Values.ToList();
+        //    //list.Sort();
+        //    return teamTotPoints;
+        //}
         public static async Task<List<RosterConfigItem>> getRosterConfig(string leagueID)
         {
             List<RosterConfigItem> starterValues = new List<RosterConfigItem>();

@@ -16,5 +16,7 @@ namespace Database.Model
         [MaxLength(256)]
         public string? UserEmail { get; set; }
         public DateTime? CreateDate { get; set; }
+        public DateTime? LastActiveDate { get; set; }
+        public ICollection<UserLeague>? UserLeagues { get; set; }
     }
 }

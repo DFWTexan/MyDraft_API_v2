@@ -49,8 +49,8 @@ namespace DbData
         public DbSet<Database.Model.Position> Positions { get; set; }
         public DbSet<Database.Model.UserLeague> UserLeague { get; set; }
         public DbSet<Database.Model.DepthChart> DepthChart { get; set; }
-        public DbSet<Database.Model.UserLeagueTeams> UserLeagueTeam { get; set; }
-        public DbSet<Database.Model.UserDraftSelections> UserDraftSelection { get; set; }
+        public DbSet<Database.Model.UserLeagueTeam> UserLeagueTeam { get; set; }
+        public DbSet<Database.Model.UserDraftSelection> UserDraftSelection { get; set; }
         public DbSet<Database.Model.UserDraftStatus> UserDraftStatus { get; set; }
         public DbSet<Database.Model.Schedule> Schedule { get; set; }
         public DbSet<Database.Model.PlayerPosition> PlayerPosition { get; set; }
@@ -76,8 +76,8 @@ namespace DbData
             modelBuilder.Entity<Database.Model.Position>().ToTable("Positions");
             modelBuilder.Entity<Database.Model.UserLeague>().ToTable("UserLeague");
             modelBuilder.Entity<Database.Model.DepthChart>().ToTable("DepthChart");
-            modelBuilder.Entity<Database.Model.UserLeagueTeams>().ToTable("UserLeagueTeams");
-            modelBuilder.Entity<Database.Model.UserDraftSelections>().ToTable("UserDraftSelections").HasNoKey();
+            modelBuilder.Entity<Database.Model.UserLeagueTeam>().ToTable("UserLeagueTeams");
+            modelBuilder.Entity<Database.Model.UserDraftSelection>().ToTable("UserDraftSelections");
             modelBuilder.Entity<Database.Model.UserDraftStatus>().ToTable("UserDraftStatus").HasNoKey();
             modelBuilder.Entity<Database.Model.Schedule>().ToTable("Schedule");
             modelBuilder.Entity<Database.Model.PlayerPosition>().ToTable("PlayerPosition");
@@ -94,8 +94,8 @@ namespace DbData
             modelBuilder.Entity<Database.Model.DepthChart>()
                 .HasKey(k => new { k.PlayerID, k.PositionID, k.TeamID });
 
-            modelBuilder.Entity<Database.Model.UserDraftSelections>()
-                .HasKey(k => new { k.LeagueID, k.TeamID, k.Round });
+            modelBuilder.Entity<Database.Model.UserDraftSelection>()
+                .HasKey(k => new { k.ID });
 
             modelBuilder.Entity<Database.Model.PlayerPosition>()
                 .HasKey(k => new { k.PlayerID, k.PositionID });
@@ -104,7 +104,16 @@ namespace DbData
                 .HasKey(k => new { k.LeagueID });
 
             modelBuilder.Entity<Database.Model.MyDraftUser>()
-                .HasKey(k => new { k.UserUniqueID });
+                .HasKey(k => new { k.ID });
+
+            modelBuilder.Entity<Database.Model.Player>()
+                .HasKey(k => new { k.ID });
+
+            modelBuilder.Entity<Database.Model.UserLeagueTeam>()
+                .HasKey(k => new { k.ID });
+
+            modelBuilder.Entity<Database.Model.ProTeam>()
+                .HasKey(k => new { k.ID });
             #endregion
 
             #region Views

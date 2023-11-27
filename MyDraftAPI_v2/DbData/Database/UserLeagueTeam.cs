@@ -3,8 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Database.Model
 {
-    public partial class UserLeagueTeams
+    public partial class UserLeagueTeam
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
         public int LeagueID { get; set; }
         public string? Name { get; set; }

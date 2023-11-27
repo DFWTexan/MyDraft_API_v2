@@ -1,5 +1,7 @@
 ﻿
-namespace MyDraftAPI_v2.FantasyDataModel.Draft
+using MyDraftAPI_v2.DbData.DataModel;
+
+namespace MyDraftAPI_v2.FantasyDataModel
 {
     public class MyDraftPick
     {
@@ -12,7 +14,6 @@ namespace MyDraftAPI_v2.FantasyDataModel.Draft
         //public float? auctionValue { get; set; }
         //public bool? isKeeper { get; set; }
 
-        public int UniverseID { get; set; }
         public int leagueID { get; set; }
         public int? playerID { get; set; }
         public int? overallPick { get; set; }
@@ -23,14 +24,14 @@ namespace MyDraftAPI_v2.FantasyDataModel.Draft
         public bool isKeeper { get; set; }
         public Database.Model.Player? player { get; set; }
 
-        public FantasyLeague? league { get; set; }
-        public FantasyTeam team
-        {
-            get
-            {
-                return league.teamWithID((int)teamID);
-            }
-        }
+        public MyFantasyLeague? league { get; set; }
+        //public FantasyTeam team
+        //{
+        //    get
+        //    {
+        //        return league.teamWithID((int)teamID);
+        //    }
+        //}
 
         public MyDraftPick() { }
         public MyDraftPick(int leagueID, int overall, int round, int pickInRound, int teamID, int playerID, float auctionValue, bool isKeeper)
@@ -50,11 +51,11 @@ namespace MyDraftAPI_v2.FantasyDataModel.Draft
             return new MyDraftPickMemento(this);
         }
 
-        public void setState(DraftPickMemento memento)
+        public void setState(MyDraftPickMemento memento)
         {
             this.overallPick = memento.overall;
             //this.playerID = memento.playerID;
-            this.auctionValue = memento.auctionValue;
+            //this.auctionValue = memento.auctionValue;
             this.isKeeper = memento.isKeeper;
         }
     }
