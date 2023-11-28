@@ -604,6 +604,7 @@ namespace MyDraftAPI_v2
                             pickInRound = draftPick.pickInRound,
                             overallPick = draftPick.overallPick,
                             teamID = draftPick.teamID,
+                            fanTeamName = db.UserLeagueTeam.Where(x => x.ID == draftPick.teamID).FirstOrDefault().Name,
                             playerID = draftPick.playerID,
                             player = draftPick.player
                         };

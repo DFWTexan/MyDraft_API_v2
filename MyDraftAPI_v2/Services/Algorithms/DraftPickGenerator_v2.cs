@@ -144,7 +144,7 @@ namespace MyDraftAPI_v2.Services.Algorithms
 
                 FantasyTeam team = teams[teamIndex];
                 int pickInRound = pickInRoundForOverallPick(overall, numberOfTeams);
-                ViewModel.DraftPick draftPick = new ViewModel.DraftPick(league.identifier, overall, round, pickInRound, team.identifier, 0, 0, false);
+                ViewModel.DraftPick draftPick = new ViewModel.DraftPick(league.identifier, overall, round, pickInRound, team.identifier, team.name, 0, 0, false, false);
                 //draftPick.league = league;
                 draftPicks.Add(draftPick);
             }
