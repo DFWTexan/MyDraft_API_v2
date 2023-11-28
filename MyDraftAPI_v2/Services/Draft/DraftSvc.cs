@@ -86,7 +86,9 @@ namespace DraftService
                         round = q.Round,
                         pickInRound = q.PickInRound,
                         teamID = q.TeamID,
-                        playerID = q.PlayerID
+                        fanTeamName = _db.UserLeagueTeam.Where(x => x.ID == q.TeamID).FirstOrDefault().Name,
+                        playerID = q.PlayerID,
+                        isMyTeamPick = q.TeamID == _draftEngine.MyDraftFanTeamID ? true : false,
                     })
                     .OrderBy(q => q.overallPick)
                     .AsNoTracking()

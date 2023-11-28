@@ -35,7 +35,7 @@ namespace PlayerService
                 var players = _db.vw_PlayerListItem
                                 .Select(q => new ViewModel.PlayerListItem
                                 {
-                                    ID = q.ID,
+                                    PlayerID = q.PlayerID,
                                     FirstName = q.FirstName,
                                     LastName = q.LastName,
                                     FullName = q.FullName,
@@ -47,7 +47,7 @@ namespace PlayerService
                                     ADPPoints = q.ADPPoints,
                                     IsDrafted = _db.UserDraftSelection
                                                 .Where(q => q.LeagueID == _draftEngine.ActiveMyDraftLeague.ID)
-                                                .Any(x => x.PlayerID == q.ID)
+                                                .Any(x => x.PlayerID == q.PlayerID)
                                 })
                                 .AsSplitQuery();
 

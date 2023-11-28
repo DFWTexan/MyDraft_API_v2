@@ -5,7 +5,7 @@ namespace Database.Model
     public class vw_PlayerListItem
     {
         public int LeagueID { get; set; }
-        public int ID { get; set; }
+        public int PlayerID { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set;}
         public string? FullName { get; set; }
