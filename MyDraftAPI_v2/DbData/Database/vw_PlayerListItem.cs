@@ -4,9 +4,11 @@ namespace Database.Model
 {
     public class vw_PlayerListItem
     {
+        public int LeagueID { get; set; }
         public int ID { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set;}
+        public string? FullName { get; set; }
         public string? PhotoURL { get; set; }
         public string? Position { get; set; }
         public string? TeamAbbr { get; set; }

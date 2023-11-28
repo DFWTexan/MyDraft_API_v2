@@ -13,6 +13,7 @@ namespace Database.Model
         public string? Abbreviation { get; set; }
         public int DraftPosition { get; set; }  
         public string? Owner { get; set; }
+        public bool IsMyTeam { get; set; }  
 
         #region Foreign Keys
         [ForeignKey("LeagueID")]

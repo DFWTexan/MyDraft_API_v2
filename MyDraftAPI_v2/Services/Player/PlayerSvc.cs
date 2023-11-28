@@ -32,14 +32,31 @@ namespace PlayerService
             try
             {
                 //var players = from q in _db.vw_PlayerListItem.AsSplitQuery() select q;
-                var players = _db.vw_PlayerListItem.AsSplitQuery();
+                var players = _db.vw_PlayerListItem
+                                .Select(q => new ViewModel.PlayerListItem
+                                {
+                                    ID = q.ID,
+                                    FirstName = q.FirstName,
+                                    LastName = q.LastName,
+                                    FullName = q.FullName,
+                                    PhotoURL = q.PhotoURL,
+                                    Position = q.Position,
+                                    TeamAbbr = q.TeamAbbr,
+                                    PointsVal = q.PointsVal,
+                                    AAVPoints = q.AAVPoints,
+                                    ADPPoints = q.ADPPoints,
+                                    IsDrafted = _db.UserDraftSelection
+                                                .Where(q => q.LeagueID == _draftEngine.ActiveMyDraftLeague.ID)
+                                                .Any(x => x.PlayerID == q.ID)
+                                })
+                                .AsSplitQuery();
 
                 // FilterSORT: Point, AAV or ADP Value
                 if (vInput.pointValue != null)
                 {
-                    if(vInput.pointValue == "[POINTS]")
+                    if (vInput.pointValue == "[POINTS]")
                         players = players.OrderByDescending(q => q.PointsVal);
-                    else if(vInput.pointValue == "[ADP]")
+                    else if (vInput.pointValue == "[ADP]")
                         players = players.OrderByDescending(q => q.ADPPoints);
                     else if (vInput.pointValue == "[AAV]")
                         players = players.OrderByDescending(q => q.AAVPoints);
@@ -54,15 +71,18 @@ namespace PlayerService
                 // Filter: Draft Status Value
                 if (vInput.draftStatus != null)
                 {
-                    if(vInput.draftStatus == "[DRAFTED]")
+                    if (vInput.draftStatus == "[DRAFTED]")
                     {
                         players = players.Where(q => q.IsDrafted == true);
                     }
-                    else if(vInput.draftStatus == "[AVAILABLE]")
+                    else if (vInput.draftStatus == "[AVAILABLE]")
                     {
                         players = players.Where(q => q.IsDrafted == false);
                     }
                 }
+
+                // TBD: SET the isDrafted value
+
 
                 result.ObjData = players;
                 result.Success = true;
@@ -93,7 +113,7 @@ namespace PlayerService
                     .Include(x => x.ProTeam)
                     .Where(x => x.ID == id)
                     .SingleOrDefault();
-                
+
                 var playerInfo = new ViewModel.PlayerInfo
                 {
                     ID = player.ID,
@@ -113,25 +133,25 @@ namespace PlayerService
                     Status = player.Status,
                     IsDrafted = isPlayerDrafted(player.ID),
                     ProTeamName = player.ProTeam.NickName != null ? player.ProTeam.City + " " + player.ProTeam.NickName : "N/A"
-                };  
-                
+                };
+
                 var position = _db.Positions.Where(x => x.Abbr == player.Position).SingleOrDefault();
                 var playerNews = _db.PlayerNews.Where(x => x.PlayerID == id).ToList();
                 var depthChart = _db.DepthChart
                     .Include(x => x.Player)
                     .Where(x => x.PositionID == position.ID && x.TeamID == player.ProTeamID).ToList();
 
-                foreach(var i in depthChart.OrderBy(s => s.Rank))
+                foreach (var i in depthChart.OrderBy(s => s.Rank))
                 {
                     if (position != null && i.PositionID == position.ID)
-                        playerInfo.DepthChart.Add(new ViewModel.PlayerInfo.DepthChartItem 
-                        { 
+                        playerInfo.DepthChart.Add(new ViewModel.PlayerInfo.DepthChartItem
+                        {
                             PlayerName = (i.Player.FirstName == null ? "" : i.Player.FirstName) + ' ' + i.Player.LastName,
                             PositionName = player.Position,
                             Rank = i.Rank
                         });
                 }
-                if(playerNews != null)
+                if (playerNews != null)
                 {
                     foreach (var i in playerNews)
                     {
@@ -146,7 +166,7 @@ namespace PlayerService
                             InjuryType = i.InjuryType
                         });
                     }
-                }                
+                }
 
                 result.ObjData = playerInfo;
                 result.Success = true;

@@ -29,7 +29,7 @@ namespace MyDraftAPI_v2
         private List<MyDraftAPI_v2.FantasyDataModel.MyDraftPick>? _draftPicks;
         private ViewModel.DraftStatus? _draftStatus;
         private IDictionary<int, MyDraftAPI_v2.FantasyDataModel.MyDraftPick> _draftPickMap;
-        private int _myDraftFanTeamID = 1;
+        private int _myDraftFanTeamID;
         private Dictionary<string, ViewModel.DraftPick> _rosterDict = new Dictionary<string, ViewModel.DraftPick>() {
             {"QB", new ViewModel.DraftPick() },
             {"RB1", new ViewModel.DraftPick() },
@@ -145,7 +145,8 @@ namespace MyDraftAPI_v2
                                                      Name = lt.Name,
                                                      Abbreviation = lt.Abbreviation,
                                                      DraftPosition = lt.DraftPosition,
-                                                     Owner = lt.Owner
+                                                     Owner = lt.Owner,
+                                                     IsMyTeam = lt.IsMyTeam,
                                                  }).ToList()
                                              })
                                              .AsNoTracking()
@@ -165,6 +166,7 @@ namespace MyDraftAPI_v2
                     db.Entry(updUserLeague).Property(x => x.LastActiveDate).IsModified = true;
                     db.SaveChanges();
                     
+                    _myDraftFanTeamID = _activeMyDraftLeague.teams.Where(q => q.IsMyTeam == true).FirstOrDefault().ID;
                     
                     _league = new MyDraftAPI_v2.FantasyDataModel.MyFantasyLeague()
                     {
@@ -187,6 +189,7 @@ namespace MyDraftAPI_v2
                             fanTeamName = i.fanTeamName,
                             onTheClock = i.onTheClock,
                             IsComplete = i.IsComplete,
+                            IsMyTeamPick = i.onTheClock == _myDraftFanTeamID ? true : false,    
                         })
                         .AsNoTracking()
                         .FirstOrDefault();
@@ -296,7 +299,6 @@ namespace MyDraftAPI_v2
                     db.SaveChanges();
                     int newLeagueID = newLeague.ID;
 
-                    //int leagueID = await getMaxLeagueID();
                     var resultObj = createTeams(newLeagueID, LEAGUE_TEMP_NUM_TEAMS);
 
                     var newMyFantasyLeague = new MyFantasyLeague(newLeague);
@@ -319,7 +321,8 @@ namespace MyDraftAPI_v2
                                             Name = lt.Name,
                                             Abbreviation = lt.Abbreviation,
                                             DraftPosition = lt.DraftPosition,
-                                            Owner = lt.Owner
+                                            Owner = lt.Owner,
+                                            IsMyTeam = lt.IsMyTeam,
                                         }).ToList()
                                     })
                                     .AsNoTracking()
@@ -349,7 +352,7 @@ namespace MyDraftAPI_v2
                         LeagueID = newLeagueID,
                         CurrentPick = 1,
                         CurrentRound = 1,
-                        onTheClock = 1,
+                        onTheClock = _myDraftFanTeamID,
                         fanTeamName = "My Team",
                         IsComplete = false,
                     };
@@ -479,19 +482,11 @@ namespace MyDraftAPI_v2
                             Name = name,
                             Abbreviation = abbr,
                             Owner = owner,
-                            DraftPosition = i + 1
+                            DraftPosition = i + 1,
+                            IsMyTeam = i == 0 ? true : false,
                         };
                         db.UserLeagueTeam.Add(newLeagueTeam);
                         db.SaveChanges();
-
-                        //if (i == 0)
-                        //{
-                        //    userTeamID = await maxTeamID();
-                        //    //connection.Execute("UPDATE " + TABLE_USER_LEAGUES + " SET user_team_id = ? WHERE _id = ?", userTeamID, leagueID);
-                        //    var league = db.UserLeague.Where(q => q.ID == leagueId).FirstOrDefault();
-                        //    league.ID = userTeamID;
-                        //    db.SaveChanges();
-                        //}
                     }
 
                     return true;
