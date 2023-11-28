@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using EmailService;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace MyDraftAPI_v2
 {
@@ -69,7 +71,8 @@ namespace MyDraftAPI_v2
                         .AllowCredentials();
                     });
             });
-            #region JWT
+
+            #region // JWT //
             //-- Adding Authentication
             services.AddAuthentication(options =>
             {
@@ -91,6 +94,20 @@ namespace MyDraftAPI_v2
                      ValidIssuer = Configuration["JWT:ValidIssuer"],
                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
                  };
+            });
+            #endregion
+
+            #region // Email Service //
+            var emailConfig = Configuration
+                .GetSection("EmailConfiguration")
+                .Get<EmailConfiguration>();
+            services.AddSingleton(emailConfig);
+            services.AddScoped<IEmailSender, EmailSender>();
+
+            services.Configure<FormOptions>(o => {
+                o.ValueLengthLimit = int.MaxValue;
+                o.MultipartBodyLengthLimit = int.MaxValue;
+                o.MemoryBufferThreshold = int.MaxValue;
             });
             #endregion
 
