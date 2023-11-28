@@ -120,14 +120,14 @@ namespace MyDraftAPI_v2
                 {
                     bool isLeagueAvailable = db.UserLeague
                             .AsNoTracking()
-                            .Any(x => x.ID == myDraftUserID);
+                            .Any(x => x.MyDraftUserID == myDraftUserID);
 
                     #region LastActiveLeague
                     if (isLeagueAvailable)
                     {
                         //-- Get the last active league
                         _activeMyDraftLeague = db.UserLeague
-                                             .Where(x => x.ID == myDraftUserID)
+                                             .Where(x => x.MyDraftUserID == myDraftUserID)
                                              .OrderByDescending(q => q.LastActiveDate)
                                              .Select(i => new ViewModel.ActiveLeague
                                              {
@@ -155,6 +155,16 @@ namespace MyDraftAPI_v2
                     {
                         _activeMyDraftLeague = createLeague(myDraftUserID);
                     }
+
+                    var updUserLeague = new UserLeague
+                    {
+                        ID = _activeMyDraftLeague.ID,
+                        LastActiveDate = DateTime.Now,
+                    };
+                    db.UserLeague.Attach(updUserLeague);
+                    db.Entry(updUserLeague).Property(x => x.LastActiveDate).IsModified = true;
+                    db.SaveChanges();
+                    
                     
                     _league = new MyDraftAPI_v2.FantasyDataModel.MyFantasyLeague()
                     {
@@ -279,6 +289,7 @@ namespace MyDraftAPI_v2
                         NumberOfRounds = leagueContainer.rounds,
                         DraftType = leagueContainer.draftType,
                         DraftOrder = leagueContainer.draftOrderType.ToString(),
+                        LastActiveDate = DateTime.Now,
                     };
 
                     db.UserLeague.Add(newLeague);
