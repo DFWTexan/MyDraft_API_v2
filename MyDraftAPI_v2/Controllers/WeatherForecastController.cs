@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mail;
 using System.Net;
+using Microsoft.Extensions.Configuration;
 
 namespace MyDraftAPI_v2.Controllers
 {
@@ -16,35 +17,42 @@ namespace MyDraftAPI_v2.Controllers
     };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly IConfiguration _config;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IConfiguration config)
         {
             _logger = logger;
+            _config = config;
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
-            using (var client = new SmtpClient())
-            {
-                client.Host = "smtp.gmail.com";
-                client.Port = 587;
-                client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                client.UseDefaultCredentials = false;
-                client.EnableSsl = true;
-                client.Credentials = new NetworkCredential("ErishMF@GMAIL.COM", "drfc cfap rzsx ohsf");
-                using (var message = new MailMessage(
-                    from: new MailAddress("ErishMF@GMAIL.COM", "TxNum5"),
-                    to: new MailAddress("EMFTest@mailinator.COM", "EMFTest-Email-Message")
-                    ))
-                {
+            //using (var client = new SmtpClient())
+            //{
+            //    client.Host = "smtp.gmail.com";
+            //    client.Port = 587;
+            //    client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            //    client.UseDefaultCredentials = false;
+            //    client.EnableSsl = true;
+            //    client.Credentials = new NetworkCredential("ErishMF@GMAIL.COM", "drfc cfap rzsx ohsf");
+            //    using (var message = new MailMessage(
+            //        from: new MailAddress("ErishMF@GMAIL.COM", "TxNum5"),
+            //        to: new MailAddress("EMFTest@mailinator.COM", "EMFTest-Email-Message")
+            //        ))
+            //    {
 
-                    message.Subject = "Hello from code!";
-                    message.Body = "Loremn ipsum dolor sit amet ...";
+            //        message.Subject = "Hello from code!";
+            //        message.Body = "Loremn ipsum dolor sit amet ...";
 
-                    client.Send(message);
-                }
-            }
+            //        client.Send(message);
+            //    }
+            //}
+
+            var body = string.Format("<div><p> Hello {0}</p><p>Need to Complete email body content.</p></div>", "DFWTexan");
+
+            var service = new EmailService.EmailSvs(_config);
+            service.SendEmail("EMFTest@mailinator.com", "EMF-Tester", "Welcome to MyDraft!", body);
 
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {

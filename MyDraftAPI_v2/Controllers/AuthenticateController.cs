@@ -98,7 +98,7 @@ namespace JWTAuthentication.NET6._0.Controllers
             {
                 var userExists = await _userManager.FindByNameAsync(model.Username);
                 if (userExists != null)
-                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "FAILED", Message = "User already exists!" });
 
                 IdentityUser user = new()
                 {
@@ -108,8 +108,9 @@ namespace JWTAuthentication.NET6._0.Controllers
                 };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (!result.Succeeded)
-                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "FAILED", Message = "User creation failed! Please check user details and try again." });
 
+                #region // Add User to MyDraftUser Table
                 var newUser = await _userManager.FindByNameAsync(model.Username);
                 MyDraftUser myDraftUser = new()
                 {
@@ -119,8 +120,16 @@ namespace JWTAuthentication.NET6._0.Controllers
                 };
                 _db.MyDraftUser.Add(myDraftUser);
                 _db.SaveChanges();
+                #endregion
 
-                return Ok(new Response { Status = "Success", Message = "User created successfully!" });
+                #region // Send Email
+                var body = string.Format("<div><p>Hello {0}</p><p>Need to Complete email body content.</p></div>", newUser.NormalizedUserName);
+            
+                var service = new EmailService.EmailSvs(_configuration);
+                service.SendEmail(newUser.NormalizedEmail, newUser.NormalizedUserName, "Welcome to MyDraft!", body);
+                #endregion
+
+                return Ok(new Response { Status = "SUCCESS", Message = "User created successfully!" });
             }
             catch (Exception ex)
             {
