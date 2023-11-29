@@ -39,43 +39,55 @@ namespace JWTAuthentication.NET6._0.Controllers
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            var user = await _userManager.FindByNameAsync(model.Username);
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+            try
             {
-                var userRoles = await _userManager.GetRolesAsync(user);
-
-                var authClaims = new List<Claim>
+                var user = await _userManager.FindByNameAsync(model.Username);
+                if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
                 {
-                    new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                };
+                    var userRoles = await _userManager.GetRolesAsync(user);
 
-                foreach (var userRole in userRoles)
-                {
-                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-                }
-
-                var token = GetToken(authClaims);
-
-                var myDraftUser = _db.MyDraftUser.Where(x => x.UserUniqueID == user.Id).FirstOrDefault(); 
-                if (myDraftUser != null)
-                {
-                    _draftEngine.MyDraftUser = new ViewModel.UserInfo() { 
-                        UserName = myDraftUser.UserName,
-                        UserEmail = myDraftUser.UserEmail,  
-                        IsLoggedIn = true,
+                    var authClaims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, user.UserName),
+                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     };
-                    _draftEngine.InitializeLeagueData_v2(myDraftUser.ID);
-                }
-                    
 
-                return Ok(new
+                    foreach (var userRole in userRoles)
+                    {
+                        authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+                    }
+
+                    var token = GetToken(authClaims);
+
+                    var myDraftUser = _db.MyDraftUser.Where(x => x.UserUniqueID == user.Id).FirstOrDefault();
+                    if (myDraftUser != null)
+                    {
+                        _draftEngine.MyDraftUser = new ViewModel.UserInfo()
+                        {
+                            UserName = myDraftUser.UserName,
+                            UserEmail = myDraftUser.UserEmail,
+                            IsLoggedIn = true,
+                        };
+                        _draftEngine.InitializeLeagueData_v2(myDraftUser.ID);
+                    }
+
+
+                    return Ok(new
+                    {
+                        token = new JwtSecurityTokenHandler().WriteToken(token),
+                        expiration = token.ValidTo
+                    });
+                } else
                 {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo
-                });
+                    return Unauthorized(new Response { Status = "Failed", Message = "Username or password is incorrect..." });
+                }
             }
-            return Unauthorized();
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            //return Unauthorized();
         }
 
         [HttpPost]
@@ -97,7 +109,7 @@ namespace JWTAuthentication.NET6._0.Controllers
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (!result.Succeeded)
                     return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
-                
+
                 var newUser = await _userManager.FindByNameAsync(model.Username);
                 MyDraftUser myDraftUser = new()
                 {
@@ -115,7 +127,7 @@ namespace JWTAuthentication.NET6._0.Controllers
                 return BadRequest(ex.Message);
                 throw;
             }
-            
+
         }
 
         [HttpPost]
