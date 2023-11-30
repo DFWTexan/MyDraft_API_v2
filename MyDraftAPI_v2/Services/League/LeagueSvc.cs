@@ -59,6 +59,17 @@ namespace LeagueService
                 return _utility.ExceptionReturnResult(ex);
             }
         }
+        public DataModel.Response.ReturnResult ChangeActiveLeague(int vLeagueID)
+        {
+            try
+            {
+                return _utility.SuccessResult(_draftEngine.changeActiveLeague(vLeagueID));
+            }
+            catch (Exception ex)
+            {
+                return _utility.ExceptionReturnResult(ex);
+            }
+        }
         public DataModel.Response.ReturnResult TeamsForLeague(int leagueID)
         {
             var result = new DataModel.Response.ReturnResult();

@@ -26,24 +26,6 @@ namespace EmailService
 
             try
             {
-                //using (var client = new SmtpClient())
-                //{
-                //    client.Host = "smtp.gmail.com";
-                //    client.Port = 587;
-                //    client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                //    client.UseDefaultCredentials = false;
-                //    client.EnableSsl = true;
-                //    client.Credentials = new NetworkCredential("ErishMF@GMAIL.COM", "drfc cfap rzsx ohsf");
-                //    using (var message = new MailMessage(
-                //        from: new MailAddress("ErishMF@GMAIL.COM", "TxNum5"),
-                //        to: new MailAddress("EMFTest@mailinator.COM", "EMFTest-Email-Message")
-                //        ))
-                //    {
-                //        message.Subject = "Hello from code!";
-                //        message.Body = "Loremn ipsum dolor sit amet ...";
-                //        client.Send(message);
-                //    }
-                //}
                 using (var client = new SmtpClient())
                 {
                     client.Host = smtpServer;
@@ -55,7 +37,7 @@ namespace EmailService
 
                     using (var message = new MailMessage(
                                 from: new MailAddress(fromAddress, "MyDraft - E.faggett "),
-                                to: new MailAddress("EMFTest@mailinator.COM", "")
+                                to: new MailAddress(vTo, vToName)
                                 ))
                     {
                         message.Subject = vSubject;

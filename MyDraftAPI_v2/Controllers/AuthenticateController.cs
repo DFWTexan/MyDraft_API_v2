@@ -3,6 +3,7 @@ using DbData;
 using JWTAuthentication.NET6._0.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MyDraftAPI_v2;
 using System.IdentityModel.Tokens.Jwt;
@@ -59,7 +60,9 @@ namespace JWTAuthentication.NET6._0.Controllers
 
                     var token = GetToken(authClaims);
 
-                    var myDraftUser = _db.MyDraftUser.Where(x => x.UserUniqueID == user.Id).FirstOrDefault();
+                    var myDraftUser = _db.MyDraftUser
+                                    .Include(x => x.UserLeagues)
+                                    .Where(x => x.UserUniqueID == user.Id).FirstOrDefault();
                     if (myDraftUser != null)
                     {
                         _draftEngine.MyDraftUser = new ViewModel.UserInfo()
@@ -67,7 +70,18 @@ namespace JWTAuthentication.NET6._0.Controllers
                             UserName = myDraftUser.UserName,
                             UserEmail = myDraftUser.UserEmail,
                             IsLoggedIn = true,
+                            UserLeagues = new List<ViewModel.UserLeagueItem>()
                         };
+
+                        foreach (var userLeague in myDraftUser.UserLeagues)
+                        {
+                            _draftEngine.MyDraftUser.UserLeagues.Add(new ViewModel.UserLeagueItem()
+                            {
+                                Value = userLeague.ID,
+                                Label = userLeague.Name
+                            });
+                        }
+
                         _draftEngine.InitializeLeagueData_v2(myDraftUser.ID);
                     }
 

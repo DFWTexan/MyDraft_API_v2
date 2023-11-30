@@ -255,6 +255,41 @@ namespace MyDraftAPI_v2
             };
         }
 
+        #region // Draft Actions //
+        public async Task<bool> changeActiveLeague(int vLeagueID)
+        {
+            using (var db = new AppDataContext(_dbOptionsBuilder.Options))
+            {
+                try
+                {
+                    // statement to update the last UserLeague active date
+                    var updUserLeague = new UserLeague
+                    {
+                        ID = vLeagueID,
+                        LastActiveDate = DateTime.Now,
+                    };
+                    db.UserLeague.Attach(updUserLeague);
+                    db.Entry(updUserLeague).Property(x => x.LastActiveDate).IsModified = true;
+                    db.SaveChanges();
+                    
+                    // statement to get MyDraftUserID from UserLeague table where ID = vLeagueID
+                    var myDraftUserID = db.UserLeague
+                                        .Where(x => x.ID == vLeagueID)
+                                        .Select(i => i.MyDraftUserID)
+                                        .FirstOrDefault();
+
+                    InitializeLeagueData_v2(myDraftUserID);
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
+        }
+        #endregion
+
         #region //  Draft Construction  //
         public ViewModel.ActiveLeague createLeague(int vMyDraftUserID)
         {
@@ -367,22 +402,6 @@ namespace MyDraftAPI_v2
                     throw;
                 }
             }
-        }
-        public static async Task saveDraftPicks(IList<MyDraftPick> draftPicks)
-        {
-            if (draftPicks == null)
-                return;
-
-            await Task.Delay(2000);
-            //await DBAdapter.dbAPP.RunInTransactionAsync((SQLiteConnection connection) =>
-            //{
-            //    foreach (DraftPick draftPick in draftPicks)
-            //    {
-            //        saveDraftPick(draftPick, connection);
-            //    }
-
-            //    Debug.WriteLine("SAVE_DRAFT_PICKS_DONE");
-            //});
         }
         public async Task<MyFantasyLeague> getLeagueWithID(int identifier)
         {
