@@ -120,6 +120,9 @@ namespace JWTAuthentication.NET6._0.Controllers
                 };
                 _db.MyDraftUser.Add(myDraftUser);
                 _db.SaveChanges();
+                int myDraftUserID = myDraftUser.ID;
+
+                _draftEngine.InitializeLeagueData_v2(myDraftUser.ID);
                 #endregion
 
                 #region // Send Email
