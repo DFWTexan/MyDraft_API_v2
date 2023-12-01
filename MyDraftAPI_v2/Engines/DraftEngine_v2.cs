@@ -382,6 +382,7 @@ namespace MyDraftAPI_v2
                         db.SaveChanges();
                     }
 
+                    //* Draft Status *//
                     var newDraftStatus = new UserDraftStatus
                     {
                         LeagueID = newLeagueID,
@@ -394,7 +395,26 @@ namespace MyDraftAPI_v2
 
                     db.UserDraftStatus.Add(newDraftStatus);
                     db.SaveChanges();
-                    
+
+                    //* UserInfoStatus *//
+                    _myDraftUser = db.MyDraftUser
+                                    .Include(x => x.UserLeagues)
+                                    .Where(x => x.ID == vMyDraftUserID)
+                                    .Select(i => new ViewModel.UserInfo
+                                    {
+                                        UserName = i.UserName,
+                                        UserEmail = i.UserEmail,
+                                        IsLoggedIn = true,
+                                        UserLeagues = i.UserLeagues.Select(l => new ViewModel.UserLeagueItem
+                                        {
+                                            Value = l.ID,
+                                            Label = l.Name
+                                        }).ToList() 
+                                    })
+                                    .AsNoTracking()
+                                    .FirstOrDefault();  
+
+
                     return result;
                 }
                 catch (Exception)

@@ -50,14 +50,14 @@ namespace MyDraftAPI_v2.Controllers
         /// 
         /// Create Fantasy League
         ///
-        [HttpGet("{MyDraftUserID}")]
-        public async Task<ActionResult> CreateLeague(int MyDraftUserID)
+        [HttpGet]
+        public async Task<ActionResult> CreateLeague()
         {
             try
             {
                 var service = new LeagueService.LeagueSvc(_db, _config, null, _utility, _draftEngine);
 
-                var result = await Task.Run(() => service.CreateLeague(MyDraftUserID));
+                var result = await Task.Run(() => service.CreateLeague());
 
                 return StatusCode(result.StatusCode, result.ObjData);
             }
