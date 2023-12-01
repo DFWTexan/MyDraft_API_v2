@@ -67,6 +67,40 @@ namespace LeagueService
                 return _utility.ExceptionReturnResult(ex);
             }
         }
+        public DataModel.Response.ReturnResult DeleteLeague(int vLeagueID)
+        {
+            try
+            {
+                int myDraftUserID = _db.UserLeague
+                                        .Where(x => x.ID == _draftEngine.ActiveMyDraftLeague.ID)
+                                        .Select(i => i.MyDraftUserID)
+                                        .FirstOrDefault();
+
+                // DELETE UserSelections
+                _db.UserDraftSelection.RemoveRange(_db.UserDraftSelection.Where(x => x.LeagueID == vLeagueID));
+                _db.SaveChanges();
+
+                // DELETE UserDraftStatus
+                _db.UserDraftStatus.RemoveRange(_db.UserDraftStatus.Where(x => x.LeagueID == vLeagueID));
+                _db.SaveChanges();
+
+                // DELETE UserLeagueTeams
+                _db.UserLeagueTeam.RemoveRange(_db.UserLeagueTeam.Where(x => x.LeagueID == vLeagueID));
+                _db.SaveChanges();
+
+                // DELETE UserLeague
+                _db.UserLeague.RemoveRange(_db.UserLeague.Where(x => x.ID == vLeagueID));
+                _db.SaveChanges();
+
+                _draftEngine.InitializeLeagueData_v2(myDraftUserID);
+
+                return _utility.SuccessResult(StatusCodes.Status200OK);
+            }
+            catch (Exception ex)
+            {
+                return _utility.ExceptionReturnResult(ex);
+            }
+        }
         public DataModel.Response.ReturnResult ChangeActiveLeague(int vLeagueID)
         {
             try

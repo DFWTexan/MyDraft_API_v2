@@ -69,6 +69,28 @@ namespace MyDraftAPI_v2.Controllers
         }
 
         /// <summary>
+        /// 
+        /// Delete Fantasy League
+        ///
+        [HttpGet("{leagueID}")]
+        public async Task<ActionResult> DeleteLeague(int leagueID)
+        {
+            try
+            {
+                var service = new LeagueService.LeagueSvc(_db, _config, null, _utility, _draftEngine);
+
+                var result = await Task.Run(() => service.DeleteLeague(leagueID));
+
+                return StatusCode(result.StatusCode, result.ObjData);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new List<string>() { "Server Error" });
+            }
+
+        }
+
+        /// <summary>
         ///     
         /// Change the Active League
         ///
