@@ -152,7 +152,7 @@ namespace DbData
 
             modelBuilder.Entity<UserDraftSelection>()
                 .HasIndex(p => new {p.LeagueID, p.TeamID, p.OverallPick})
-                .HasName("IX_PlayerID_LeagueID")
+                .HasName("IX_LeagueID_TeamID_OverallPick")
                 .IsUnique();
 
             //modelBuilder.Entity<Player>()
