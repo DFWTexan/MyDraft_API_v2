@@ -48,11 +48,30 @@ namespace LeagueService
                 return _utility.ExceptionReturnResult(ex);
             }
         }
-        public DataModel.Response.ReturnResult CreateLeague(int vMyDraftUserID)
+        public DataModel.Response.ReturnResult CreateLeague()
         {
             try
             {
-                return _utility.SuccessResult(_draftEngine.createLeague(vMyDraftUserID));
+                int myDraftUserID = _db.UserLeague
+                                        .Where(x => x.ID == _draftEngine.ActiveMyDraftLeague.ID)
+                                        .Select(i => i.MyDraftUserID)
+                                        .FirstOrDefault();
+                
+                _draftEngine.createLeague(myDraftUserID);
+                _draftEngine.InitializeLeagueData_v2(myDraftUserID);
+
+                return _utility.SuccessResult(StatusCodes.Status200OK);
+            }
+            catch (Exception ex)
+            {
+                return _utility.ExceptionReturnResult(ex);
+            }
+        }
+        public DataModel.Response.ReturnResult ChangeActiveLeague(int vLeagueID)
+        {
+            try
+            {
+                return _utility.SuccessResult(_draftEngine.changeActiveLeague(vLeagueID));
             }
             catch (Exception ex)
             {

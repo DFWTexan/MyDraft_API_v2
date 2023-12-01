@@ -31,25 +31,22 @@ namespace PlayerService
             var result = new DataModel.Response.ReturnResult();
             try
             {
-                //var players = from q in _db.vw_PlayerListItem.AsSplitQuery() select q;
                 var players = _db.vw_PlayerListItem
-                                .Select(q => new ViewModel.PlayerListItem
-                                {
-                                    PlayerID = q.PlayerID,
-                                    FirstName = q.FirstName,
-                                    LastName = q.LastName,
-                                    FullName = q.FullName,
-                                    PhotoURL = q.PhotoURL,
-                                    Position = q.Position,
-                                    TeamAbbr = q.TeamAbbr,
-                                    PointsVal = q.PointsVal,
-                                    AAVPoints = q.AAVPoints,
-                                    ADPPoints = q.ADPPoints,
-                                    IsDrafted = _db.UserDraftSelection
-                                                .Where(q => q.LeagueID == _draftEngine.ActiveMyDraftLeague.ID)
-                                                .Any(x => x.PlayerID == q.PlayerID)
-                                })
-                                .AsSplitQuery();
+                .Select(plyr => new ViewModel.PlayerListItem
+                {
+                    PlayerID = plyr.PlayerID,
+                    FirstName = plyr.FirstName,
+                    LastName = plyr.LastName,
+                    FullName = plyr.FullName,
+                    PhotoURL = plyr.PhotoURL,
+                    Position = plyr.Position,
+                    TeamAbbr = plyr.TeamAbbr,
+                    PointsVal = plyr.PointsVal,
+                    AAVPoints = plyr.AAVPoints,
+                    ADPPoints = plyr.ADPPoints,
+                    IsDrafted = _db.UserDraftSelection
+                                .Any(ud => ud.LeagueID == _draftEngine.ActiveMyDraftLeague.ID && ud.PlayerID == plyr.PlayerID)
+                });
 
                 // FilterSORT: Point, AAV or ADP Value
                 if (vInput.pointValue != null)
@@ -100,7 +97,7 @@ namespace PlayerService
         {
             bool isDrafted = _db.UserDraftSelection
                             .AsNoTracking()
-                            .Any(x => x.PlayerID == vPlayerID);
+                            .Any(x => x.PlayerID == vPlayerID && x.LeagueID == _draftEngine.ActiveMyDraftLeague.ID);
 
             return isDrafted;
         }

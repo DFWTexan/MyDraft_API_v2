@@ -2,19 +2,26 @@
 {
     public class UserInfo
     {
-        //public int UserID { get; set; }
         public string? UserName {  get; set; }
         public string? UserEmail { get; set; }
-        //public string? Password { get; set; }
         public bool? IsLoggedIn { get; set; }
+        public List<UserLeagueItem>? UserLeagues { get; set; }
 
-        public UserInfo() { }
+        public UserInfo() {
+            UserLeagues = new List<UserLeagueItem>();
+        }
         public UserInfo(string userName, string userEmail, bool isLoggedIn) 
         {
-            //UserID = universID;
             UserName = userName;
             UserEmail = userEmail;
             IsLoggedIn = isLoggedIn;
+            UserLeagues = new List<UserLeagueItem>();
         }
+    }
+
+    public class UserLeagueItem
+    {
+        public int Value { get; set; }
+        public string? Label { get; set; }
     }
 }
