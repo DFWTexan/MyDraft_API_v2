@@ -4,6 +4,7 @@ using DbData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MyDraftAPI_v2.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    partial class AppDataContextModelSnapshot : ModelSnapshot
+    [Migration("20231201061942_emf20211201C")]
+    partial class emf20211201C
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -459,10 +462,7 @@ namespace MyDraftAPI_v2.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("LeagueID", "TeamID", "OverallPick")
-                        .IsUnique()
-                        .HasDatabaseName("IX_PlayerID_LeagueID")
-                        .HasFilter("[TeamID] IS NOT NULL AND [OverallPick] IS NOT NULL");
+                    b.HasIndex("LeagueID");
 
                     b.ToTable("UserDraftSelections", (string)null);
                 });
