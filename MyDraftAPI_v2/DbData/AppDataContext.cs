@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Database.Model;
 #pragma warning disable 
 
 namespace DbData
@@ -10,8 +11,8 @@ namespace DbData
         private readonly int _fanUniverse_ID;
 
         private readonly IHttpContextAccessor _httpContextAccessor;
-              
-        public AppDataContext(DbContextOptions<AppDataContext> options) : base(options) 
+
+        public AppDataContext(DbContextOptions<AppDataContext> options) : base(options)
         {
             //if (httpContextAccessor != null && httpContextAccessor.HttpContext != null)
             //{
@@ -148,6 +149,11 @@ namespace DbData
             modelBuilder.Entity<Database.Model.MyDraftUser>()
                 .Property(p => p.CreateDate)
                 .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<UserDraftSelection>()
+                .HasIndex(p => new { p.PlayerID, p.LeagueID })
+                .HasName("IX_PlayerID_LeagueID")
+                .IsUnique();
 
             //modelBuilder.Entity<Database.Model.UserDraftSelections>()
             //    .Property(p => p.TiemStamp)

@@ -616,8 +616,6 @@ namespace DraftService
 
             try
             {
-                result.StatusCode = 200;
-
                 _draftEngine.executeDraftPick(vOverAll, vPlayerID);
 
                 return _utility.SuccessResult(new { ExecuteDraftPick = new { Success = true } });
