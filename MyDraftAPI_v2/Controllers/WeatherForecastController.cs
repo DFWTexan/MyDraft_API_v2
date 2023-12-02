@@ -3,14 +3,18 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net.Mail;
 using System.Net;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Identity.Web.Resource;
 
 namespace MyDraftAPI_v2.Controllers
 {
     //[Authorize]
+    [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]    //[Authorize]
+    [Authorize]    //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class WeatherForecastController : ControllerBase
     {
+        static readonly string[] scopeRequiredByApi = new string[] { "access_as_user" };
         private static readonly string[] Summaries = new[]
         {
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -28,6 +32,7 @@ namespace MyDraftAPI_v2.Controllers
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
+HttpContext.VerifyUserHasAnyAcceptedScope(scopeRequiredByApi);
             //using (var client = new SmtpClient())
             //{
             //    client.Host = "smtp.gmail.com";

@@ -1,4 +1,7 @@
-﻿namespace MyDraftAPI_v2
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.Identity.Web;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+namespace MyDraftAPI_v2
 {
     public class PostStartup : IHostedService
     {
