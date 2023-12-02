@@ -151,9 +151,14 @@ namespace DbData
                 .HasDefaultValueSql("getdate()");
 
             modelBuilder.Entity<UserDraftSelection>()
-                .HasIndex(p => new { p.PlayerID, p.LeagueID })
-                .HasName("IX_PlayerID_LeagueID")
+                .HasIndex(p => new {p.LeagueID, p.TeamID, p.OverallPick})
+                .HasName("IX_LeagueID_TeamID_OverallPick")
                 .IsUnique();
+
+            //modelBuilder.Entity<Player>()
+            //    .HasIndex(p => new { p.ID })
+            //    .HasName("IX_ID")
+            //    .IsUnique();
 
             //modelBuilder.Entity<Database.Model.UserDraftSelections>()
             //    .Property(p => p.TiemStamp)

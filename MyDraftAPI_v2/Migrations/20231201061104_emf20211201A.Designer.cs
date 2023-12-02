@@ -4,6 +4,7 @@ using DbData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MyDraftAPI_v2.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    partial class AppDataContextModelSnapshot : ModelSnapshot
+    [Migration("20231201061104_emf20211201A")]
+    partial class emf20211201A
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -227,6 +230,10 @@ namespace MyDraftAPI_v2.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("ID")
+                        .IsUnique()
+                        .HasDatabaseName("IX_ID");
 
                     b.HasIndex("ProTeamID");
 
@@ -459,10 +466,12 @@ namespace MyDraftAPI_v2.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("LeagueID", "TeamID", "OverallPick")
+                    b.HasIndex("LeagueID");
+
+                    b.HasIndex("PlayerID", "LeagueID")
                         .IsUnique()
-                        .HasDatabaseName("IX_LeagueID_TeamID_OverallPick")
-                        .HasFilter("[TeamID] IS NOT NULL AND [OverallPick] IS NOT NULL");
+                        .HasDatabaseName("IX_PlayerID_LeagueID")
+                        .HasFilter("[PlayerID] IS NOT NULL");
 
                     b.ToTable("UserDraftSelections", (string)null);
                 });
