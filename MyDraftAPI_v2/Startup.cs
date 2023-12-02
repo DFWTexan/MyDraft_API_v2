@@ -109,15 +109,15 @@ namespace MyDraftAPI_v2
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime appLifetime)
         {
 
-            if (env.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
             //if (env.IsDevelopment())
             //{
-            //    app.UseDeveloperExceptionPage();
+            //    app.UseSwagger();
+            //    app.UseSwaggerUI();
             //}
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
 
             //Our Custom middleware, which will used for handling the http requests and validation etc
             //app.UseCustomMiddleware(Configuration);

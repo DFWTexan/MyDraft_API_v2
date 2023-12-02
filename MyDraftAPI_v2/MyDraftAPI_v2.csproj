@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>0dcee30e-70ec-4fc8-9387-1e452d6a3e41</UserSecretsId>
+    <ApplicationInsightsResourceId>/subscriptions/77cb2c34-ebff-4cc3-a010-154cf1a365db/resourceGroups/EMFTEST-Grp/providers/microsoft.insights/components/my-draft-num5</ApplicationInsightsResourceId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.25" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.14" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.25" />

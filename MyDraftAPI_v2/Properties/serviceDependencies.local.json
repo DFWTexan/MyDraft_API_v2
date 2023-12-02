@@ -1,9 +1,5 @@
 {
   "dependencies": {
-    "apis1": {
-      "ignored": "true",
-      "type": "apis"
-    },
     "identityapp1": {
       "connectionInfo": "App registration: MyDraftApi_v2, Tenant: Default Directory (ErishMFnum5drive.onmicrosoft.com - Microsoft Entra ID)",
       "type": "identityapp.default"
@@ -18,6 +14,17 @@
       "type": "mssql.azure",
       "connectionId": "ConnectionStrings:DefaultConnection",
       "dynamicId": null
+    },
+    "appInsights1": {
+      "secretStore": "LocalSecretsFile",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/microsoft.insights/components/my-draft-num5",
+      "type": "appInsights.azure",
+      "connectionId": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+      "dynamicId": null
+    },
+    "apis1": {
+      "ignored": "True",
+      "type": "apis"
     }
   }
 }
