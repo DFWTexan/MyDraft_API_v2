@@ -2,7 +2,7 @@ name: Build and deploy .NET Core application to Web App MyDraftAPI-v2 with API M
 on:
   push:
     branches:
-    - DEVELOPMENT
+    - master
 env:
   AZURE_WEBAPP_NAME: MyDraftAPI-v2
   AZURE_WEBAPP_PACKAGE_PATH: MyDraftAPI_v2\publish
