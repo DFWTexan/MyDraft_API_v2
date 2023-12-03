@@ -32,5 +32,27 @@ namespace UserService
                 return _utility.ExceptionReturnResult(ex);
             }
         }
+
+        #region // Method Template //
+        /// <summary>
+        ///              TEMPLATE FOR NEW METHODS
+        /// </summary>
+        /// <param name="vVariable"></param>
+        /// <returns></returns>
+        public DataModel.Response.ReturnResult TemplateMethod(int vVariable)
+        {
+            var result = new DataModel.Response.ReturnResult();
+            try
+            {
+                // Code Here
+
+                return _utility.SuccessResult(new { EMFTest = new { Success = true } });
+            }
+            catch (Exception ex)
+            {
+                return _utility.ExceptionReturnResult(ex);
+            }
+        }
+        #endregion
     }
 }
