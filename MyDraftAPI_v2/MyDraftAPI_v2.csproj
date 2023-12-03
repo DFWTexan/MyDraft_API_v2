@@ -34,8 +34,4 @@
     <PackageReference Include="Uno.UI" Version="4.9.45" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\NewFolder\" />
-  </ItemGroup>
-
 </Project>

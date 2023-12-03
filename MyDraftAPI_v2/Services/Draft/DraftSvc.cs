@@ -35,7 +35,7 @@ namespace DraftService
             _db = db;
             _config = config;
             _env = env;
-            _utility = utility;
+            _utility = new UtilityService.Utility(_db, _config);
             //_mapper = mapper;
             //_logger = logger;
             _draftEngine = draftEngine;

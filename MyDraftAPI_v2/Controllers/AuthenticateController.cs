@@ -21,6 +21,7 @@ namespace JWTAuthentication.NET6._0.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
+        private UtilityService.Utility _utility;
 
         public AuthenticateController(
             UserManager<IdentityUser> userManager,
@@ -34,6 +35,7 @@ namespace JWTAuthentication.NET6._0.Controllers
             _configuration = configuration;
             _db = db;
             _draftEngine = draftEngine;
+            _utility = new UtilityService.Utility(_db, _configuration);
         }
 
         [HttpPost]
