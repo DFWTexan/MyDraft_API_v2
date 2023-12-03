@@ -2,7 +2,7 @@
 using CodeTitans.Core.Generics.Objects;
 using MyDraftAPI_v2.DbData.DataModel;
 using MyDraftAPI_v2.FantasyDataModel;
-using MyDraftLib.Utilities;
+using MyDraftAPI_v2.Services.Utility.FanAppUtilities;
 using Windows.Storage;
 #pragma warning disable 
 

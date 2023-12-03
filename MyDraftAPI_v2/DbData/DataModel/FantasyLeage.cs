@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using MyDraftAPI_v2.FantasyDataModel.Draft;
 using DraftService;
-using MyDraftLib.Utilities;
 using CodeTitans.Core.Generics;
 using ViewModel;
+using MyDraftAPI_v2.Services.Utility.FanAppUtilities;
 
 namespace MyDraftAPI_v2.FantasyDataModel
 {

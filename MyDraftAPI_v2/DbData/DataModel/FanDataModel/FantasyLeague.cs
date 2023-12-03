@@ -1,9 +1,5 @@
-﻿using CodeTitans.Core.Generics;
-using DraftService;
-using MyDraftAPI_v2.FantasyDataModel;
+﻿using MyDraftAPI_v2.FantasyDataModel;
 using MyDraftAPI_v2.Managers;
-using MyDraftLib.Utilities;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using ViewModel;
 #pragma warning disable 

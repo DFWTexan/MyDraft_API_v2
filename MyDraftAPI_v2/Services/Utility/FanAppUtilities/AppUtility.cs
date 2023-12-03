@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-//---------------------------------//
-using MyDraftLib.Utilities;
 
-namespace MyDraftLib.Utilities
+//---------------------------------//
+
+namespace MyDraftAPI_v2.Services.Utility.FanAppUtilities
 {
     public class AppUtility
     {
         //Tom Brady: http://s.nflcdn.com/static/content/public/image/fantasy/transparent/200x200/BRA371156.png
         //Drew Brees: http://s.nflcdn.com/static/content/public/image/fantasy/transparent/200x200/BRE229498.png
         //Joe Flacco: http://static.fantasydata.com/headshots/nfl/low-res/611.png
-        public static String transparentPlayerImageURLForPlayerID(String playerID)
+        public static string transparentPlayerImageURLForPlayerID(string playerID)
         {
-            String eliasID = playerID;
-            String url = null;
-            if (eliasID.Length > 3) {
-                String baseURL = "http://static.fantasydata.com/headshots/" +  "nfl/low-res";
-                String fileExt = ".png";
-                url = String.Format("{0}/{1}{2}",
+            string eliasID = playerID;
+            string url = null;
+            if (eliasID.Length > 3)
+            {
+                string baseURL = "http://static.fantasydata.com/headshots/" + "nfl/low-res";
+                string fileExt = ".png";
+                url = string.Format("{0}/{1}{2}",
                        baseURL,
                        eliasID,
                        fileExt);

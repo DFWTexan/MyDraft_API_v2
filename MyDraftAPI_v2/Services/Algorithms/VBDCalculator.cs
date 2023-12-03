@@ -1,7 +1,7 @@
 ﻿using MyDraftAPI_v2.DbData.DataModel;
 using MyDraftAPI_v2.FantasyDataModel;
 using MyDraftAPI_v2.Managers;
-using MyDraftLib.Utilities;
+using MyDraftAPI_v2.Services.Utility.FanAppUtilities;
 using System.Diagnostics;
 
 namespace DraftService

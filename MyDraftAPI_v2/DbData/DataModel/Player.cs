@@ -3,7 +3,7 @@ using MyDraftAPI_v2.DbData.DataModel;
 using MyDraftAPI_v2.Engines;
 using MyDraftAPI_v2.FantasyDataModel.Draft;
 using MyDraftAPI_v2.Managers;
-using MyDraftLib.Utilities;
+using MyDraftAPI_v2.Services.Utility.FanAppUtilities;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 

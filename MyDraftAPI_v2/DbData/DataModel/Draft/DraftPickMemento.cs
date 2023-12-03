@@ -1,5 +1,5 @@
 ﻿using MyDraftAPI_v2.FantasyDataModel.Draft;
-using MyDraftLib.Utilities;
+using MyDraftAPI_v2.Services.Utility.FanAppUtilities;
 
 namespace MyDraftAPI_v2.FantasyDataModel.Draft
 {

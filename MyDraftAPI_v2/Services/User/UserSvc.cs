@@ -1,6 +1,7 @@
 ﻿using DbData;
 using Microsoft.Extensions.Configuration;
 using MyDraftAPI_v2;
+using MyDraftAPI_v2.Services.Utility;
 
 namespace UserService
 {

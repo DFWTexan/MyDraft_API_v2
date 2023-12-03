@@ -38,7 +38,6 @@ namespace UtilityService
         {
             return new DataModel.Response.ReturnResult() { StatusCode = 404, ObjData = new List<string>() { vMessage } };
         }
-
         public DataModel.Response.ReturnResult MessageResult(int vStatus_ID, string vMessage)
         {
             return new DataModel.Response.ReturnResult() { StatusCode = vStatus_ID, ObjData = new List<string>() { vMessage } };

@@ -3,18 +3,9 @@ using DbData;
 using Microsoft.EntityFrameworkCore;
 using ViewModel;
 using MyDraftAPI_v2.FantasyDataModel;
-using System.Text;
-using MyDraftAPI_v2.FantasyDataModel.Draft;
-using System.Diagnostics;
 using MyDraftAPI_v2.Services.Algorithms;
 using MyDraftAPI_v2;
-using MyDraftLib.Utilities;
-using Windows.UI.Xaml;
-using System.Windows.Markup;
-using System;
 using DataModel.Enums;
-using System.Diagnostics.Eventing.Reader;
-using Microsoft.Data.SqlClient;
 #pragma warning disable
 
 namespace DraftService

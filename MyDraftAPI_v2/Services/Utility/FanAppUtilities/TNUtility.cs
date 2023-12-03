@@ -12,7 +12,7 @@ using System;
 //-------------------------------//
 using CodeTitans.Core.Generics;
 
-namespace MyDraftLib.Utilities
+namespace MyDraftAPI_v2.Services.Utility.FanAppUtilities
 {
     public static class TNUtility
     {
@@ -26,9 +26,9 @@ namespace MyDraftLib.Utilities
         {
             //this verse is loaded for the first time so fill it from the text file
 
-//            StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(
-//                new Uri("ms-appx:///Data/" + filePath));
-            
+            //            StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(
+            //                new Uri("ms-appx:///Data/" + filePath));
+
             StorageFolder installedLocation = Windows.ApplicationModel.Package.Current.InstalledLocation;
             StorageFile file = await installedLocation.GetFileAsync("MyDraftAPI_v2\\Resources\\" + filePath);
 
@@ -60,7 +60,7 @@ namespace MyDraftLib.Utilities
         public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
         {
             // Unix timestamp is seconds past epoch
-            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0);
             dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
             return dtDateTime;
         }
@@ -70,9 +70,9 @@ namespace MyDraftLib.Utilities
             return (dateTime - new DateTime(1970, 1, 1).ToLocalTime()).TotalSeconds;
         }
 
-        public static Object GetPropValue(this Object obj, String name)
+        public static object GetPropValue(this object obj, string name)
         {
-            foreach (String part in name.Split('.'))
+            foreach (string part in name.Split('.'))
             {
                 if (obj == null) { return null; }
 
@@ -85,18 +85,18 @@ namespace MyDraftLib.Utilities
             return obj;
         }
 
-        public static T GetPropValue<T>(this Object obj, String name)
+        public static T GetPropValue<T>(this object obj, string name)
         {
-            Object retval = GetPropValue(obj, name);
-            if (retval == null) { return default(T); }
+            object retval = obj.GetPropValue(name);
+            if (retval == null) { return default; }
 
             // throws InvalidCastException if types are incompatible
             return (T)retval;
         }
 
-        public static IList<String> listFromPropertyListArrayItems(IEnumerable<IPropertyListItem> positionItems)
+        public static IList<string> listFromPropertyListArrayItems(IEnumerable<IPropertyListItem> positionItems)
         {
-            IList<String> positions = new List<String>();
+            IList<string> positions = new List<string>();
             foreach (IPropertyListItem positionItem in positionItems)
                 positions.Add(positionItem.StringValue);
 
@@ -105,7 +105,7 @@ namespace MyDraftLib.Utilities
 
         public static int getScheduleWeek()
         {
-            return TNUtility.getScheduleWeek(DateTime.Now);
+            return getScheduleWeek(DateTime.Now);
         }
 
         public static int getScheduleWeek(DateTime date)
@@ -135,7 +135,7 @@ namespace MyDraftLib.Utilities
 
             return week;
         }
-    
+
         /*
     public static int getAge(DateTime birthdate)
     {
@@ -247,45 +247,45 @@ namespace MyDraftLib.Utilities
     }
          * */
 
-    public static String getKeyFromArrayOfStrings(IList<String> array)
-    {
-        IList<String> orderedList = array.OrderBy(x => x).ToList();
-        String valueKey = TNUtility.arrayToString(orderedList, "-", false);
-        
-        return valueKey;
-    }
-
-    public static String arrayToString(IList<String> array, String separator, Boolean useQuotes)
-    {
-        StringBuilder result = new StringBuilder();
-
-        String quote = null;
-        if (useQuotes)
-            quote = "'";
-        else
-            quote = "";
-
-        if (array.Count() > 0)
+        public static string getKeyFromArrayOfStrings(IList<string> array)
         {
-            result.Append(quote + array[0] + quote);
-            for (int i = 1; i < array.Count(); i++)
-            {
-                result.Append(separator);
-                result.Append(quote + array[i] + quote);
-            }
+            IList<string> orderedList = array.OrderBy(x => x).ToList();
+            string valueKey = arrayToString(orderedList, "-", false);
+
+            return valueKey;
         }
-        return result.ToString();
-    }
 
-    public static string md5(string input)
-    {
-        var md5Hash = MD5Core.GetHashString(input);
-        return md5Hash.ToLower();
+        public static string arrayToString(IList<string> array, string separator, bool useQuotes)
+        {
+            StringBuilder result = new StringBuilder();
 
-        //var myStringBytes = input.GetBytes(); // this will get the UTF8 bytes for the string
-        //var md5Hash2 = myStringBytes.ComputeMD5Hash().ToBase64String();
-        //return md5Hash2;
-    }
+            string quote = null;
+            if (useQuotes)
+                quote = "'";
+            else
+                quote = "";
+
+            if (array.Count() > 0)
+            {
+                result.Append(quote + array[0] + quote);
+                for (int i = 1; i < array.Count(); i++)
+                {
+                    result.Append(separator);
+                    result.Append(quote + array[i] + quote);
+                }
+            }
+            return result.ToString();
+        }
+
+        public static string md5(string input)
+        {
+            var md5Hash = MD5Core.GetHashString(input);
+            return md5Hash.ToLower();
+
+            //var myStringBytes = input.GetBytes(); // this will get the UTF8 bytes for the string
+            //var md5Hash2 = myStringBytes.ComputeMD5Hash().ToBase64String();
+            //return md5Hash2;
+        }
 
         /*
     public static Map<String, Object> loadPlistFromResource(int resourceID)

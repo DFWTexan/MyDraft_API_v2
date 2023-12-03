@@ -3,13 +3,9 @@ using DbData;
 using DraftService;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using MyDraftAPI_v2.DbData.DataModel;
 using MyDraftAPI_v2.FantasyDataModel;
 //using MyDraftAPI_v2.FantasyDataModel.Draft;
-using MyDraftAPI_v2.Managers;
-using MyDraftLib.Utilities;
 using ViewModel;
-using Windows.UI.Xaml.Controls.Primitives;
 #pragma warning disable 
 
 namespace MyDraftAPI_v2

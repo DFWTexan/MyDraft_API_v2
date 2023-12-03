@@ -6,10 +6,11 @@ using System.Text;
 using MyDraftAPI_v2.Managers;
 using MyDraftAPI_v2.Engines;
 using System.ComponentModel.DataAnnotations.Schema;
-using MyDraftLib.Utilities;
 using System.Diagnostics;
 using MyDraftAPI_v2;
 using ViewModel;
+using MyDraftAPI_v2.Services.Utility;
+using MyDraftAPI_v2.Services.Utility.FanAppUtilities;
 #pragma warning disable 
 
 namespace LeagueService
