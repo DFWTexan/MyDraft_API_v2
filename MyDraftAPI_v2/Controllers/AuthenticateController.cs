@@ -113,8 +113,8 @@ namespace JWTAuthentication.NET6._0.Controllers
         }
 
         [HttpPost]
-        [Route("Reset-Code")]
-        public async Task<IActionResult> ResetCode([FromBody] ResetPssWrdModel model)
+        [Route("Get-Code")]
+        public async Task<IActionResult> GetResetCode([FromBody] CodeRequest model)
         {
             try
             {
@@ -137,6 +137,57 @@ namespace JWTAuthentication.NET6._0.Controllers
                     service.SendEmail(user.NormalizedEmail, user.NormalizedUserName, "MyDraft Password Reset Code", welcomeHTML.ToString());
 
                     return Ok(new Response { Status = "SUCCESS", Message = "Code for Password Reset sent to email!" });
+                }
+                else
+                {
+                    return Unauthorized(new Response { Status = "FAILED", Message = "Email not Found..." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("Reset-Password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPssWrdModel model)
+        {
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user != null)
+                {
+                    var myDraftUser = _db.MyDraftUser.Where(x => x.UserUniqueID == user.Id).FirstOrDefault();
+                    if (myDraftUser != null)
+                    {
+                        if (myDraftUser.ResetCode == model.Code)
+                        {
+                            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                            var result = await _userManager.ResetPasswordAsync(user, token, model.NewPassword);
+                            if (result.Succeeded)
+                            {
+                                StringBuilder confrimHTML = new StringBuilder(Email.Temaplate.PasswordWasReset.GetHTML(user.UserName));
+
+                                var service = new EmailService.EmailSvs(_configuration);
+                                service.SendEmail(user.NormalizedEmail, user.NormalizedUserName, "MyDraft Password Reset", confrimHTML.ToString());
+
+                                return Ok(new Response { Status = "SUCCESS", Message = "Successful Password Reset!" });
+                            }
+                            else
+                            {
+                                return Unauthorized(new Response { Status = "FAILED", Message = "Password Reset Failed..." });
+                            }
+                        }
+                        else
+                        {
+                            return Unauthorized(new Response { Status = "FAILED", Message = "Code is incorrect..." });
+                        }
+                    }
+                    else
+                    {
+                        return Unauthorized(new Response { Status = "FAILED", Message = "Code is incorrect..." });
+                    }   
                 }
                 else
                 {
@@ -185,10 +236,10 @@ namespace JWTAuthentication.NET6._0.Controllers
                 #endregion
 
                 #region // Send Email
-                var body = string.Format("<div><p>Hello {0}</p><p>Need to Complete email body content.</p></div>", newUser.NormalizedUserName);
+                StringBuilder welcomeHTML = new StringBuilder(Email.Temaplate.WelcomeHTML.GetHTML(model.Username));
             
                 var service = new EmailService.EmailSvs(_configuration);
-                service.SendEmail(newUser.NormalizedEmail, newUser.NormalizedUserName, "Welcome to MyDraft!", body);
+                service.SendEmail(newUser.NormalizedEmail, newUser.NormalizedUserName, "Welcome to MyDraft!", welcomeHTML.ToString());
                 #endregion
 
                 return Ok(new Response { Status = "SUCCESS", Message = "User created successfully!" });
