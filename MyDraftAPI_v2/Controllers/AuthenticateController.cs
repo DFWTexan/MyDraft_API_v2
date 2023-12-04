@@ -110,19 +110,31 @@ namespace JWTAuthentication.NET6._0.Controllers
             {
                 return BadRequest(ex.Message);
             }
-
-            //return Unauthorized();
         }
 
         [HttpPost]
-        [Route("Request-Reset-Code")]
-        public async Task<IActionResult> RequestResetCode([FromBody] RegisterModel model)
+        [Route("Reset-Code")]
+        public async Task<IActionResult> ResetCode([FromBody] ResetPssWrdModel model)
         {
             try
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 if (user != null)
                 {
+                    var code = _utility.GenerateRandomNumber(1000000, 9999999);
+
+                    // create update MyDraftUser ResetCode record with code
+                    var myDraftUser = _db.MyDraftUser.Where(x => x.UserUniqueID == user.Id).FirstOrDefault();
+                    if (myDraftUser != null)
+                    {
+                        myDraftUser.ResetCode = code;
+                        _db.SaveChanges();
+                    }
+
+                    StringBuilder welcomeHTML = new StringBuilder(Email.Temaplate.ResetCodeHTML.GetHTML(code.ToString()));
+
+                    var service = new EmailService.EmailSvs(_configuration);
+                    service.SendEmail(user.NormalizedEmail, user.NormalizedUserName, "MyDraft Password Reset Code", welcomeHTML.ToString());
 
                     return Ok(new Response { Status = "SUCCESS", Message = "Code for Password Reset sent to email!" });
                 }

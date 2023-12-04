@@ -13,6 +13,12 @@ namespace UtilityService
             _config = config;
         }
 
+        public int GenerateRandomNumber(int vMin, int vMax)
+        {
+            Random random = new Random();
+            return random.Next(vMin, vMax);
+        }
+
         #region // Api Responses //
         public DataModel.Response.ReturnResult ErrorReturnResult(int vStatus_ID, string vError)
         {
