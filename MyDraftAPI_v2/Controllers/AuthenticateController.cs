@@ -114,7 +114,7 @@ namespace JWTAuthentication.NET6._0.Controllers
 
         [HttpPost]
         [Route("Get-Code")]
-        public async Task<IActionResult> GetResetCode([FromBody] CodeRequest model)
+        public async Task<IActionResult> GetResetCode([FromBody] CodeRequestModel model)
         {
             try
             {
@@ -167,10 +167,10 @@ namespace JWTAuthentication.NET6._0.Controllers
                             var result = await _userManager.ResetPasswordAsync(user, token, model.NewPassword);
                             if (result.Succeeded)
                             {
-                                StringBuilder confrimHTML = new StringBuilder(Email.Temaplate.PasswordWasReset.GetHTML(user.UserName));
+                                StringBuilder resetConfrimHTML = new StringBuilder(Email.Temaplate.PasswordWasResetHTML.GetHTML(user.UserName));
 
                                 var service = new EmailService.EmailSvs(_configuration);
-                                service.SendEmail(user.NormalizedEmail, user.NormalizedUserName, "MyDraft Password Reset", confrimHTML.ToString());
+                                service.SendEmail(user.NormalizedEmail, user.NormalizedUserName, "MyDraft Password Reset", resetConfrimHTML.ToString());
 
                                 return Ok(new Response { Status = "SUCCESS", Message = "Successful Password Reset!" });
                             }
@@ -220,29 +220,38 @@ namespace JWTAuthentication.NET6._0.Controllers
                 if (!result.Succeeded)
                     return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "FAILED", Message = "User creation failed! Please check user details and try again." });
 
-                #region // Add User to MyDraftUser Table
-                var newUser = await _userManager.FindByNameAsync(model.Username);
-                MyDraftUser myDraftUser = new()
-                {
-                    UserUniqueID = newUser.Id,
-                    UserName = newUser.NormalizedUserName,
-                    UserEmail = newUser.NormalizedEmail,
-                };
-                _db.MyDraftUser.Add(myDraftUser);
-                _db.SaveChanges();
-                int myDraftUserID = myDraftUser.ID;
+                #region // Send Email Confirmation
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                
+                StringBuilder emailConfirmationHTML = new StringBuilder(Email.Temaplate.EmailConfirmationHTML.GetHTML(model.Username, token));
 
-                _draftEngine.InitializeLeagueData_v2(myDraftUser.ID);
+                var service = new EmailService.EmailSvs(_configuration);
+                service.SendEmail(user.NormalizedEmail, user.NormalizedUserName, "MyDraft Email Confirmation", emailConfirmationHTML.ToString());
+                #endregion
+
+                #region // Add User to MyDraftUser Table
+                //var newUser = await _userManager.FindByNameAsync(model.Username);
+                //MyDraftUser myDraftUser = new()
+                //{
+                //    UserUniqueID = newUser.Id,
+                //    UserName = newUser.NormalizedUserName,
+                //    UserEmail = newUser.NormalizedEmail,
+                //};
+                //_db.MyDraftUser.Add(myDraftUser);
+                //_db.SaveChanges();
+                //int myDraftUserID = myDraftUser.ID;
+
+                //_draftEngine.InitializeLeagueData_v2(myDraftUser.ID);
                 #endregion
 
                 #region // Send Email
-                StringBuilder welcomeHTML = new StringBuilder(Email.Temaplate.WelcomeHTML.GetHTML(model.Username));
-            
-                var service = new EmailService.EmailSvs(_configuration);
-                service.SendEmail(newUser.NormalizedEmail, newUser.NormalizedUserName, "Welcome to MyDraft!", welcomeHTML.ToString());
+                //StringBuilder welcomeHTML = new StringBuilder(Email.Temaplate.WelcomeHTML.GetHTML(model.Username));
+
+                //var service = new EmailService.EmailSvs(_configuration);
+                //service.SendEmail(newUser.NormalizedEmail, newUser.NormalizedUserName, "Welcome to MyDraft!", welcomeHTML.ToString());
                 #endregion
 
-                return Ok(new Response { Status = "SUCCESS", Message = "User created successfully!" });
+                return Ok(new Response { Status = "SUCCESS", Message = "Please, click the link in confrimation email sent to registration email to proceed with login!" });
             }
             catch (Exception ex)
             {
@@ -250,6 +259,29 @@ namespace JWTAuthentication.NET6._0.Controllers
                 throw;
             }
 
+        }
+
+        [HttpPost]
+        [Route("ConfrimEmail")]
+        public async Task<IActionResult> ConfrimEmail([FromBody] ConfrimEmailModel model)
+        {
+            try
+            {
+                var result = await _userManager.ConfirmEmailAsync(new IdentityUser(), model.Token);
+                if (result.Succeeded)
+                {
+                    return Ok(new Response { Status = "SUCCESS", Message = "Email Confirmed!" });
+                }
+                else
+                {
+                    return Unauthorized(new Response { Status = "FAILED", Message = "Email Confirmation Failed..." });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost]

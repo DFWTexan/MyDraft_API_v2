@@ -2,7 +2,7 @@
 
 namespace JWTAuthentication.NET6._0.Auth
 {
-    public class CodeRequest
+    public class CodeRequestModel
     {
         [EmailAddress]
         [Required(ErrorMessage = "Email is required")]
