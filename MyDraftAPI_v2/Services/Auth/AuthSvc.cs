@@ -1,6 +1,7 @@
 ﻿using DbData;
 using JWTAuthentication.NET6._0.Auth;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MyDraftAPI_v2;
@@ -10,7 +11,7 @@ using System.Text;
 
 namespace AuthService
 {
-    public class AuthSvc
+    public class AuthSvc : ControllerBase
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -40,7 +41,7 @@ namespace AuthService
         /// </summary>
         /// <param name="vVariable"></param>
         /// <returns></returns>
-        public async Task<DataModel.Response.ReturnResult> Login(LoginModel model)
+        public async Task<IActionResult> Login(LoginModel model)
         {
             var result = new DataModel.Response.ReturnResult();
             try
@@ -88,30 +89,22 @@ namespace AuthService
                         _draftEngine.InitializeLeagueData_v2(myDraftUser.ID);
                     }
 
-
-                    //return Ok(new
-                    //{
-                    //    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    //    expiration = token.ValidTo
-                    //});
-                    return _utility.SuccessResult(new
+                    return Ok(new
                     {
                         token = new JwtSecurityTokenHandler().WriteToken(token),
                         expiration = token.ValidTo
                     });
+                   
                 }
                 else
                 {
-                    //return Unauthorized(new Response { Status = "Failed", Message = "Username or password is incorrect..." });
-                    return _utility.SuccessResult(new { EMFTest = new { Success = true } });
+                    return Unauthorized(new Response { Status = "Failed", Message = "Username or password is incorrect..." });
+                    //return _utility.Unauthorized();
                 }
-
-                
             }
             catch (Exception ex)
             {
-                //return BadRequest(ex.Message);
-                return _utility.ExceptionReturnResult(ex);
+                return BadRequest(ex.Message);
             }
         }
 

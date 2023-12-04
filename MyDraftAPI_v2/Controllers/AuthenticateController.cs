@@ -62,6 +62,7 @@ namespace JWTAuthentication.NET6._0.Controllers
 
                     var token = GetToken(authClaims);
 
+                    #region // Set User Info & Initialize Data //
                     var myDraftUser = _db.MyDraftUser
                                     .Include(x => x.UserLeagues)
                                     .Where(x => x.UserUniqueID == user.Id).FirstOrDefault();
@@ -86,17 +87,24 @@ namespace JWTAuthentication.NET6._0.Controllers
 
                         _draftEngine.InitializeLeagueData_v2(myDraftUser.ID);
                     }
-
+                    #endregion
 
                     return Ok(new
                     {
                         token = new JwtSecurityTokenHandler().WriteToken(token),
                         expiration = token.ValidTo
                     });
-                } else
-                {
-                    return Unauthorized(new Response { Status = "Failed", Message = "Username or password is incorrect..." });
                 }
+                else
+                {
+                    return Unauthorized(new Response { Status = "FAILED", Message = "Username or password is incorrect..." });
+                }
+
+                //var service = new AuthService.AuthSvc(_userManager, _roleManager, _configuration, _db, _draftEngine);
+
+                //var result = await Task.Run(() => service.Login(model));
+
+                //return Ok(result);
             }
             catch (Exception ex)
             {
@@ -104,6 +112,29 @@ namespace JWTAuthentication.NET6._0.Controllers
             }
 
             //return Unauthorized();
+        }
+
+        [HttpPost]
+        [Route("Request-Reset-Code")]
+        public async Task<IActionResult> RequestResetCode([FromBody] RegisterModel model)
+        {
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user != null)
+                {
+
+                    return Ok(new Response { Status = "SUCCESS", Message = "Code for Password Reset sent to email!" });
+                }
+                else
+                {
+                    return Unauthorized(new Response { Status = "FAILED", Message = "Email not Found..." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost]
@@ -191,7 +222,7 @@ namespace JWTAuthentication.NET6._0.Controllers
             }
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
         }
-
+        
         private JwtSecurityToken GetToken(List<Claim> authClaims)
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
