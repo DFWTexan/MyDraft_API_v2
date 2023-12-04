@@ -113,8 +113,8 @@ namespace JWTAuthentication.NET6._0.Controllers
         }
 
         [HttpPost]
-        [Route("Get-Code")]
-        public async Task<IActionResult> GetResetCode([FromBody] CodeRequestModel model)
+        [Route("ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] CodeRequestModel model)
         {
             try
             {
@@ -155,13 +155,15 @@ namespace JWTAuthentication.NET6._0.Controllers
         {
             try
             {
-                var user = await _userManager.FindByEmailAsync(model.Email);
+                var user = await _userManager.FindByEmailAsync(model.ForgotEmail);
                 if (user != null)
                 {
-                    var myDraftUser = _db.MyDraftUser.Where(x => x.UserUniqueID == user.Id).FirstOrDefault();
+                    var myDraftUser = _db.MyDraftUser
+                                    .Include(x => x.UserLeagues)
+                                    .Where(x => x.UserUniqueID == user.Id).FirstOrDefault();
                     if (myDraftUser != null)
                     {
-                        if (myDraftUser.ResetCode == model.Code)
+                        if (myDraftUser.ResetCode == model.CodeFromEmail)
                         {
                             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
                             var result = await _userManager.ResetPasswordAsync(user, token, model.NewPassword);
@@ -171,6 +173,33 @@ namespace JWTAuthentication.NET6._0.Controllers
 
                                 var service = new EmailService.EmailSvs(_configuration);
                                 service.SendEmail(user.NormalizedEmail, user.NormalizedUserName, "MyDraft Password Reset", resetConfrimHTML.ToString());
+
+                                #region // Set User Info & Initialize Data //
+                                //var myDraftUser = _db.MyDraftUser
+                                //                .Include(x => x.UserLeagues)
+                                //                .Where(x => x.UserUniqueID == user.Id).FirstOrDefault();
+                                //if (myDraftUser != null)
+                                //{
+                                    _draftEngine.MyDraftUser = new ViewModel.UserInfo()
+                                    {
+                                        UserName = myDraftUser.UserName,
+                                        UserEmail = myDraftUser.UserEmail,
+                                        IsLoggedIn = true,
+                                        UserLeagues = new List<ViewModel.UserLeagueItem>()
+                                    };
+
+                                    foreach (var userLeague in myDraftUser.UserLeagues)
+                                    {
+                                        _draftEngine.MyDraftUser.UserLeagues.Add(new ViewModel.UserLeagueItem()
+                                        {
+                                            Value = userLeague.ID,
+                                            Label = userLeague.Name
+                                        });
+                                    }
+
+                                    _draftEngine.InitializeLeagueData_v2(myDraftUser.ID);
+                                //}
+                                #endregion
 
                                 return Ok(new Response { Status = "SUCCESS", Message = "Successful Password Reset!" });
                             }
