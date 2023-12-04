@@ -136,7 +136,7 @@ namespace JWTAuthentication.NET6._0.Controllers
                     var service = new EmailService.EmailSvs(_configuration);
                     service.SendEmail(user.NormalizedEmail, user.NormalizedUserName, "MyDraft Password Reset Code", welcomeHTML.ToString());
 
-                    return Ok(new Response { Status = "SUCCESS", Message = "Code for Password Reset sent to email!" });
+                    return Ok(new Response { Status = code.ToString(), Message = "Code for Password Reset sent to email!" });
                 }
                 else
                 {
