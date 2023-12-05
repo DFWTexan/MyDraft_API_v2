@@ -5,8 +5,6 @@
         public static string GetHTML(string vUserName, string vToken, string vEmail)
         {
 
-            //< p >< a href = 'https://localhost:3000/EmailConfirmed?token=" + vToken + @"' > Confirm Email </ a ></ p >
-
             //string html = @"
             //    <html>
             //        <head>
@@ -15,7 +13,6 @@
             //        <body>
             //            <p>Hi " + vUserName + @",</p>
             //            <p>Click the link below to confirm your email.</p>
-
             //            <p>https://localhost:3000/EmailConfirmed?token="" + vToken + @""'>Confirm Email</a></p>
             //            <p>Thanks,</p>
             //            <p>Erish Faggett</p>
@@ -23,31 +20,18 @@
             //    </html>
             //";
 
-            //string html = string.Format(@"<html>
-            //                                 <head>
-            //                                    <title>MyDraft Email Confirmation</title>
-            //                                 </head>
-            //                                 <body>
-            //                                     <p>Hi {0},</p>
-            //                                     <p>Click the link below to confirm your email.</p>
-            //                                     <p>https://localhost:3000/EmailVerified?token={1}&email={2}</p>
-            //                                     <p>Thanks,</p>
-            //                                     <p>Erish Faggett</p>
-            //                                 </body>
-            //                              </html>", vUserName, vToken, vEmail);
-
-            // remove spaces from token
-            vToken = vToken.Replace(" ", "");
-
             string html = string.Format(@"<html>
                                              <head>
                                                 <title>MyDraft Email Confirmation</title>
                                              </head>
                                              <body>
-                                                 <p>http://localhost:3000/EmailVerified?token={0}&email={1}</p>
+                                                 <p>Hi {0},</p>
+                                                 <p>Click the link below to confirm your email.</p>
+                                                 <p><a href=""https://localhost:3000/EmailVerified?token={1}&email{2}"">Confirm Email</a></p>
+                                                 <p>Thanks,</p>
+                                                 <p>Erish Faggett</p>
                                              </body>
-                                          </html>", vToken, vEmail);
-
+                                          </html>", vUserName, vToken, vEmail);
             return html;
         }
     }
