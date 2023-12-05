@@ -14,7 +14,7 @@
                         <p>Click the link below to reset your password.</p>
                         <p><a href='https://mydraft.net/resetpassword/" + vCode + @"'>Reset Password</a></p>
                         <p>Thanks,</p>
-                        <p>MyDraft Team</p>
+                        <p>Erish Faggett</p>
                     </body>
                 </html>
             ";

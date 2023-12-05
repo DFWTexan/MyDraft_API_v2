@@ -9,6 +9,7 @@ using MyDraftAPI_v2;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Web;
 
 namespace JWTAuthentication.NET6._0.Controllers
 {
@@ -251,8 +252,9 @@ namespace JWTAuthentication.NET6._0.Controllers
 
                 #region // Send Email Confirmation
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                
-                StringBuilder emailConfirmationHTML = new StringBuilder(Email.Temaplate.EmailConfirmationHTML.GetHTML(model.Username, token));
+                var encodedToken = HttpUtility.UrlEncode(token);
+
+                var emailConfirmationHTML = new StringBuilder(Email.Temaplate.EmailConfirmationHTML.GetHTML(model.Username, encodedToken, model.Email));
 
                 var service = new EmailService.EmailSvs(_configuration);
                 service.SendEmail(user.NormalizedEmail, user.NormalizedUserName, "MyDraft Email Confirmation", emailConfirmationHTML.ToString());
@@ -284,19 +286,23 @@ namespace JWTAuthentication.NET6._0.Controllers
             }
             catch (Exception ex)
             {
+                //_logger.LogError(ex, "Error in Register method.");
                 return BadRequest(ex.Message);
-                throw;
             }
 
         }
 
         [HttpPost]
-        [Route("ConfrimEmail")]
-        public async Task<IActionResult> ConfrimEmail([FromBody] ConfrimEmailModel model)
+        [Route("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailModel model)
         {
             try
             {
-                var result = await _userManager.ConfirmEmailAsync(new IdentityUser(), model.Token);
+                var user = await _userManager.FindByEmailAsync(model.email);
+                if (user == null)
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "FAILED", Message = "User not found!" });
+
+                var result = await _userManager.ConfirmEmailAsync(user, model.token);
                 if (result.Succeeded)
                 {
                     return Ok(new Response { Status = "SUCCESS", Message = "Email Confirmed!" });

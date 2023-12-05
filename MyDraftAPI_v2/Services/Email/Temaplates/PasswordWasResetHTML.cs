@@ -13,7 +13,7 @@
                         <p>Hi " + vUserName + @",</p>
                         <p>Your password was successfully reset.</p>
                         <p>Thanks,</p>
-                        <p>MyDraft Team</p>
+                        <p>Erish Faggett</p>
                     </body>
                 </html>
             ";
