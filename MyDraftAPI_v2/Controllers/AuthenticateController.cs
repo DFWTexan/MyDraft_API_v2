@@ -305,6 +305,22 @@ namespace JWTAuthentication.NET6._0.Controllers
                 var result = await _userManager.ConfirmEmailAsync(user, model.token);
                 if (result.Succeeded)
                 {
+
+                    #region // Add User to MyDraftUser Table
+                    var newUser = await _userManager.FindByEmailAsync(model.email);
+                    MyDraftUser myDraftUser = new()
+                    {
+                        UserUniqueID = newUser.Id,
+                        UserName = newUser.NormalizedUserName,
+                        UserEmail = newUser.NormalizedEmail,
+                    };
+                    _db.MyDraftUser.Add(myDraftUser);
+                    _db.SaveChanges();
+                    int myDraftUserID = myDraftUser.ID;
+
+                    _draftEngine.InitializeLeagueData_v2(myDraftUser.ID);
+                    #endregion
+
                     return Ok(new Response { Status = "SUCCESS", Message = "Email Confirmed!" });
                 }
                 else
