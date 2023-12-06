@@ -141,6 +141,20 @@ namespace MyDraftAPI_v2.Controllers
 
         /// <summary>
         ///     
+        /// Get Fan Team Player News
+        ///
+        [HttpGet("{fanTeamID}")]
+        public async Task<ActionResult> GetTeamNews(int fanTeamID)
+        {
+            var service = new DraftService.DraftSvc(_db, _config, null, null, _draftEngine);
+
+            var result = await Task.Run(() => service.GetTeamNews(fanTeamID));
+
+            return StatusCode(result.StatusCode, result.ObjData);
+        }
+
+        /// <summary>
+        ///     
         /// Get Position Depter Chart for Pro Teams
         ///
         [HttpGet("{position}")]

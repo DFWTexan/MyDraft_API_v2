@@ -542,6 +542,34 @@ namespace DraftService
 
             return result;
         }
+        /// <summary>
+        ///              Get Fan Team Player News
+        /// </summary>
+        /// <param name="vFanTeamID"></param>
+        /// <returns> News items for players on provided Fan Team </returns>
+        public DataModel.Response.ReturnResult GetTeamNews(int vFanTeamID)
+        {
+            var result = new DataModel.Response.ReturnResult();
+            try
+            {
+                var news = _db.vw_ProTeamNewsItem
+                   .Where(plyr => plyr.TeamID == vFanTeamID && plyr.LeagueID == _draftEngine.ActiveMyDraftLeague.ID)
+                   .Select(plyr => new ViewModel.ProTeamNewsItem
+                   {
+                       PlayerName = plyr.PlayerName,
+                       ProTeamID = plyr.ProTeamID,
+                       DateString = plyr.PubDate.ToString("dddd, dd MMMM yyyy"),
+                       Title = plyr.Title,
+                       NewsDescription = plyr.NewsDescription
+                   });
+
+                return _utility.SuccessResult(news);
+            }
+            catch (Exception ex)
+            {
+                return _utility.ExceptionReturnResult(ex);
+            }
+        }
         public DataModel.Response.ReturnResult GetPositionDepthChart(string vPosition)
         {
             var result = new DataModel.Response.ReturnResult();

@@ -34,7 +34,7 @@ namespace ProTeamService
                     .Select(plyr => new ViewModel.ProTeamNewsItem
                     {
                         ProTeamID = plyr.ProTeamID,
-                        PubDate = plyr.PubDate,
+                        DateString = plyr.PubDate.ToString("dddd, dd MMMM yyyy"),
                         Title = plyr.Title,
                         NewsDescription = plyr.NewsDescription
                     });
