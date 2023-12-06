@@ -8,12 +8,12 @@ namespace Database.Model
         public int ID { get; set; }
         public int PlayerID { get; set; }
         public DateTime? PubDate { get; set; }
-        [MaxLength(250)]
+        //[MaxLength(250)]
         public string? Title { get; set; }
-        [MaxLength(550)]
+        //[MaxLength(550)]
         public string? NewsDescription{ get; set; }
-        public string? Reccomendation{ get; set; }
-        [MaxLength(10)]
+        //public string? Reccomendation{ get; set; }
+        //[MaxLength(300)]
         public string? ImageURL { get; set; }
         [MaxLength(350)]
         public string? Analysis { get; set; }

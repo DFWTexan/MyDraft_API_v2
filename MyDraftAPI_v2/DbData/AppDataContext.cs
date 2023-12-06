@@ -60,6 +60,10 @@ namespace DbData
         public DbSet<Database.Model.AAV> AAV { get; set; }
         public DbSet<Database.Model.ADP> ADP { get; set; }
         public DbSet<Database.Model.MyDraftUser> MyDraftUser { get; set; }
+        public DbSet<Database.Model.RosterConfigReference> RosterConfigReference { get; set; }
+        public DbSet<Database.Model.ProjectionsWeekly> ProjectionsWeekly { get; set; }
+        public DbSet<Database.Model.ProjectionsSeason> ProjectionsSeason { get; set; }
+        public DbSet<Database.Model.PlayerProjectionSeason> PlayerProjectionSeason { get; set; }
         #endregion
 
         #region Views
@@ -87,6 +91,10 @@ namespace DbData
             modelBuilder.Entity<Database.Model.AAV>().ToTable("AAV").HasNoKey();
             modelBuilder.Entity<Database.Model.ADP>().ToTable("ADP").HasNoKey();
             modelBuilder.Entity<Database.Model.MyDraftUser>().ToTable("MyDraftUser");
+            modelBuilder.Entity<Database.Model.RosterConfigReference>().ToTable("RosterConfigReference");
+            modelBuilder.Entity<Database.Model.ProjectionsWeekly>().ToTable("ProjectionsWeekly");
+            modelBuilder.Entity<Database.Model.ProjectionsSeason>().ToTable("ProjectionsSeason");
+            modelBuilder.Entity<Database.Model.PlayerProjectionSeason>().ToTable("PlayerProjectionSeason");
 
             #region Bridge Table Keys
             //modelBuilder.Entity<IdentityUser<string>>()

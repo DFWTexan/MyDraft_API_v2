@@ -4,6 +4,7 @@ using DbData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MyDraftAPI_v2.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    partial class AppDataContextModelSnapshot : ModelSnapshot
+    [Migration("20231205233439_emf20231205A")]
+    partial class emf20231205A
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -249,14 +252,16 @@ namespace MyDraftAPI_v2.Migrations
                         .HasColumnType("nvarchar(350)");
 
                     b.Property<string>("ImageURL")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("InjuryType")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("NewsDescription")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(550)
+                        .HasColumnType("nvarchar(550)");
 
                     b.Property<int>("PlayerID")
                         .HasColumnType("int");
@@ -264,8 +269,12 @@ namespace MyDraftAPI_v2.Migrations
                     b.Property<DateTime?>("PubDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Reccomendation")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.HasKey("ID");
 
@@ -295,53 +304,53 @@ namespace MyDraftAPI_v2.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PlayerID"));
 
-                    b.Property<double>("DefFumRec")
-                        .HasColumnType("float");
+                    b.Property<int>("DefFumRec")
+                        .HasColumnType("int");
 
-                    b.Property<double>("DefInts")
-                        .HasColumnType("float");
+                    b.Property<int>("DefInts")
+                        .HasColumnType("int");
 
-                    b.Property<double>("FgAtt")
-                        .HasColumnType("float");
+                    b.Property<int>("FgAtt")
+                        .HasColumnType("int");
 
-                    b.Property<double>("FgMade")
-                        .HasColumnType("float");
+                    b.Property<int>("FgMade")
+                        .HasColumnType("int");
 
-                    b.Property<double>("PassInt")
-                        .HasColumnType("float");
+                    b.Property<int>("PassInt")
+                        .HasColumnType("int");
 
-                    b.Property<double>("PassTD")
-                        .HasColumnType("float");
+                    b.Property<int>("PassTD")
+                        .HasColumnType("int");
 
-                    b.Property<double>("PassYards")
-                        .HasColumnType("float");
+                    b.Property<int>("PassYards")
+                        .HasColumnType("int");
 
-                    b.Property<double>("PointsAllowed")
-                        .HasColumnType("float");
+                    b.Property<int>("PointsAllowed")
+                        .HasColumnType("int");
 
-                    b.Property<double>("Rec")
-                        .HasColumnType("float");
+                    b.Property<int>("Rec")
+                        .HasColumnType("int");
 
-                    b.Property<double>("RecTD")
-                        .HasColumnType("float");
+                    b.Property<int>("RecTD")
+                        .HasColumnType("int");
 
-                    b.Property<double>("RecYards")
-                        .HasColumnType("float");
+                    b.Property<int>("RecYards")
+                        .HasColumnType("int");
 
-                    b.Property<double>("RushAttempts")
-                        .HasColumnType("float");
+                    b.Property<int>("RushAttempts")
+                        .HasColumnType("int");
 
-                    b.Property<double>("RushTD")
-                        .HasColumnType("float");
+                    b.Property<int>("RushTD")
+                        .HasColumnType("int");
 
-                    b.Property<double>("RushYards")
-                        .HasColumnType("float");
+                    b.Property<int>("RushYards")
+                        .HasColumnType("int");
 
-                    b.Property<double>("Sacks")
-                        .HasColumnType("float");
+                    b.Property<int>("Sacks")
+                        .HasColumnType("int");
 
-                    b.Property<double>("XpMade")
-                        .HasColumnType("float");
+                    b.Property<int>("XpMade")
+                        .HasColumnType("int");
 
                     b.HasKey("PlayerID");
 

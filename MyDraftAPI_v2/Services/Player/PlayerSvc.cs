@@ -158,7 +158,7 @@ namespace PlayerService
                             Title = i.Title,
                             PubDate = i.PubDate,
                             NewsDescription = i.NewsDescription,
-                            Reccomendation = i.Reccomendation,
+                            //Reccomendation = i.Reccomendation,
                             ImageURL = i.ImageURL,
                             Analysis = i.Analysis,
                             InjuryType = i.InjuryType
