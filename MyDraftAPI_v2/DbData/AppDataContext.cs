@@ -69,6 +69,7 @@ namespace DbData
         #region Views
         public DbSet<Database.Model.vw_PlayerListItem> vw_PlayerListItem { get; set; }
         public DbSet<Database.Model.vw_ProTeamNewsItem> vw_ProTeamNewsItem { get; set; }
+        public DbSet<Database.Model.vw_ProTeamInjuryItem> vw_ProTeamInjuryItem { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -129,6 +130,7 @@ namespace DbData
             #region Views
             modelBuilder.Entity<Database.Model.vw_PlayerListItem>().ToView("vw_PlayerListItem").HasNoKey();
             modelBuilder.Entity<Database.Model.vw_ProTeamNewsItem>().ToView("vw_ProTeamNewsItem").HasNoKey();
+            modelBuilder.Entity<Database.Model.vw_ProTeamInjuryItem>().ToView("vw_ProTeamInjuryItem").HasNoKey();
             #endregion
 
             #region Property Descr

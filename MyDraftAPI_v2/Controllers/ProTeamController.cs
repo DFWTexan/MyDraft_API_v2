@@ -65,5 +65,25 @@ namespace MyDraftAPI_v2.Controllers
                 return StatusCode(500, new List<string>() { "Server Error" });
             }
         }
+        /// <summary>
+        ///     
+        /// ProTeam Injuries
+        /// 
+        [HttpGet("{proTeamID}")]
+        public async Task<ActionResult> Injuries(int proTeamID)
+        {
+            try
+            {
+                var service = new ProTeamService.ProTeamSvc(_db, _config, null, _utility, _draftEngine);
+
+                var result = await Task.Run(() => service.Injuries(proTeamID));
+
+                return StatusCode(result.StatusCode, result.ObjData);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new List<string>() { "Server Error" });
+            }
+        }
     }
 }

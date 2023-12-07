@@ -18,6 +18,8 @@ namespace Database.Model
         public decimal AAVPoints { get; set; }
         [Column(TypeName = "decimal(3,2)")]
         public decimal ADPPoints { get; set; }
+        [Column(TypeName = "decimal(3,2)")]
+        public decimal DVDBVal { get; set; }
         public bool IsDrafted { get; set; }
     }
 }

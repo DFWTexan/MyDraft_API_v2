@@ -52,12 +52,24 @@ namespace PlayerService
                 // FilterSORT: Point, AAV or ADP Value
                 if (vInput.pointValue != null)
                 {
-                    if (vInput.pointValue == "[POINTS]")
-                        players = players.OrderByDescending(q => q.PointsVal);
-                    else if (vInput.pointValue == "[ADP]")
-                        players = players.OrderByDescending(q => q.ADPPoints);
-                    else if (vInput.pointValue == "[AAV]")
-                        players = players.OrderByDescending(q => q.AAVPoints);
+                    switch (vInput.pointValue)
+                    {
+                        case "[POINTS]":
+                            players = players.OrderByDescending(q => q.PointsVal);
+                            break;
+                        case "[ADP]":
+                            players = players.OrderByDescending(q => q.ADPPoints);
+                            break;
+                        case "[AAV]":
+                            players = players.OrderByDescending(q => q.AAVPoints);
+                            break;
+                        case "[DVDB]":
+                            players = players.OrderByDescending(q => q.DVDBVal);
+                            break;
+                        default:
+                            players = players.OrderByDescending(q => q.PointsVal);
+                            break;
+                    }
                 }
 
                 // Filter: Position Value

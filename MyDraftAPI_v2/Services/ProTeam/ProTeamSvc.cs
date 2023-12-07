@@ -82,7 +82,28 @@ namespace ProTeamService
                 return _utility.ExceptionReturnResult(ex);
             }
         }
+        public DataModel.Response.ReturnResult Injuries(int vProTeamID)
+        {
+            var result = new DataModel.Response.ReturnResult();
+            try
+            {
+                var injuries = _db.vw_ProTeamInjuryItem.Where(plyr => plyr.ProTeamID == vProTeamID)
+                    .Select(plyr => new ViewModel.ProTeamInjuryItem
+                    {
+                        FirstNameInitial = plyr.FirstNameInitial,
+                        LastName = plyr.LastName,
+                        Position = plyr.Position,
+                        Type = plyr.Type,
+                        Status = plyr.Status,
+                    });
 
+                return _utility.SuccessResult(injuries);
+            }
+            catch (Exception ex)
+            {
+                return _utility.ExceptionReturnResult(ex);
+            }
+        }
 
         #region // Method Template //
         /// <summary>
