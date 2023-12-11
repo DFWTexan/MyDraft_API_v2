@@ -147,6 +147,8 @@ namespace PlayerService
 
                 var position = _db.Positions.Where(x => x.Abbr == player.Position).SingleOrDefault();
                 var playerNews = _db.PlayerNews.Where(x => x.PlayerID == id).ToList();
+                bool isPlayerNews = _db.PlayerNews.Any(x => x.PlayerID == id);   
+                
                 var depthChart = _db.DepthChart
                     .Include(x => x.Player)
                     .Where(x => x.PositionID == position.ID && x.TeamID == player.ProTeamID).ToList();
@@ -161,7 +163,7 @@ namespace PlayerService
                             Rank = i.Rank
                         });
                 }
-                if (playerNews != null)
+                if (isPlayerNews)
                 {
                     foreach (var i in playerNews)
                     {
