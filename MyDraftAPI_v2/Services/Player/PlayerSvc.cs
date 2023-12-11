@@ -3,6 +3,8 @@ using DbData;
 using Microsoft.EntityFrameworkCore;
 using MyDraftAPI_v2;
 using MyDraftAPI_v2.Services.Utility;
+using ViewModel;
+using static ViewModel.PlayerInfo;
 
 namespace PlayerService
 {
@@ -142,7 +144,8 @@ namespace PlayerService
                     PhotoUrl = player.PhotoUrl,
                     Status = player.Status,
                     IsDrafted = isPlayerDrafted(player.ID),
-                    ProTeamName = player.ProTeam.NickName != null ? player.ProTeam.City + " " + player.ProTeam.NickName : "N/A"
+                    ProTeamName = player.ProTeam.NickName != null ? player.ProTeam.City + " " + player.ProTeam.NickName : "N/A",
+                    ProTeamNickname = player.ProTeam.NickName,
                 };
 
                 var position = _db.Positions.Where(x => x.Abbr == player.Position).SingleOrDefault();
@@ -179,6 +182,32 @@ namespace PlayerService
                         });
                     }
                 }
+
+                Dictionary<int, PlayerScheduleItem> mapSchedule = new Dictionary<int, PlayerScheduleItem>();
+
+                for (int i = 1; i <= 16; i++)
+                {
+                    mapSchedule.Add(i, new PlayerScheduleItem());
+                }
+
+                var Schedule = _db.Schedule
+                    .Where(x => x.HomeTeamID == player.ProTeamID || x.AwayTeamID == player.ProTeamID)
+                    .Select(x => new ViewModel.PlayerInfo.PlayerScheduleItem
+                    {
+                        Week = (int)x.Week,
+                        Designation = x.HomeTeamID == player.ProTeamID ? "VS" : "@",
+                        HomeTeamName = x.HomeTeamID == player.ProTeamID ? null : _db.ProTeam.Where(q => q.ID == x.HomeTeamID).FirstOrDefault().NickName,
+                        AwayTeamName = x.AwayTeamID == player.ProTeamID ? null : _db.ProTeam.Where(q => q.ID == x.AwayTeamID).FirstOrDefault().NickName,
+                    })
+                    .OrderBy(x => x.Week)
+                    .ToList();
+
+                foreach (var item in Schedule)
+                {
+                    mapSchedule[item.Week] = item;
+                }
+
+                playerInfo.PlayerSchedule = mapSchedule.Values.ToList();
 
                 result.ObjData = playerInfo;
                 result.Success = true;

@@ -7,13 +7,16 @@ namespace ViewModel
     {
         public bool IsDrafted { get; set; }
         public string? ProTeamName { get; set; }
+        public string? ProTeamNickname { get; set; }
         public List<DepthChartItem> DepthChart { get; set; }
         public List<PlayerNewsItem> PlayerNews { get; set; }
+        public List<PlayerScheduleItem> PlayerSchedule { get; set; }
 
         public PlayerInfo()
         {
             DepthChart = new List<DepthChartItem>();
             PlayerNews = new List<PlayerNewsItem>();
+            PlayerSchedule = new List<PlayerScheduleItem>();
         }
 
         public class DepthChartItem
@@ -33,6 +36,10 @@ namespace ViewModel
             public string? ImageURL { get; set; }
             public string? Analysis { get; set; }
             public string? InjuryType { get; set; }
+        }
+
+        public class PlayerScheduleItem : ProTeamScheduleItem
+        {
         }
     }
 }
