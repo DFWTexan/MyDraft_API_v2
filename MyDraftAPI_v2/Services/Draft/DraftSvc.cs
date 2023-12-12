@@ -596,6 +596,7 @@ namespace DraftService
                                 Team = teamAbbreviation.ToString(),
                                 Position = pos.ToString(),
                                 IsDrafted = isPlayerDrafted((int)qb.PlayerID),
+                                IsOnMyTeam = isOnMyTeam((int)qb.PlayerID),
                             };
 
                             depthChartItems.Add(depthChartItem);
@@ -625,6 +626,14 @@ namespace DraftService
                             .Any(x => x.PlayerID == vPlayerID);
 
             return isDrafted;
+        }
+        private bool isOnMyTeam(int vPlayerID)
+        {
+            bool isOnMyTeam = _db.UserDraftSelection
+                            .AsNoTracking()
+                            .Any(x => x.PlayerID == vPlayerID && x.TeamID == _draftEngine.MyDraftFanTeamID);
+
+            return isOnMyTeam;
         }
         #endregion
 

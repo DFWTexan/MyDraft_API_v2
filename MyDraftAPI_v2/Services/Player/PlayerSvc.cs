@@ -118,13 +118,40 @@ namespace PlayerService
         }
         public DataModel.Response.ReturnResult GetPlayerByID(int id)
         {
+            int limitTake = 1;
+
             var result = new DataModel.Response.ReturnResult();
             try
             {
                 var player = _db.Player
                     .Include(x => x.ProTeam)
                     .Where(x => x.ID == id)
+                    .AsNoTracking()
                     .SingleOrDefault();
+
+                switch (player.Position)
+                {
+                    case "QB":
+                        limitTake = 2;
+                        break;
+                    case "RB":
+                        limitTake = 3;
+                        break;
+                    case "WR":
+                        limitTake = 4;
+                        break;
+                    case "TE":
+                        limitTake = 2;
+                        break;
+                    case "K":
+                        limitTake = 1;
+                        break;
+                    case "DEF":
+                        break;
+                    default:
+                        limitTake = 1;
+                        break;
+                }
 
                 var playerInfo = new ViewModel.PlayerInfo
                 {
@@ -144,8 +171,8 @@ namespace PlayerService
                     PhotoUrl = player.PhotoUrl,
                     Status = player.Status,
                     IsDrafted = isPlayerDrafted(player.ID),
-                    ProTeamName = player.ProTeam.NickName != null ? player.ProTeam.City + " " + player.ProTeam.NickName : "N/A",
-                    ProTeamNickname = player.ProTeam.NickName,
+                    ProTeamName = player.ProTeam != null ? player.ProTeam.City + " " + player.ProTeam.NickName : "N/A",
+                    ProTeamNickname = player.ProTeam != null ? player.ProTeam.NickName : "N/A",
                 };
 
                 var position = _db.Positions.Where(x => x.Abbr == player.Position).SingleOrDefault();
@@ -154,7 +181,11 @@ namespace PlayerService
                 
                 var depthChart = _db.DepthChart
                     .Include(x => x.Player)
-                    .Where(x => x.PositionID == position.ID && x.TeamID == player.ProTeamID).ToList();
+                    .Where(x => x.PositionID == position.ID && x.TeamID == player.ProTeamID)
+                    .AsNoTracking()
+                    .Take(limitTake)
+                    .OrderBy(x => x.Rank)
+                    .ToList();
 
                 foreach (var i in depthChart.OrderBy(s => s.Rank))
                 {
@@ -200,6 +231,7 @@ namespace PlayerService
                         AwayTeamName = x.AwayTeamID == player.ProTeamID ? null : _db.ProTeam.Where(q => q.ID == x.AwayTeamID).FirstOrDefault().NickName,
                     })
                     .OrderBy(x => x.Week)
+                    .AsNoTracking()
                     .ToList();
 
                 foreach (var item in Schedule)

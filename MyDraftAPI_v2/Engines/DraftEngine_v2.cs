@@ -234,10 +234,10 @@ namespace MyDraftAPI_v2
                                             q => (DataModel.Enums.ProTeams)Enum.Parse(typeof(DataModel.Enums.ProTeams), q.Abbr),
                                             q => new Dictionary<DataModel.Enums.Position, List<ViewModel.DepthChartPlayer>>()
                                             {
-                                                { DataModel.Enums.Position.QB, GetPlayersForPositionAndTeam(3, q.ID, DataModel.Enums.Position.QB) },
-                                                { DataModel.Enums.Position.RB, GetPlayersForPositionAndTeam(4, q.ID, DataModel.Enums.Position.RB) },
-                                                { DataModel.Enums.Position.WR, GetPlayersForPositionAndTeam(6, q.ID, DataModel.Enums.Position.WR) },
-                                                { DataModel.Enums.Position.TE, GetPlayersForPositionAndTeam(3, q.ID, DataModel.Enums.Position.TE) },
+                                                { DataModel.Enums.Position.QB, GetPlayersForPositionAndTeam(2, q.ID, DataModel.Enums.Position.QB) },
+                                                { DataModel.Enums.Position.RB, GetPlayersForPositionAndTeam(3, q.ID, DataModel.Enums.Position.RB) },
+                                                { DataModel.Enums.Position.WR, GetPlayersForPositionAndTeam(4, q.ID, DataModel.Enums.Position.WR) },
+                                                { DataModel.Enums.Position.TE, GetPlayersForPositionAndTeam(2, q.ID, DataModel.Enums.Position.TE) },
                                                 { DataModel.Enums.Position.PK, GetPlayersForPositionAndTeam(2, q.ID, DataModel.Enums.Position.PK) },
                                             }
                                         );
