@@ -21,5 +21,6 @@ namespace Database.Model
         [Column(TypeName = "decimal(3,2)")]
         public decimal DVDBVal { get; set; }
         public bool IsDrafted { get; set; }
+        public bool IsPlayerNews { get; set; }
     }
 }

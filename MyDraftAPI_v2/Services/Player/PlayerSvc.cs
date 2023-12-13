@@ -47,6 +47,7 @@ namespace PlayerService
                     PointsVal = plyr.PointsVal,
                     AAVPoints = plyr.AAVPoints,
                     ADPPoints = plyr.ADPPoints,
+                    IsPlayerNews = plyr.IsPlayerNews,
                     IsDrafted = _db.UserDraftSelection
                                 .Any(ud => ud.LeagueID == _draftEngine.ActiveMyDraftLeague.ID && ud.PlayerID == plyr.PlayerID)
                 });
@@ -108,13 +109,21 @@ namespace PlayerService
             return result;
         }
 
-        private bool isPlayerDrafted(int vPlayerID)
+        private bool IsPlayerDrafted(int vPlayerID)
         {
             bool isDrafted = _db.UserDraftSelection
                             .AsNoTracking()
                             .Any(x => x.PlayerID == vPlayerID && x.LeagueID == _draftEngine.ActiveMyDraftLeague.ID);
 
             return isDrafted;
+        }
+        private bool IsPlayerNews(int vPlayerID)
+        {
+            bool isPlayerNewsAvailable = _db.PlayerNews
+                            .AsNoTracking()
+                            .Any(x => x.PlayerID == vPlayerID);
+
+            return isPlayerNewsAvailable;
         }
         public DataModel.Response.ReturnResult GetPlayerByID(int id)
         {
@@ -170,7 +179,8 @@ namespace PlayerService
                     IsRookie = player.IsRookie,
                     PhotoUrl = player.PhotoUrl,
                     Status = player.Status,
-                    IsDrafted = isPlayerDrafted(player.ID),
+                    IsDrafted = IsPlayerDrafted(player.ID),
+                    IsPlayerNews = IsPlayerNews(player.ID),
                     ProTeamName = player.ProTeam != null ? player.ProTeam.City + " " + player.ProTeam.NickName : "N/A",
                     ProTeamNickname = player.ProTeam != null ? player.ProTeam.NickName : "N/A",
                 };

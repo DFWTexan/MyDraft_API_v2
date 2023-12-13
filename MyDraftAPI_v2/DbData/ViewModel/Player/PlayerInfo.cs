@@ -5,6 +5,7 @@ namespace ViewModel
 {
     public class PlayerInfo : Player
     {
+        public bool IsPlayerNews { get; set; }
         public bool IsDrafted { get; set; }
         public string? ProTeamName { get; set; }
         public string? ProTeamNickname { get; set; }
