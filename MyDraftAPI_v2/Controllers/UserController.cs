@@ -1,8 +1,6 @@
 ﻿using DbData;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MyDraftAPI_v2.Services.Utility;
 
 namespace MyDraftAPI_v2.Controllers
 {

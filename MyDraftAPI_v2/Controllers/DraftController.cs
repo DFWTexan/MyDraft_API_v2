@@ -2,10 +2,12 @@
 using System.Threading.Tasks;
 using DbData;
 using MyDraftAPI_v2.Services.Utility;
+using Microsoft.AspNetCore.Authorization;
 #pragma warning disable 
 
 namespace MyDraftAPI_v2.Controllers
 {
+    //[Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class DraftController : Controller
