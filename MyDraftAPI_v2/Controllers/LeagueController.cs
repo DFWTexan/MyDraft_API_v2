@@ -2,9 +2,11 @@
 using DbData;
 using DataModel.Response;
 using MyDraftAPI_v2.Services.Utility;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MyDraftAPI_v2.Controllers
 {
+    //[Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class LeagueController : Controller

@@ -655,6 +655,7 @@ namespace MyDraftAPI_v2
         {
             Dictionary<string, ViewModel.DraftPick> draftPicks = _rosterDict;
             HashSet<ViewModel.DraftPick> uniqueValues = new HashSet<ViewModel.DraftPick>();
+            HashSet<string> uniqueValues_v2 = new HashSet<string>();
 
             var picks = draftPicksForTeam(vFanTeamID);
             foreach (var pick in picks)
@@ -666,10 +667,12 @@ namespace MyDraftAPI_v2
                         string positionPrefix = draftPickKey.Substring(0, 2);
 
                         if (positionPrefix == pick.player.Position.Trim() &&
-                            (!draftPicks.ContainsKey(draftPickKey) || !uniqueValues.Contains(pick)))
+                            (!draftPicks.ContainsKey(draftPickKey) || !uniqueValues_v2.Contains(draftPickKey) || !uniqueValues.Contains(pick)))
                         {
+                            //if (draftPicks[draftPickKey].player == null)
                             draftPicks[draftPickKey] = pick;
                             uniqueValues.Add(pick);
+                            uniqueValues_v2.Add(draftPickKey);
                         }
                         else if (!draftPicks.ContainsKey(draftPickKey) || draftPicks[draftPickKey].teamID != vFanTeamID)
                         {
