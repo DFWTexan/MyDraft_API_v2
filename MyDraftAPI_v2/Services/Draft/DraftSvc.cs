@@ -268,7 +268,7 @@ namespace DraftService
             try
             {
                 result.StatusCode = 200;
-                var resData = _draftEngine.draftPicksForTeam_v2(vFanTeamID);
+                var resData = _draftEngine.DraftPicksForTeam_V2(vFanTeamID);
 
                 foreach (var item in resData)
                 {

@@ -133,6 +133,7 @@ namespace MyDraftAPI_v2
                                                  DraftOrder = i.DraftOrder,
                                                  NumberOfRounds = i.NumberOfRounds,
                                                  NumberOfTeams = i.NumberOfTeams,
+                                                 NumberOfStarters = i.NumberOfStarters,
                                                  LastActiveDate = DateTime.Now,
                                                  teams = i.LeagueTeams.Select(lt => new ViewModel.UserLeagueTeamItem
                                                  {
@@ -147,7 +148,7 @@ namespace MyDraftAPI_v2
                                              })
                                              .AsNoTracking()
                                              .FirstOrDefault();
-                    } 
+                    }
                     else
                     {
                         _activeMyDraftLeague = createLeague(myDraftUserID);
@@ -161,9 +162,9 @@ namespace MyDraftAPI_v2
                     db.UserLeague.Attach(updUserLeague);
                     db.Entry(updUserLeague).Property(x => x.LastActiveDate).IsModified = true;
                     db.SaveChanges();
-                    
+
                     _myDraftFanTeamID = _activeMyDraftLeague.teams.Where(q => q.IsMyTeam == true).FirstOrDefault().ID;
-                    
+
                     _league = new MyDraftAPI_v2.FantasyDataModel.MyFantasyLeague()
                     {
                         identifier = _activeMyDraftLeague.ID,
@@ -185,7 +186,7 @@ namespace MyDraftAPI_v2
                             fanTeamName = i.fanTeamName,
                             onTheClock = i.onTheClock,
                             IsComplete = i.IsComplete,
-                            IsMyTeamPick = i.onTheClock == _myDraftFanTeamID ? true : false,    
+                            IsMyTeamPick = i.onTheClock == _myDraftFanTeamID ? true : false,
                         })
                         .AsNoTracking()
                         .FirstOrDefault();
@@ -267,7 +268,7 @@ namespace MyDraftAPI_v2
                     db.UserLeague.Attach(updUserLeague);
                     db.Entry(updUserLeague).Property(x => x.LastActiveDate).IsModified = true;
                     db.SaveChanges();
-                    
+
                     // statement to get MyDraftUserID from UserLeague table where ID = vLeagueID
                     var myDraftUserID = db.UserLeague
                                         .Where(x => x.ID == vLeagueID)
@@ -302,7 +303,7 @@ namespace MyDraftAPI_v2
                     MyFantasyLeague.DraftOrderType LEAGUE_TEMP_DRAFT_ORDER_TYPE = MyFantasyLeague.DraftOrderType.snake;
                     int LEAGUE_TEMP_DRAFT_TYPE = 1;
 
-                    int uniqueIdentifier = db.UserLeague.Where(q => q.MyDraftUserID == vMyDraftUserID).Any() ? (int)db.UserLeague.Max(q => q.ID) : 0; 
+                    int uniqueIdentifier = db.UserLeague.Where(q => q.MyDraftUserID == vMyDraftUserID).Any() ? (int)db.UserLeague.Max(q => q.ID) : 0;
 
                     MyFantasyLeague leagueContainer = new MyFantasyLeague(0);
                     leagueContainer.name = String.Format("{0}-{1}", LEAGUE_TEMP_NAME, uniqueIdentifier + 1);
@@ -333,7 +334,7 @@ namespace MyDraftAPI_v2
                     var resultObj = createTeams(newLeagueID, LEAGUE_TEMP_NUM_TEAMS);
 
                     var newMyFantasyLeague = new MyFantasyLeague(newLeague);
-                        
+
                     var result = db.UserLeague
                                 .Where(q => q.ID == newLeagueID)
                                     .Select(i => new ViewModel.ActiveLeague
@@ -361,8 +362,8 @@ namespace MyDraftAPI_v2
 
                     newMyFantasyLeague.teams = (IList<UserLeagueTeamItem>?)result.teams;
                     IList<MyDraftAPI_v2.FantasyDataModel.MyDraftPick> draftPicks = (IList<MyDraftAPI_v2.FantasyDataModel.MyDraftPick>)MyDraftPickGenerator.generateDraftPicks(newMyFantasyLeague);
-                    
-                    foreach(MyDraftAPI_v2.FantasyDataModel.MyDraftPick draftPick in draftPicks)
+
+                    foreach (MyDraftAPI_v2.FantasyDataModel.MyDraftPick draftPick in draftPicks)
                     {
                         var newDraftPick = new UserDraftSelection
                         {
@@ -405,10 +406,10 @@ namespace MyDraftAPI_v2
                                         {
                                             Value = l.ID,
                                             Label = l.Name
-                                        }).ToList() 
+                                        }).ToList()
                                     })
                                     .AsNoTracking()
-                                    .FirstOrDefault();  
+                                    .FirstOrDefault();
 
 
                     return result;
@@ -651,38 +652,79 @@ namespace MyDraftAPI_v2
 
             return draftPicks;
         }
-        public Dictionary<string, ViewModel.DraftPick> draftPicksForTeam_v2(int vFanTeamID)
+        public Dictionary<string, ViewModel.DraftPick> DraftPicksForTeam_V2(int vFanTeamID)
         {
-            Dictionary<string, ViewModel.DraftPick> draftPicks = _rosterDict;
-            HashSet<ViewModel.DraftPick> uniqueValues = new HashSet<ViewModel.DraftPick>();
-            HashSet<string> uniqueValues_v2 = new HashSet<string>();
+            var draftPicks = new Dictionary<string, ViewModel.DraftPick>(_rosterDict);
+            var uniqueValues = new HashSet<ViewModel.DraftPick>();
+            var uniquePositions = new HashSet<string>();
 
-            var picks = draftPicksForTeam(vFanTeamID);
-            foreach (var pick in picks)
-            {
-                if (pick.player != null)
+            var positionLimits = new Dictionary<string, int>
                 {
-                    foreach (var draftPickKey in _rosterDict.Keys.ToList())
-                    {
-                        string positionPrefix = draftPickKey.Substring(0, 2);
+                    {"QB", 1}, {"RB", 2}, {"WR", 2}, {"TE", 1}, {"PK", 1}, {"DEF", 1}
+                };
+            var positionCounts = new Dictionary<string, int>
+                {
+                    {"QB", 0}, {"RB", 0}, {"WR", 0}, {"TE", 0}, {"PK", 0}, {"DEF", 0}
+                };
 
-                        if (positionPrefix == pick.player.Position.Trim() &&
-                            (!draftPicks.ContainsKey(draftPickKey) || !uniqueValues_v2.Contains(draftPickKey) || !uniqueValues.Contains(pick)))
-                        {
-                            //if (draftPicks[draftPickKey].player == null)
-                            draftPicks[draftPickKey] = pick;
-                            uniqueValues.Add(pick);
-                            uniqueValues_v2.Add(draftPickKey);
-                        }
-                        else if (!draftPicks.ContainsKey(draftPickKey) || draftPicks[draftPickKey].teamID != vFanTeamID)
-                        {
-                            draftPicks[draftPickKey] = new ViewModel.DraftPick();
-                        }
-                    }
+            foreach (var pick in draftPicksForTeam(vFanTeamID))
+            {
+                if (pick.player == null) continue;
+
+                var playerPosition = pick.player.Position.Trim();
+                if (!positionLimits.ContainsKey(playerPosition)) continue;
+
+                var isStarter = positionCounts[playerPosition] < positionLimits[playerPosition];
+                var rosterKey = FindRosterKeyForPick(draftPicks, uniqueValues, uniquePositions, playerPosition, isStarter);
+
+                if (rosterKey != null)
+                {
+                    draftPicks[rosterKey] = pick;
+                    uniqueValues.Add(pick);
+                    uniquePositions.Add(rosterKey);
+                    positionCounts[playerPosition]++;
                 }
             }
+
+            // Assign empty picks to remaining roster slots
+            AssignEmptyPicksToRoster(draftPicks, vFanTeamID);
+
             return draftPicks;
         }
+
+        private string FindRosterKeyForPick(Dictionary<string, ViewModel.DraftPick> draftPicks, HashSet<ViewModel.DraftPick> uniqueValues, HashSet<string> uniquePositions, string playerPosition, bool isStarter)
+        {
+            foreach (var key in _rosterDict.Keys)
+            {
+                if (!isStarter && key.StartsWith("B") && CanAssignPick(draftPicks, uniqueValues, uniquePositions, key))
+                {
+                    return key;
+                }
+                if (isStarter && key.StartsWith(playerPosition) && CanAssignPick(draftPicks, uniqueValues, uniquePositions, key))
+                {
+                    return key;
+                }
+            }
+
+            return null;
+        }
+
+        private bool CanAssignPick(Dictionary<string, ViewModel.DraftPick> draftPicks, HashSet<ViewModel.DraftPick> uniqueValues, HashSet<string> uniquePositions, string key)
+        {
+            return !draftPicks.ContainsKey(key) || !uniqueValues.Contains(draftPicks[key]) || !uniquePositions.Contains(key);
+        }
+
+        private void AssignEmptyPicksToRoster(Dictionary<string, ViewModel.DraftPick> draftPicks, int vFanTeamID)
+        {
+            foreach (var key in _rosterDict.Keys)
+            {
+                if (!draftPicks.ContainsKey(key) || draftPicks[key].teamID != vFanTeamID)
+                {
+                    draftPicks[key] = new ViewModel.DraftPick();
+                }
+            }
+        }
+
         private List<ViewModel.DepthChartPlayer> GetPlayersForPositionAndTeam(int limitTake, int teamId, DataModel.Enums.Position position)
         {
             using (var db = new AppDataContext(_dbOptionsBuilder.Options))

@@ -13,6 +13,7 @@ namespace ViewModel
         public string? DraftOrder { get; set; }
         public int NumberOfTeams { get; set; }
         public int NumberOfRounds { get; set; }
+        public int NumberOfStarters { get; set; }
         public DateTime? LastActiveDate { get; set; }
         public List<UserLeagueTeamItem> teams { get; set; }
         public ActiveLeague()
