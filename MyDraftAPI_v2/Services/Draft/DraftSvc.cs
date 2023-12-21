@@ -387,7 +387,7 @@ namespace DraftService
                     int round = 0;
                     var draftedPosItem = new ViewModel.DraftedByPositionItem()
                     {
-                        PositionGroup = posGroup == "K1" ? "K" : posGroup == "D1" ? "DEF" : posGroup,
+                        PositionGroup = posGroup == "K1" ? "PK" : posGroup == "D1" ? "DEF" : posGroup,
                         Count = dictDraftedPlayerByPositions[posGroup].Count,
                         RoundPicks = new Dictionary<int, Dictionary<int, List<DraftPositionPick>>>()
                     };
@@ -457,7 +457,7 @@ namespace DraftService
         }
         private Dictionary<string, int> BuildFanTeamPositionData(List<ViewModel.DraftPick> data)
         {
-            string[] positionGroups = { "QB", "RB", "WR", "TE", "K", "DEF" };
+            string[] positionGroups = { "QB", "RB", "WR", "TE", "PK", "DEF" };
             int qb_Count = 0;
             int rb_Count = 0;
             int wr_Count = 0;
@@ -483,7 +483,7 @@ namespace DraftService
                         case "TE":
                             te_Count++;
                             break;
-                        case "K":
+                        case "PK":
                             k_Count++;
                             break;
                         case "DEF":
@@ -508,8 +508,8 @@ namespace DraftService
                     case "TE":
                         dictFanTeamPositions.Add("TE", te_Count);
                         break;
-                    case "K":
-                        dictFanTeamPositions.Add("K", k_Count);
+                    case "PK":
+                        dictFanTeamPositions.Add("PK", k_Count);
                         break;
                     case "DEF":
                         dictFanTeamPositions.Add("DEF", def_Count);
