@@ -295,12 +295,12 @@ namespace DraftService
                             pick.PositionGroup = "TIGHT END";
                             pick.SortOrder = 4;
                             break;
-                        case "K1":
+                        case "PK":
                             pick.@int = ++cnt_K;
                             pick.PositionGroup = "KICKER";
                             pick.SortOrder = 5;
                             break;
-                        case "D1":
+                        case "DE":
                             pick.@int = ++cnt_DEF;
                             pick.PositionGroup = "DEFENSE";
                             pick.SortOrder = 6;

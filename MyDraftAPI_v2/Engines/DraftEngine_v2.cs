@@ -33,8 +33,8 @@ namespace MyDraftAPI_v2
             {"WR1", new ViewModel.DraftPick() },
             {"WR2", new ViewModel.DraftPick() },
             {"TE", new ViewModel.DraftPick() },
-            {"K1", new ViewModel.DraftPick() },
-            {"D1", new ViewModel.DraftPick() },
+            {"PK", new ViewModel.DraftPick() },
+            {"DEF", new ViewModel.DraftPick() },
             {"B1", new ViewModel.DraftPick() },
             {"B2", new ViewModel.DraftPick() },
             {"B3", new ViewModel.DraftPick() },
@@ -691,7 +691,6 @@ namespace MyDraftAPI_v2
 
             return draftPicks;
         }
-
         private string FindRosterKeyForPick(Dictionary<string, ViewModel.DraftPick> draftPicks, HashSet<ViewModel.DraftPick> uniqueValues, HashSet<string> uniquePositions, string playerPosition, bool isStarter)
         {
             foreach (var key in _rosterDict.Keys)
@@ -708,12 +707,10 @@ namespace MyDraftAPI_v2
 
             return null;
         }
-
         private bool CanAssignPick(Dictionary<string, ViewModel.DraftPick> draftPicks, HashSet<ViewModel.DraftPick> uniqueValues, HashSet<string> uniquePositions, string key)
         {
             return !draftPicks.ContainsKey(key) || !uniqueValues.Contains(draftPicks[key]) || !uniquePositions.Contains(key);
         }
-
         private void AssignEmptyPicksToRoster(Dictionary<string, ViewModel.DraftPick> draftPicks, int vFanTeamID)
         {
             foreach (var key in _rosterDict.Keys)
@@ -724,7 +721,6 @@ namespace MyDraftAPI_v2
                 }
             }
         }
-
         private List<ViewModel.DepthChartPlayer> GetPlayersForPositionAndTeam(int limitTake, int teamId, DataModel.Enums.Position position)
         {
             using (var db = new AppDataContext(_dbOptionsBuilder.Options))
