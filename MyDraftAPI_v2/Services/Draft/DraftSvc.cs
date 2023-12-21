@@ -329,7 +329,7 @@ namespace DraftService
         public DataModel.Response.ReturnResult GetDraftPicksByPosition()
         {
             var result = new DataModel.Response.ReturnResult();
-            string[] positionGroups = { "QB", "RB", "WR", "TE", "K1", "D1" };
+            string[] positionGroups = { "QB", "RB", "WR", "TE", "PK", "DEF" };
             List<ViewModel.DraftedByPositionItem> draftedPositions = new List<DraftedByPositionItem>();
 
             List<ViewModel.DraftPick> drafted_QB = new List<ViewModel.DraftPick>();
@@ -363,8 +363,11 @@ namespace DraftService
                             case "TE":
                                 drafted_TE.Add(item);
                                 break;
-                            case "K":
+                            case "PK":
                                 drafted_K.Add(item);
+                                break;
+                            case "DEF":
+                                drafted_D.Add(item);
                                 break;
                         }
                     }
@@ -375,8 +378,8 @@ namespace DraftService
                     {"RB",drafted_RB },
                     {"WR",drafted_WR },
                     {"TE",drafted_TE },
-                    {"K1",drafted_K },
-                    {"D1",drafted_D },
+                    {"PK",drafted_K },
+                    {"DEF",drafted_D },
                 };
 
                 foreach (string posGroup in positionGroups)
