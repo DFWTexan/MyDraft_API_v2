@@ -425,24 +425,105 @@ namespace DraftService
 
             return result;
         }
+        //public DataModel.Response.ReturnResult GetRosterTotalPositionCount()
+        //{
+        //    var result = new DataModel.Response.ReturnResult();
+        //    try
+        //    {
+        //        var fanTeams = _draftEngine.fantasyTeams;
+        //        Dictionary<string, Dictionary<string, int>> dictMasterFanTeams = new Dictionary<string, Dictionary<string, int>>();
+        //        foreach (var team in fanTeams)
+        //        {
+        //            var playerData = _draftEngine.draftPicksForTeam(team.ID);
+        //            if (playerData != null)
+        //            {
+        //                var rosterCount = BuildFanTeamPositionData((List<ViewModel.DraftPick>)playerData);
+        //                dictMasterFanTeams.Add(team.Name, rosterCount);
+        //            }
+        //        }
+        //        result.ObjData = dictMasterFanTeams.ToList();
+        //        result.StatusCode = 200;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        result.StatusCode = 500;
+        //        result.ErrMessage = ex.Message;
+        //    }
+        //    return result;
+        //}
+        //private Dictionary<string, int> BuildFanTeamPositionData(List<ViewModel.DraftPick> data)
+        //{
+        //    string[] positionGroups = { "QB", "RB", "WR", "TE", "PK", "DEF" };
+        //    int qb_Count = 0;
+        //    int rb_Count = 0;
+        //    int wr_Count = 0;
+        //    int te_Count = 0;
+        //    int k_Count = 0;
+        //    int def_Count = 0;
+        //    Dictionary<string, int> dictFanTeamPositions = new Dictionary<string, int>();
+        //    foreach (ViewModel.DraftPick item in data)
+        //    {
+        //        if (item.player != null)
+        //            switch (item.player.Position)
+        //            {
+        //                case "QB":
+        //                    qb_Count++;
+        //                    break;
+        //                case "RB":
+        //                    rb_Count++;
+        //                    break;
+        //                case "WR":
+        //                    wr_Count++;
+        //                    break;
+        //                case "TE":
+        //                    te_Count++;
+        //                    break;
+        //                case "PK":
+        //                    k_Count++;
+        //                    break;
+        //                case "DEF":
+        //                    def_Count++;
+        //                    break;
+        //            }
+        //    }
+        //    foreach (string pos in positionGroups)
+        //    {
+        //        switch (pos)
+        //        {
+        //            case "QB":
+        //                dictFanTeamPositions.Add("QB", qb_Count);
+        //                break;
+        //            case "RB":
+        //                dictFanTeamPositions.Add("RB", rb_Count);
+        //                break;
+        //            case "WR":
+        //                dictFanTeamPositions.Add("WR", wr_Count);
+        //                break;
+        //            case "TE":
+        //                dictFanTeamPositions.Add("TE", te_Count);
+        //                break;
+        //            case "PK":
+        //                dictFanTeamPositions.Add("PK", k_Count);
+        //                break;
+        //            case "DEF":
+        //                dictFanTeamPositions.Add("DEF", def_Count);
+        //                break;
+        //        }
+        //    }
+        //    return dictFanTeamPositions;
+        //}
         public DataModel.Response.ReturnResult GetRosterTotalPositionCount()
         {
             var result = new DataModel.Response.ReturnResult();
 
             try
             {
-                var fanTeams = _draftEngine.fantasyTeams;
-
-                Dictionary<string, Dictionary<string, int>> dictMasterFanTeams = new Dictionary<string, Dictionary<string, int>>();
-                foreach (var team in fanTeams)
-                {
-                    var playerData = _draftEngine.draftPicksForTeam(team.ID);
-                    if (playerData != null)
-                    {
-                        var rosterCount = BuildFanTeamPositionData((List<ViewModel.DraftPick>)playerData);
-                        dictMasterFanTeams.Add(team.Name, rosterCount);
-                    }
-                }
+                var dictMasterFanTeams = _draftEngine.fantasyTeams
+                    .Where(team => _draftEngine.draftPicksForTeam(team.ID) != null)
+                    .ToDictionary(
+                        team => team.Name,
+                        team => BuildFanTeamPositionData(_draftEngine.draftPicksForTeam(team.ID).ToList())
+                    );
 
                 result.ObjData = dictMasterFanTeams.ToList();
                 result.StatusCode = 200;
@@ -451,6 +532,7 @@ namespace DraftService
             {
                 result.StatusCode = 500;
                 result.ErrMessage = ex.Message;
+                // Consider logging the exception here
             }
 
             return result;
@@ -458,62 +540,13 @@ namespace DraftService
         private Dictionary<string, int> BuildFanTeamPositionData(List<ViewModel.DraftPick> data)
         {
             string[] positionGroups = { "QB", "RB", "WR", "TE", "PK", "DEF" };
-            int qb_Count = 0;
-            int rb_Count = 0;
-            int wr_Count = 0;
-            int te_Count = 0;
-            int k_Count = 0;
-            int def_Count = 0;
+            var dictFanTeamPositions = positionGroups.ToDictionary(position => position, position => 0);
 
-            Dictionary<string, int> dictFanTeamPositions = new Dictionary<string, int>();
-            foreach (ViewModel.DraftPick item in data)
+            foreach (var item in data.Where(d => d.player != null))
             {
-                if (item.player != null)
-                    switch (item.player.Position)
-                    {
-                        case "QB":
-                            qb_Count++;
-                            break;
-                        case "RB":
-                            rb_Count++;
-                            break;
-                        case "WR":
-                            wr_Count++;
-                            break;
-                        case "TE":
-                            te_Count++;
-                            break;
-                        case "PK":
-                            k_Count++;
-                            break;
-                        case "DEF":
-                            def_Count++;
-                            break;
-                    }
-            }
-
-            foreach (string pos in positionGroups)
-            {
-                switch (pos)
+                if (dictFanTeamPositions.ContainsKey(item.player.Position))
                 {
-                    case "QB":
-                        dictFanTeamPositions.Add("QB", qb_Count);
-                        break;
-                    case "RB":
-                        dictFanTeamPositions.Add("RB", rb_Count);
-                        break;
-                    case "WR":
-                        dictFanTeamPositions.Add("WR", wr_Count);
-                        break;
-                    case "TE":
-                        dictFanTeamPositions.Add("TE", te_Count);
-                        break;
-                    case "PK":
-                        dictFanTeamPositions.Add("PK", k_Count);
-                        break;
-                    case "DEF":
-                        dictFanTeamPositions.Add("DEF", def_Count);
-                        break;
+                    dictFanTeamPositions[item.player.Position]++;
                 }
             }
 
