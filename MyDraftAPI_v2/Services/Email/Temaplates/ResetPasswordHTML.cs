@@ -12,7 +12,7 @@
                     <body>
                         <p>Hi " + vUserName + @",</p>
                         <p>Click the link below to reset your password.</p>
-                        <p><a href='https://mydraft.net/resetpassword/" + vCode + @"'>Reset Password</a></p>
+                        <p><a href='https://red-sand-08dbc5010.4.azurestaticapps.net/" + vCode + @"'>Reset Password</a></p>
                         <p>Thanks,</p>
                         <p>Erish Faggett</p>
                     </body>
