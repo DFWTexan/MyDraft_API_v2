@@ -27,7 +27,7 @@
                                              <body>
                                                  <p>Hi {0},</p>
                                                  <p>Click the link below to confirm your email.</p>
-                                                 <p><a href=""https://red-sand-08dbc5010.4.azurestaticapps.net/EmailVerified?token={1}&email={2}"">Confirm Email</a></p>
+                                                 <p><a href=""https://red-sand-08dbc5010.4.azurestaticapps.net/emailverified?token={1}&email={2}"">Confirm Email</a></p>
                                                  <p>Thanks,</p>
                                                  <p>Erish Faggett</p>
                                              </body>
